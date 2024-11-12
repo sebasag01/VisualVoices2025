@@ -1,7 +1,10 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { importProvidersFrom } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 bootstrapApplication(AppComponent, {
-  providers: [provideHttpClient(withFetch())]
+  providers: [
+    importProvidersFrom(HttpClientModule) // Asegúrate de que HttpClientModule esté disponible
+  ]
 }).catch(err => console.error(err));
