@@ -20,6 +20,11 @@ export class UsuariosService {
     return this.http.post(this.apiUrl, usuario);
   }
 
+  // Registro de un nuevo usuario
+  register(user: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, user);
+  }
+
   // Actualizar un usuario por ID
   updateUsuario(id: string, usuario: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, usuario);

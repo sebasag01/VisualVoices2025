@@ -1,16 +1,9 @@
-<h2>Lista de Usuarios</h2>
-
-<!-- Verificar si hay usuarios para mostrar -->
-<div *ngIf="usuarios && usuarios.length > 0; else sinUsuarios">
-  <ul>
-    <li *ngFor="let usuario of usuarios">
-      <!-- Mostrar el nombre del usuario, puedes agregar más campos si están disponibles -->
-      {{ usuario.nombre }}
-    </li>
-  </ul>
-</div>
-
-<!-- Plantilla que se muestra si no se encontraron usuarios -->
-<ng-template #sinUsuarios>
-  <p>No se encontraron usuarios.</p>
-</ng-template>
+<form (ngSubmit)="registerUser()">
+  <label>Email:</label>
+  <input type="email" [(ngModel)]="user.email" name="email" required>
+  <label>Nombre de usuario:</label>
+  <input type="text" [(ngModel)]="user.username" name="username" required>
+  <label>Contraseña:</label>
+  <input type="password" [(ngModel)]="user.password" name="password" required>
+  <button type="submit">Registrarse</button>
+</form>

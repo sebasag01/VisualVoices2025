@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuariosService } from '../services/usuarios.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // Importa FormsModule
+
 
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule,FormsModule]
 })
 export class UsuariosComponent implements OnInit {
   usuarios: any[] = [];
   usuarioSeleccionado: any = null;
+  user = { email: '', username: '', password: '' };
 
   constructor(private usuariosService: UsuariosService) {}
 
@@ -26,6 +29,19 @@ export class UsuariosComponent implements OnInit {
       },
       error => {
         console.error('Error al obtener usuarios:', error);
+      }
+    );
+  }
+
+  registerUser() {
+    this.usuariosService.register(this.user).subscribe(
+      response => {
+        console.log(response.message);
+        // Opcional: resetear el formulario
+        this.user = { email: '', username: '', password: '' };
+      },
+      error => {
+        console.error('Error en el registro:', error);
       }
     );
   }
