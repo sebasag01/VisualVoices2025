@@ -69,10 +69,37 @@ const registerUser = async (req, res) => {
     }
 };
 
+// Iniciar sesión de usuario
+const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Verificar si el usuario existe
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            return res.status(400).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Comparar la contraseña ingresada con la almacenada
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+            return res.status(400).json({ message: 'Contraseña incorrecta' });
+        }
+
+        // Inicio de sesión exitoso
+        console.log('Usuario ha iniciado sesión con éxito');
+        res.json({ message: 'Inicio de sesión exitoso' });
+    } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        res.status(500).json({ message: 'Error al iniciar sesión' });
+    }
+};
+
 module.exports = {
     getUsuarios,
     createUsuario,
     updateUsuario,
     deleteUsuario,
-    registerUser // Asegúrate de exportar registerUser
+    registerUser,
+    loginUser
 };

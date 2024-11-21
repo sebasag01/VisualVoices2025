@@ -7,3 +7,11 @@
   <input type="password" [(ngModel)]="user.password" name="password" required>
   <button type="submit">Registrarse</button>
 </form>
+
+<form (ngSubmit)="loginUser()">
+  <label>Email:</label>
+  <input type="email" [(ngModel)]="userLogin.email" name="loginEmail" required>
+  <label>Contraseña:</label>
+  <input type="password" [(ngModel)]="userLogin.password" name="loginPassword" required>
+  <button type="submit">Iniciar Sesión</button>
+</form>

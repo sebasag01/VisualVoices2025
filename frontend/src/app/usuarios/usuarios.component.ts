@@ -14,6 +14,7 @@ export class UsuariosComponent implements OnInit {
   usuarios: any[] = [];
   usuarioSeleccionado: any = null;
   user = { email: '', username: '', password: '' };
+  userLogin = { email: '', password: '' };
 
   constructor(private usuariosService: UsuariosService) {}
 
@@ -42,6 +43,19 @@ export class UsuariosComponent implements OnInit {
       },
       error => {
         console.error('Error en el registro:', error);
+      }
+    );
+  }
+
+  loginUser() {
+    this.usuariosService.login(this.userLogin).subscribe(
+      response => {
+        console.log(response.message);
+        // Opcional: resetear el formulario
+        this.userLogin = { email: '', password: '' };
+      },
+      error => {
+        console.error('Error en el inicio de sesión:', error);
       }
     );
   }
