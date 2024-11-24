@@ -17,14 +17,17 @@ export class AppComponent implements OnInit {
   constructor(private apiService: ApiService) {}
 
   ngOnInit() {
-    this.apiService.getHelloWorld().subscribe(
-      data => {
+    this.apiService.getHelloWorld().subscribe({
+      next: (data) => {
         this.response = data;
         console.log('Respuesta de la API:', this.response);
       },
-      error => {
+      error: (error) => {
         console.error('Error al obtener datos:', error);
-      }
-    );
+        if (error.error instanceof ProgressEvent) {
+          console.error('Parece que la respuesta no es un JSON válido o el servidor no está disponible.');
+        }
+      },
+    });    
   }
 }

@@ -1,17 +1,26 @@
 <form (ngSubmit)="registerUser()">
   <label>Email:</label>
   <input type="email" [(ngModel)]="user.email" name="email" required>
-  <label>Nombre de usuario:</label>
-  <input type="text" [(ngModel)]="user.username" name="username" required>
+  
+  <label>Nombre:</label>
+  <input type="text" [(ngModel)]="user.nombre" name="nombre" required>
+  
+  <label>Apellidos:</label>
+  <input type="text" [(ngModel)]="user.apellidos" name="apellidos" required>
+  
   <label>Contraseña:</label>
   <input type="password" [(ngModel)]="user.password" name="password" required>
+  
   <button type="submit">Registrarse</button>
 </form>
 
 <form (ngSubmit)="loginUser()">
   <label>Email:</label>
   <input type="email" [(ngModel)]="userLogin.email" name="loginEmail" required>
+  
   <label>Contraseña:</label>
   <input type="password" [(ngModel)]="userLogin.password" name="loginPassword" required>
+  
   <button type="submit">Iniciar Sesión</button>
 </form>
+

@@ -11,6 +11,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   getHelloWorld(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/`);
+    return this.http.get(`${this.apiUrl}/`, { responseType: 'json' }); // Asegúrate de que responseType sea 'json'
   }
+  
 }

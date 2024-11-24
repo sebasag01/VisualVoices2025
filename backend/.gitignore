@@ -1,5 +1,7 @@
-# Ignora la carpeta node_modules
-/node_modules
+# Ignorar todas las carpetas node_modules
+node_modules/
 
-# Ignora el archivo .env
+# Otras carpetas o archivos que podrías querer ignorar
+dist/
 .env
+*.log

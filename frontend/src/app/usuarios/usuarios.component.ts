@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms'; // Importa FormsModule
 export class UsuariosComponent implements OnInit {
   usuarios: any[] = [];
   usuarioSeleccionado: any = null;
-  user = { email: '', username: '', password: '' };
+  user = { email: '', nombre: '', apellidos: '', password: '' };
   userLogin = { email: '', password: '' };
 
   constructor(private usuariosService: UsuariosService) {}
@@ -38,27 +38,34 @@ export class UsuariosComponent implements OnInit {
     this.usuariosService.register(this.user).subscribe(
       response => {
         console.log(response.message);
-        // Opcional: resetear el formulario
-        this.user = { email: '', username: '', password: '' };
+        // Reiniciar el formulario con el objeto correcto
+        this.user = { email: '', nombre: '', apellidos: '', password: '' };
       },
       error => {
         console.error('Error en el registro:', error);
       }
     );
   }
+  
 
   loginUser() {
-    this.usuariosService.login(this.userLogin).subscribe(
-      response => {
-        console.log(response.message);
-        // Opcional: resetear el formulario
+    this.usuariosService.login(this.userLogin).subscribe({
+      next: (response) => {
+        console.log('Login exitoso:', response);
+        // Guardar el token en localStorage
+        localStorage.setItem('token', response.token);
+        alert('Inicio de sesión exitoso');
+        // Limpiar el formulario
         this.userLogin = { email: '', password: '' };
       },
-      error => {
+      error: (error) => {
         console.error('Error en el inicio de sesión:', error);
+        alert('Error en el inicio de sesión. Revisa tus credenciales.');
       }
-    );
+    });
   }
+  
+  
 
   eliminarUsuario(id: string) {
     this.usuariosService.deleteUsuario(id).subscribe(() => {
