@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from './services/api.service';
 import { CommonModule } from '@angular/common'; // Importa CommonModule para tener acceso a directivas como *ngIf y *ngFor
 import { UsuariosComponent } from './usuarios/usuarios.component'; // Importar UsuariosComponent
+import { RouterModule } from '@angular/router'; // Importar RouterModule para router-outlet
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   standalone: true,
-  imports: [CommonModule,UsuariosComponent]
+  imports: [CommonModule,UsuariosComponent,RouterModule]
 })
 export class AppComponent implements OnInit {
   title = 'frontend';

@@ -3,7 +3,7 @@ import { LoginComponent } from './login/login.component';
 import { RegistroComponent } from './registro/registro.component';
 
 export const routes: Routes = [
-  { path: '', component: LoginComponent }, // Ruta raíz que carga LoginComponent
-  { path: 'registro', component: RegistroComponent } // Ruta del registro
+  { path: '', redirectTo: 'login', pathMatch: 'full' }, // Redirige a login por defecto
+  { path: 'login', component: LoginComponent },
+  { path: 'registro', component: RegistroComponent },
 ];
-
