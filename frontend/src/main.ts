@@ -8,3 +8,7 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(HttpClientModule) // Asegúrate de que HttpClientModule esté disponible
   ]
 }).catch(err => console.error(err));
+bootstrapApplication(AppComponent, appConfig)
+  .catch((err) => console.error(err));
+
+  
