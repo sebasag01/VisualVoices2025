@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UsuariosService {
-  private apiUrl = 'http://localhost:3000/api/usuarios'; // URL base para usuarios
+  private apiUrl = 'https://visualvoices.ovh/api/usuarios'; // URL base para usuarios
 
   constructor(private http: HttpClient) {}
 
@@ -27,7 +27,7 @@ export class UsuariosService {
 
   // Iniciar sesión de usuario
   login(user: any): Observable<any> {
-    return this.http.post('http://localhost:3000/api/login', user); // URL correcta
+        return this.http.post('https://visualvoices.ovh/api/login', user); // Cambié localhost por la URL pública
   }
   
   
