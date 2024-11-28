@@ -7,9 +7,9 @@
 </head>
 <body>
     <!-- Header con logo y botones -->
-    <header class="header">
+    <header class="header"> 
         <div class="logo-container">
-            <img src="bombillita.png" alt="Logo de GraphicCare" class="logo">
+            <img src="assets/bombillita.png" alt="Logo de GraphicCare" class="logo">
         </div>
         <div class="buttons">
             <button class="btn register">REGÍSTRATE</button>
@@ -19,15 +19,28 @@
 
     <!-- Contenido principal -->
     <main class="main-container">
-      <div class="text-content">
-          <h1>Visual Voices: La lengua de signos al alcance de todos</h1>
-          <p>Aprende la lengua de signos, sigue tu progreso, descubre nuevo vocabulario de manera interactiva y reta tus habilidades.</p>
-      </div>
-  
-      <div class="graphic">
-          <img src="image.png" alt="Ilustración de apretón de manos" class="imagen">
-      </div>
+    <div class="container_arriba">
+        <div class="text-content">
+            <h1>Visual Voices: La lengua de signos al alcance de todos</h1>
+            <p>Aprende la lengua de signos, sigue tu progreso, descubre nuevo vocabulario de manera interactiva y reta tus habilidades.</p>
+        </div>
+    
+        <div class="graphic">
+            <img src="assets/image.png" alt="Ilustración de apretón de manos" class="imagen">
+        </div>
+    </div>
 
+    <div class="container_abajo">
+        <!-- Segunda sección: Registro -->
+        <div class="landing-register">
+        <app-registro></app-registro>
+    </div>
+  
+  <!-- Login oculto -->
+  <div class="landing-login" *ngIf="mostrarLogin">
+    <app-login></app-login>
+  </div>
+    </div>
       <!-- Formulario de inicio de sesión
 <section id="login-section" class="login-form">
   <h2>Inicia Sesión</h2>

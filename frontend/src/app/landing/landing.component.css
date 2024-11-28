@@ -1,31 +1,31 @@
 /* Importar la fuente personalizada desde la carpeta public */
 @font-face {
     font-family: 'ChauPhilomene';
-    src: url('/chauphilomene.ttf') format('truetype'); /* Ruta desde public */
+    src: url('src/assets/fonts/chauphilomene.ttf') format('truetype'); /* Ruta desde public */
     font-weight: normal;
     font-style: normal;
   }
   
   @font-face {
     font-family: 'Lexend';
-    src: url('/lexend.ttf') format('truetype'); /* Ruta desde public */
+    src: url('src/assets/fonts/lexend.ttf') format('truetype'); /* Ruta desde public */
     font-weight: normal;
     font-style: normal;
   }
   
   html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
-    height: 100%;
     display: flex;
     flex-direction: column;
-  }
+}
   
   
   /* Estilo general del body */
   body {
     background-color: #F2C464;
-    font-family: 'Lexend', sans-serif;
+    font-family: 'Lexend', sans-serif !important;
   }
   
   /* Estilo para el header */
@@ -109,18 +109,45 @@
   /* Contenedor principal */
   .main-container {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 40px;
-    gap: 20px; /* Espacio entre el texto y la imagen */
+    flex-direction: column; /* Apila los elementos verticalmente */
+    align-items: center; /* Centra el contenido horizontalmente */
+    justify-content: center; /* Centra verticalmente si es necesario */
+    gap: 20px; /* Espacio entre las secciones */
+    
+    flex: 1;
   }
   
+  /* Contenedor arriba */
+.container_arriba {
+  display: flex;
+    flex-direction: row; /* Organiza los elementos en una fila */
+    justify-content: space-between; /* Espacia los elementos horizontalmente */
+    align-items: center; /* Centra verticalmente los elementos */
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 20px; /* Espaciado entre el texto y la imagen */
+    
+}
+
+/* Contenedor abajo */
+.container_abajo {
+  display: flex;
+    flex-direction: column;
+    width: 100%; /* Ocupa todo el ancho de la pantalla */
+    max-width: 100%; /* No permite que exceda el ancho de la pantalla */
+    min-height: 100vh; /* Ocupa al menos la altura de la pantalla */
+    padding: 20px;
+   
+}
   /* Contenedor de texto */
   .text-content {
     flex: 1; /* Toma el espacio disponible en la parte izquierda */
     flex-direction: column; /* Mantiene los elementos (título y párrafo) en columna */
     justify-content: center; /* Centra el contenido verticalmente */
     text-align: center; /* Centra el texto horizontalmente */
+    padding-left: 30px;
   }
   
   .text-content h1 {
@@ -200,7 +227,7 @@
     text-align: center;
     padding: 20px;
     width: 100%;
-    position: absolute;
+    position: relative;
     bottom: 0;
     left: 0;
     font-family: 'ChauPhilomene'
