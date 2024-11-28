@@ -17,21 +17,10 @@ body {
     align-items: center;
     min-height: 100vh;
     background-color: #f5f5dc;
+    padding-bottom:50px ;
 }
 
-.header {
-    background-color: #f4b400; /* Fondo amarillo fuerte */
-    padding: 20px 0;
-    text-align: center;
-    width: 100%;
-}
 
-.header-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #000;
-    text-transform: uppercase;
-}
 
 .content {
     display: flex;

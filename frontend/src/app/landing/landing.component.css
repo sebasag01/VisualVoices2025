@@ -113,7 +113,7 @@
     align-items: center; /* Centra el contenido horizontalmente */
     justify-content: center; /* Centra verticalmente si es necesario */
     gap: 20px; /* Espacio entre las secciones */
-    
+    background-color: #F2C464;
     flex: 1;
   }
   
@@ -138,7 +138,6 @@
     width: 100%; /* Ocupa todo el ancho de la pantalla */
     max-width: 100%; /* No permite que exceda el ancho de la pantalla */
     min-height: 100vh; /* Ocupa al menos la altura de la pantalla */
-    padding: 20px;
    
 }
   /* Contenedor de texto */
