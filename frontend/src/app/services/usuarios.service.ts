@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment'; // Importar el entorno
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuariosService {
-  private apiUrl = 'https://visualvoices.ovh/api/usuarios'; // URL base para usuarios
+  private apiUrl = environment.apiUrl; // Utilizar la URL desde el entorno
 
   constructor(private http: HttpClient) {}
 
@@ -22,12 +23,12 @@ export class UsuariosService {
 
   // Registro de un nuevo usuario
   register(user: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, user);
+    return this.http.post(`${this.apiUrl}/usuarios`, user);
   }
 
   // Iniciar sesión de usuario
   login(user: any): Observable<any> {
-        return this.http.post('https://visualvoices.ovh/api/login', user); // Cambié localhost por la URL pública
+    return this.http.post(`${this.apiUrl}/login`, user); // Utilizar la URL del entorno
   }
   
   
