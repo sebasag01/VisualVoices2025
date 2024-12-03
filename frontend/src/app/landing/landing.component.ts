@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { LoginComponent } from '../login/login.component';
 import { RegistroComponent } from '../registro/registro.component';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css',
+  encapsulation: ViewEncapsulation.None,  // Desactiva el encapsulamiento
   imports: [CommonModule, LoginComponent, RegistroComponent]
 })
 export class LandingComponent {

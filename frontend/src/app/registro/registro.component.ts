@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { UsuariosService } from '../services/usuarios.service';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router'; // Añadir la importación de RouterModule
+import { RouterModule } from '@angular/router'; 
+import {EventEmitter, Output } from '@angular/core';
+
 
 @Component({
   selector: 'app-registro',
@@ -11,7 +13,9 @@ import { RouterModule } from '@angular/router'; // Añadir la importación de Ro
   styleUrls: ['./registro.component.css'],
 })
 export class RegistroComponent {
-  user = { email: '', password: '', nombre: '', apellidos: '' }; // Modelo para el formulario de registro
+  user = { email: '', password: '', nombre: '', apellidos: '' };
+  @Output() toggleLogin = new EventEmitter<void>();  
+
 
   constructor(private usuariosService: UsuariosService) {}
 

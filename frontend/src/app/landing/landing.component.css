@@ -1,237 +1,323 @@
 /* Importar la fuente personalizada desde la carpeta public */
 @font-face {
-    font-family: 'ChauPhilomene';
-    src: url('src/assets/fonts/chauphilomene.ttf') format('truetype'); /* Ruta desde public */
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  @font-face {
-    font-family: 'Lexend';
-    src: url('src/assets/fonts/lexend.ttf') format('truetype'); /* Ruta desde public */
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-}
-  
-  
-  /* Estilo general del body */
-  body {
-    background-color: #F2C464;
-    font-family: 'Lexend', sans-serif !important;
-  }
-  
-  /* Estilo para el header */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0px 40px; /* Aumentar el espacio alrededor del header */
-    background-color: #F2C464;
-    box-sizing: border-box;
-  }
-  
-  /* Contenedor del logo */
-  .logo-container {
-    display: flex;
-    align-items: center; /* Asegura que el logo esté centrado verticalmente */
-    justify-content: flex-start; /* Mantén el logo alineado a la izquierda */
-    position: relative; /* Permite mover el logo más a la izquierda */
-    left: -60px; /* Ajusta este valor para acercarlo más a la esquina */
-    top: 0; /* Mantén el logo al nivel superior */
-  }
-  
-  /* Estilo del logo */
-  .logo {
-    width: 150px; /* Ajusta el tamaño del logo según sea necesario */
-    height: auto;
-    cursor: pointer;
-  }
-  
-  /* Estilo del logo */
-  .imagen {
-    width: 400px; /* Ajusta el tamaño del logo según sea necesario */
-    height: auto;
-    cursor: pointer;
-  }
-  
-  
-  
-  /* Contenedor de los botones */
-  .buttons {
-    display: flex;
-    align-items: center;
-    gap: 15px; /* Separación entre los botones */
-  }
-  
-  /* Estilo general de los botones */
-  .buttons .btn {
-    padding: 12px 20px;
-    font-size: 25px;
-    font-family: 'ChauPhilomene', sans-serif; /* Usar la fuente personalizada */
-    font-weight: bold;
-    border: 3px solid black; /* Bordes más gruesos */
-    border-radius: 35px; /* Bordes redondeados */
-    cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-    margin-top: 20px;
-  }
-  
-  /* BOTÓN REGISTRO */
-  .btn.register {
-    background-color: transparent;
-    color: black;
-  }
-  .btn.register:hover {
-    transform: scale(1.1); /* Animación al pasar el mouse */
-  }
-  
-  /* BOTÓN LOGIN */
-  
-  .btn.login {
-    background-color: #41B8D5;
-    color: black;
-  }
-  
-  .btn.login:hover {
-    transform: scale(1.1);
-    background-color: #2AAFCF; 
-  }
-  
-  /* Contenedor principal */
-  .main-container {
-    display: flex;
-    flex-direction: column; /* Apila los elementos verticalmente */
-    align-items: center; /* Centra el contenido horizontalmente */
-    justify-content: center; /* Centra verticalmente si es necesario */
-    gap: 20px; /* Espacio entre las secciones */
-    background-color: #F2C464;
-    flex: 1;
-  }
-  
-  /* Contenedor arriba */
-.container_arriba {
-  display: flex;
-    flex-direction: row; /* Organiza los elementos en una fila */
-    justify-content: space-between; /* Espacia los elementos horizontalmente */
-    align-items: center; /* Centra verticalmente los elementos */
-    width: 100%;
-    max-width: 100%;
-    min-height: 100vh;
-    padding: 20px;
-    gap: 20px; /* Espaciado entre el texto y la imagen */
-    
+  font-family: "ChauPhilomene";
+  src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 
-/* Contenedor abajo */
+@font-face {
+  font-family: "Lexend";
+  src: url("../../assets/fonts/lexend.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+} 
+
+/* ---------------------------------------------------------------------------
+                               HEADER
+--------------------------------------------------------------------------- */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0px 40px; 
+  background-color: #f2c464;
+  box-sizing: border-box;
+  position: relative;
+  top: 0;
+  left: 0;
+  
+}
+
+.logo-container {
+  display: flex;
+  align-items: center; 
+  justify-content: flex-start; 
+  position: relative; 
+  left: -50px; 
+  top: 0; 
+}
+
+.logo {
+  width: 150px; 
+  height: auto;
+  cursor: pointer;
+} 
+
+/* ---------------------------------------------------------------------------
+                            FIN DEL HEADER
+--------------------------------------------------------------------------- */
+
+
+/* ---------------------------------------------------------------------------
+                            BOTONES
+--------------------------------------------------------------------------- */
+
+/* Contenedor de los botones */
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 15px; 
+}
+
+.buttons .btn {
+  padding: 12px 20px;
+  font-size: 25px;
+  font-family: "ChauPhilomene", sans-serif; 
+  font-weight: bold;
+  border: 3px solid black; 
+  border-radius: 35px; 
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  margin-top: 20px;
+}
+
+.btn.register {
+  background-color:  #41b8d5;
+  color: black;
+}
+.btn.register:hover {
+  transform: scale(1.1); 
+  background-color: #2aafcf;
+}
+
+.btn.login {
+  background-color: #41b8d5;
+  color: black;
+}
+
+.btn.login:hover {
+  transform: scale(1.1);
+  background-color: #2aafcf;
+} 
+
+
+/* ---------------------------------------------------------------------------
+                        FIN DE LOS BOTONES
+--------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------
+                       LANDING PRINCIPAL
+--------------------------------------------------------------------------- */
+
+
+.text-content {
+  flex: 1; 
+  flex-direction: column; 
+  justify-content: center; 
+  text-align: center; 
+  padding-left: 30px;
+}
+
+.text-content h1 {
+  font-size: 2.5rem; 
+  margin-bottom: 20px;
+}
+
+.text-content p {
+  font-size: 1.5rem; 
+  line-height: 1.8; 
+}
+
+.main-frase{
+  font-family: "Lexend", sans-serif;
+  font-size: 2rem;
+  color: black;
+}
+
+.frase-2{
+  font-family: "Lexend", sans-serif;
+  font-size: 2rem;
+  color: black;
+}
+
+.imagen {
+  width: 400px; 
+  max-width: 100%;
+  height: auto;
+  cursor: pointer;
+  display: block; 
+
+} 
+
+/* ---------------------------------------------------------------------------
+                    FIN DEL LANDING PRINCIPAL
+--------------------------------------------------------------------------- */
+
+
+
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background-color: #f2c464;
+  font-family: "Lexend", sans-serif !important;
+}
+.lol{
+  background-color: #f2c464 !important;
+  height: 100vh;
+
+
+
+} 
+
+ body, html {
+  height: 100%;
+  background-color:  #f2c464; 
+  overflow-x: hidden
+}
+
+
+.main-container {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 20px; 
+  flex: 1;
+  box-sizing: border-box;
+  flex-grow: 1; 
+
+}
+
+.container_arriba {
+  display: flex;
+  flex-direction: row; 
+  justify-content: space-between; 
+  align-items: center; 
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+  gap: 20px; 
+  margin-top: -70px; 
+
+
+}
+
+
 .container_abajo {
   display: flex;
-    flex-direction: column;
-    width: 100%; /* Ocupa todo el ancho de la pantalla */
-    max-width: 100%; /* No permite que exceda el ancho de la pantalla */
-    min-height: 100vh; /* Ocupa al menos la altura de la pantalla */
-   
+  flex-direction: column;
+  width: 100%; 
+  max-width: 100%; 
+  min-height: 100vh; 
+
 }
-  /* Contenedor de texto */
-  .text-content {
-    flex: 1; /* Toma el espacio disponible en la parte izquierda */
-    flex-direction: column; /* Mantiene los elementos (título y párrafo) en columna */
-    justify-content: center; /* Centra el contenido verticalmente */
-    text-align: center; /* Centra el texto horizontalmente */
-    padding-left: 30px;
-  }
-  
-  .text-content h1 {
-    font-size: 2.5rem; /* Tamaño del título más grande */
-    margin-bottom: 20px;
-  }
-  
-  .text-content p {
-    font-size: 1.5rem; /* Tamaño del texto descriptivo más grande */
-    line-height: 1.8; /* Mejora la legibilidad */
-  }
-  
-  /* Contenedor de la imagen */
-  .graphic {
-    flex: 1; /* Toma el espacio disponible en la parte derecha */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .graphic .imagen {
-    max-width: 100%;
-    height: auto;
-  }
-  
-  /* Sección del formulario */
-  .login-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #F5F5DC;
-    padding: 40px;
-    margin-top: 20px;
-  }
-  
-  .login-form h2 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
-  
-  .login-form form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 300px;
-  }
-  
-  .login-form input {
-    padding: 10px;
-    font-size: 1rem;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .login-form button {
-    padding: 12px;
-    font-size: 1.2rem;
-    color: white;
-    background-color: #41B8D5;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .login-form button:hover {
-    background-color: #2AAFCF;
-  }
-  
-  
-  
-  /* Pie de página */
-  .footer {
-    background-color: #F5F5DC; /* Color de fondo del footer */
-    color: black;
-    text-align: center;
-    padding: 20px;
-    width: 100%;
-    position: relative;
-    bottom: 0;
-    left: 0;
-    font-family: 'ChauPhilomene'
-  }
-  
-  
-  
-  
+
+
+.graphic {
+  flex: 1; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.graphic .imagen {
+  max-width: 100%;
+  height: auto;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  margin-top: 20px;
+  font-family: "Lexend", sans-serif;
+
+}
+
+.login-form h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.login-form p {
+  font-family: "Lexend", sans-serif;
+}
+
+.login-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 300px;
+}
+
+.login-form input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-form button {
+  padding: 12px;
+  font-size: 1.2rem;
+  color: white;
+  background-color: #41b8d5;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-form button:hover {
+  background-color: #2aafcf;
+} 
+
+.landing-register{
+  font-family: "Lexend", sans-serif;
+}
+
+
+
+
+/* ---------------------------------------------------------------------------
+                              FOOTER
+--------------------------------------------------------------------------- */
+
+ .footer {
+  background-color:  #f2c464; 
+  color: black;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  /* position: fixed; */
+  bottom: 0;
+  left: 0;
+  font-family: "ChauPhilomene" !important;
+  margin: 0;
+  padding: 20px 0;
+
+}
+
+footer p {
+  font-family: "ChauPhilomene", sans-serif;
+}
+
+p {
+  font-family: "Lexend", sans-serif;
+} 
+
+/* ---------------------------------------------------------------------------
+                            FIN DEL FOOTER
+--------------------------------------------------------------------------- */
+
+

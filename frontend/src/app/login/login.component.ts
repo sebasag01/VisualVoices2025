@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { UsuariosService } from '../services/usuarios.service';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router'; // Añadir la importación de RouterModule
+import { RouterModule } from '@angular/router';
+
 
 
 
@@ -13,7 +14,10 @@ import { RouterModule } from '@angular/router'; // Añadir la importación de Ro
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  userLogin = { email: '', password: '' }; // Modelo para el formulario de login
+  userLogin = { email: '', password: '' }; 
+  @Output() toggleRegister = new EventEmitter<void>();  
+
+
 
   constructor(private usuariosService: UsuariosService) {}
 
@@ -21,7 +25,7 @@ export class LoginComponent {
     this.usuariosService.login(this.userLogin).subscribe({
       next: (response) => {
         console.log('Login exitoso:', response);
-        localStorage.setItem('token', response.token); // Guardar el token en localStorage
+        localStorage.setItem('token', response.token); 
         alert('Inicio de sesión exitoso');
       },
       error: (error) => {

@@ -1,25 +1,39 @@
 <div class="main-container">
-    
-    <div class="content">
-      <div class="image-container">
-        <img src="assets/foto-ejemplo.png" alt="Imagen" class="side-image" />
-      </div>
-      <div class="login-container">
-        <form class="login-form" (ngSubmit)="loginUser()">
-          <h2 class="registro-title">Bienvenido de nuevo</h2>
-          <input type="email" placeholder="Correo electrónico" [(ngModel)]="userLogin.email" name="email" class="input-field" required />
-          <input type="password" placeholder="Contraseña" [(ngModel)]="userLogin.password" name="password" class="input-field" required />
-          <button type="submit" class="btn">Iniciar sesión</button>
-          <div class="divider">
-            <span class="divider-text">O</span>
-          </div>
-          <button type="button" class="btn google-login">Inicia sesión con Google</button>
-          <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
-          <p class="register">
-            ¿No tienes cuenta? <a routerLink="/registro">Regístrate</a>
-          </p>          
-        </form>
-      </div>
+  <div class="content">
+    <div class="image-container">
+      <img src="assets/foto-ejemplo.png" alt="Imagen" class="side-image" />
+    </div>
+    <div class="login-container">
+      <form class="login-form" (ngSubmit)="loginUser()">
+        <h2 class="registro-title">Hola de nuevo!</h2>
+        <input
+          type="email"
+          placeholder="Correo electrónico"
+          [(ngModel)]="userLogin.email"
+          name="email"
+          class="input-field"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          [(ngModel)]="userLogin.password"
+          name="password"
+          class="input-field"
+          required
+        />
+        <button type="submit" class="btn">Iniciar sesión</button>
+        <div class="divider">
+          <span class="divider-text">O</span>
+        </div>
+        <button type="button" class="btn google-login">
+          Inicia sesión con Google
+        </button>
+        <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+        <p class="register">¿No tienes cuenta?
+          <a href="javascript:void(0);" (click)="toggleRegister.emit()">Regístrate</a>
+        </p>
+      </form>
     </div>
   </div>
-  
+</div>

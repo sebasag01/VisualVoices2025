@@ -1,3 +1,6 @@
+
+
+
 <header class="header">
   <div class="logo-container">
       <img src="assets/bombillita.png" alt="Logo de GraphicCare" class="logo">
@@ -8,30 +11,33 @@
   </div>
 </header>
 
+
+
 <main class="main-container">
   <div class="container_arriba">
       <div class="text-content">
-          <h1>Visual Voices: La lengua de signos al alcance de todos</h1>
-          <p>Aprende la lengua de signos, sigue tu progreso, descubre nuevo vocabulario de manera interactiva y reta tus habilidades.</p>
+          <h1 class="main-frase">Visual Voices: La lengua de signos al alcance de todos</h1>
+          <p class="frase-2">Aprende la lengua de signos, sigue tu progreso, descubre nuevo vocabulario de manera interactiva y reta tus habilidades.</p>
       </div>
 
       <div class="graphic">
           <img src="assets/image.png" alt="Ilustración de apretón de manos" class="imagen">
       </div>
-  </div>
+  </div> 
 
   <div class="container_abajo" id="container-abajo">
-      <!-- Mostrar app-registro si está seleccionado -->
       <div *ngIf="isRegisterVisible" class="landing-register" id="register-section" #registerSection>
-          <app-registro></app-registro>
+          <app-registro (toggleLogin)="showLogin()"></app-registro>
       </div>
 
-      <!-- Mostrar app-login si está seleccionado -->
       <div *ngIf="!isRegisterVisible" class="landing-login" id="login-section" #loginSection>
-          <app-login></app-login>
+          <app-login (toggleRegister)="showRegister()"></app-login>
       </div>
-  </div>
+  </div> 
+
 </main>
+
+
 
 
 <footer class="footer">
