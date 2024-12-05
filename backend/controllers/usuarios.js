@@ -59,42 +59,52 @@ const obtenerUsuarios = async(req, res) => {
 
 }
 
-const crearUsuario = async(req, res = response) => {
-    
+const crearUsuario = async (req, res = response) => {
     const { email, password, rol } = req.body;
 
-    try{
-
-        const existeEmail = await Usuario.findOne({ email: email });
-        
+    try {
+        // Verifica si el email ya está registrado
+        const existeEmail = await Usuario.findOne({ email });
         if (existeEmail) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Email ya existe'
+                msg: 'El correo ya está registrado',
             });
         }
 
-        const salt = bcrypt.genSaltSync(); // generamos un salt, una cadena aleatoria
-        const cpassword = bcrypt.hashSync(password, salt); // y aquí ciframos la contraseña
+        // Validar si el rol es ADMIN y si el usuario autenticado tiene permisos
+        if (rol === 'ROL_ADMIN' && req.rol !== 'ROL_ADMIN') {
+            return res.status(403).json({
+                ok: false,
+                msg: 'No tiene permisos para asignar el rol de administrador',
+            });
+        }
 
-        const usuario = new Usuario(req.body);
-        usuario.password = cpassword;
-        
+        // Cifrar la contraseña
+        const salt = bcrypt.genSaltSync();
+        const usuario = new Usuario({
+            ...req.body,
+            password: bcrypt.hashSync(password, salt),
+        });
+
+        // Guardar el usuario en la base de datos
         await usuario.save();
-        res.json({
-           ok: true,
-           msg: 'crearUsuarios',
-           usuario
-         });
 
-    } catch (error){
-        console.log(error);
-        return res.status(400).json({
+        res.status(201).json({
+            ok: true,
+            usuario,
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
             ok: false,
-            msg: 'Error creando usuario'
+            msg: 'Error al crear el usuario',
         });
     }
-}   
+};
+
+   
 
 const actualizarUsuario = async(req, res = response) => {
     
@@ -169,4 +179,9 @@ const borrarUsuario = async(req, res = response) => {
     }
 }
 
-module.exports = { obtenerUsuarios, crearUsuario, actualizarUsuario, borrarUsuario }
+module.exports = {
+    obtenerUsuarios,
+    crearUsuario,
+    actualizarUsuario, 
+    borrarUsuario,
+};

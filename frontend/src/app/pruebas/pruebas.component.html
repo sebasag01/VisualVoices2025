@@ -1,0 +1,18 @@
+<div>
+    <h2>Categorías</h2>
+    <div *ngFor="let categoria of categorias">
+      <button (click)="mostrarPalabras(categoria)">
+        {{ categoria.nombre }}
+      </button>
+    </div>
+  
+    <h2>Palabras</h2>
+    <ul>
+      <li *ngFor="let palabra of palabras">
+        <button (click)="accionPalabra(palabra)">
+          {{ palabra.palabra }}
+        </button>
+      </li>
+    </ul>
+  </div>
+  

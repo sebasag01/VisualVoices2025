@@ -8,7 +8,7 @@ const login = async(req, res = response) => {
     const { email, password } = req.body;
 
     try {
-        const usuarioBD = await Usuario.findOne({ email }, ' password');
+        const usuarioBD = await Usuario.findOne({ email }, 'password rol');
         
         if (!usuarioBD) {
             return res.status(400).json({

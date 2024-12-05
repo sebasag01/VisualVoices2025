@@ -24,7 +24,7 @@ const UsuarioSchema = Schema({
     rol: {
         type: String,
         required: true,
-        default: 'ROL_ALUMNO'
+        default: 'ROL_USUARIO'
     },
 }, { collection: 'usuarios' });
 
