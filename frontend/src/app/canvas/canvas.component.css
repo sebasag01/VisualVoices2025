@@ -1,0 +1,9 @@
+.webgl
+{
+  background-color: #1e1e1e; /* Fondo gris oscuro */
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
