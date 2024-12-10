@@ -1,0 +1,22 @@
+.footer {
+    background-color: #f2c464;
+    color: black;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    font-family: "ChauPhilomene" !important;
+    margin: 0;
+    padding: 20px 0;
+    position: absolute;
+  }
+  
+  footer p {
+    font-family: "ChauPhilomene", sans-serif;
+  }
+  
+  p {
+    font-family: "Lexend", sans-serif;
+  }
+  

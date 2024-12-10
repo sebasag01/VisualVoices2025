@@ -1,0 +1,38 @@
+<div class="header">
+  <div class="cont1">
+    <div class="logo">
+      <img src="assets/bombillita.png" alt="Logo" />
+    </div>
+  
+    <div class="menu-buttons" *ngIf="!isMobile">
+      <button [class.active]="selectedMode === 'modo1'" (click)="selectMode('modo1')">Modo 1</button>
+      <button [class.active]="selectedMode === 'modo2'" (click)="selectMode('modo2')">Modo 2</button>
+      <button [class.active]="selectedMode === 'modo3'" (click)="selectMode('modo3')">Modo 3</button>
+    </div>
+  </div>
+    <div class="user-icon" *ngIf="!isMobile" (click)="toggleDropdown()">
+        <img src="assets/usu.png" alt="Usuario" />
+        <div class="dropdown" *ngIf="dropdownOpen">
+          <a (click)="navigateTo('perfil')">Mi Perfil</a>
+          <a (click)="navigateTo('ajustes')">Ajustes</a>
+          <a (click)="logout()">Cerrar Sesión</a>
+        </div>
+      </div>
+      
+  
+    <!-- Responsive Menu -->
+    <div class="hamburger-menu" *ngIf="isMobile" (click)="toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </div>
+  
+    <div class="mobile-menu" *ngIf="mobileMenuOpen">
+      <a (click)="selectMode('modo1')">Modo 1</a>
+      <a (click)="selectMode('modo2')">Modo 2</a>
+      <a (click)="selectMode('modo3')" >Modo 3</a>
+      <hr />
+      <a (click)="navigateTo('perfil')">Mi Perfil</a>
+      <a (click)="navigateTo('ajustes')">Ajustes</a>
+      <a (click)="logout()">Cerrar Sesión</a>
+    </div>
+  </div>
+  

@@ -1,1 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #F5F5DC;
+  }
+  /* Estilos para botones principales */
+.main-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: 2px solid black;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.main-button:hover {
+  background-color: #f0f0f0;
+}
+
+.main-button.active {
+  background-color: yellow;
+}
+
+/* Estilos para botones secundarios */
+.secondary-button {
+  padding: 10px;
+  font-size: 0.9rem;
+  border: 1px solid black;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.secondary-button:hover {
+  background-color: #e8e8e8;
+}
+
+.secondary-button:active {
+  background-color: #cccccc;
+}

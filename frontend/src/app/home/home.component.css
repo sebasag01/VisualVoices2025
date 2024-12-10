@@ -1,0 +1,91 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .instructions {
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .layout {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+  }
+  
+  .image-container {
+    flex: 1;
+  }
+  
+  .monigote {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  /* Estilos para el contenedor del recuadro amarillo */
+  .button-grid {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffeb99;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  /* Estilos para los botones principales */
+  .main-buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .main-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: 2px solid black;
+    background-color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .main-button.active {
+    background-color: yellow;
+  }
+  
+  /* Estilos para el contenedor de los botones secundarios */
+  .grid-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .grid-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+  }
+  
+  /* Botones secundarios */
+  .secondary-button {
+    padding: 10px;
+    font-size: 0.9rem;
+    border: 1px solid black;
+    background-color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .secondary-button:hover {
+    background-color: #e8e8e8;
+  }
+  
+  .secondary-button:active {
+    background-color: #cccccc;
+  }
+  
