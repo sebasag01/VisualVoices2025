@@ -8,7 +8,14 @@
         <img src="assets/foto-ejemplo.png" alt="Monigote" class="monigote" />
       </div>
       <div class="button-grid">
-       
+        <app-card
+          [word]="currentWord"
+          [explanation]="currentExplanation"
+          (wordClick)="handleWordClick()"
+          (repeatClick)="handleRepeatClick()"
+          (prevClick)="prevWord()"
+          (nextClick)="nextWord()"
+        ></app-card>
           
         
       </div>
