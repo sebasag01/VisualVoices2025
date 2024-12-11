@@ -21,25 +21,26 @@ const loader = new GLTFLoader();
 let currentPoseIndex = 0;
 let poses = [];
 let avatar;
-let onoff = true;
+//let onoff = true;
+let animationInProgress = false;
 
 const animacion = [
-    'models/lengua/lengua.gltf',
-    'models/lengua/lengua_1.gltf',
-    'models/lengua/lengua_2.gltf',
-    'models/lengua/lengua_3.gltf',
-    // 'models/lengua/lengua_4.gltf',
+    'models/hola/hola.gltf',
+    'models/hola/hola_1.gltf',
+    'models/hola/hola_2.gltf',
+    'models/hola/hola_3.gltf',
+    'models/hola/hola_4.gltf',
 ];
 
 function cargarPoses() {
     const promises = animacion.map((poseFile) => {
         return new Promise((resolve, reject) => {
-        loader.load(
-            poseFile,
-            (gltf) => resolve(gltf.scene),
-            undefined,
-            (error) => reject(error)
-        );
+            loader.load(
+                poseFile,
+                (gltf) => resolve(gltf.scene),
+                undefined,
+                (error) => reject(error)
+            );
         });
     });
 
@@ -48,29 +49,47 @@ function cargarPoses() {
         avatar = poses[0];
         scene.add(avatar);
         animate();
+        startPoseAnimation();
     });
 }
 
-function updatePose() {
-    if (avatar) scene.remove(avatar); 
-    avatar = poses[currentPoseIndex];
-    scene.add(avatar); 
-    currentPoseIndex = (currentPoseIndex + 1) % poses.length; 
-    // while(onoff){
-    //     setTimeout(() => {
+// function updatePose() {
+//     if (avatar) scene.remove(avatar); 
+//     avatar = poses[currentPoseIndex];
+//     scene.add(avatar); 
+//     currentPoseIndex = (currentPoseIndex + 1) % poses.length; 
+// }
 
-    //     }, 500);
-    // }
+function startPoseAnimation() {
+    if (animationInProgress) return;
+    animationInProgress = true;
+
+    const poseInterval = setInterval(() => {
+        if (avatar) scene.remove(avatar);
+
+        //cambiamos de pose
+        avatar = poses[currentPoseIndex];
+        scene.add(avatar);
+
+        currentPoseIndex++; 
+
+        if (currentPoseIndex >= poses.length) {
+            clearInterval(poseInterval); 
+            animationInProgress = false;
+            console.log("Fin animacion.");
+        }
+    }, 2000);//2seg
 }
+
 
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
     renderer.render(scene, camera);
 
-    setTimeout(() => {
-        updatePose();
-    }, 1000); //1seg
+    // setTimeout(() => {
+    //     updatePose();
+    // }, 1000); //1seg
 }
 
 cargarPoses();
