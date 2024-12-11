@@ -53,8 +53,8 @@ export class CanvasComponent implements AfterViewInit {
       height: window.innerHeight,
     };
     this.camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100);
-    this.camera.position.set(0, -10, 15);
-    this.camera.lookAt(10, 0, 0);
+    this.camera.position.set(0, 1, 5);
+    this.camera.lookAt(0, 1, 0);
     this.scene.add(this.camera);
   }
 
@@ -128,6 +128,18 @@ export class CanvasComponent implements AfterViewInit {
   private addControls(): void {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
+    this.controls.enablePan = false;
+    this.controls.enableZoom = false;
+
+    // Control del giro en los ejes X y Z
+    this.controls.minPolarAngle = Math.PI / 2; // Límite inferior (90 grados)
+    this.controls.maxPolarAngle = Math.PI / 2; // Límite superior (90 grados)
+
+    // Limitamos los ejes a izquierda y derecha
+    this.controls.minAzimuthAngle = -Math.PI / 6; // Límite izquierdo (30º en radianes)
+    this.controls.maxAzimuthAngle = Math.PI / 6; // Límite derecho (30º en radianes)
+
+    this.controls.update();
   }
 
   private animate(): void {
