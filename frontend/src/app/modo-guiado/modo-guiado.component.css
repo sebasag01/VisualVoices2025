@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'lexend';
+  src: url('/assets/fonts/lexend.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .container {
     display: flex;
     flex-direction: column;
@@ -8,21 +15,24 @@
     font-size: 1.2rem;
     text-align: center;
     margin-bottom: 20px;
+    font-family: 'lexend';
+    margin: 20px;
   }
   
   .layout {
     display: flex;
     justify-content: space-between;
-    width: 80%;
+    width: 100%;
   }
   
   .image-container {
     flex: 1;
+    
   }
   
   .monigote {
     width: 100%;
-    max-width: 200px;
+    max-width: 300px;
   }
   
   /* Estilos para el contenedor del recuadro amarillo */
@@ -60,10 +70,11 @@
   /* Estilos para el contenedor de los botones secundarios */
   .grid-container {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;    /* Centra verticalmente */
     width: 100%;
-  }
-  
+   
+}
   .grid-buttons {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

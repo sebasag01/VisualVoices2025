@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -14,6 +15,15 @@ export class HeaderComponent {
   mobileMenuOpen: boolean = false;
   isMobile: boolean = window.innerWidth <= 768;
 
+  constructor(private router: Router) {
+    // Escuchar cambios en la navegación
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.updateSelectedModeFromUrl(event.urlAfterRedirects);
+      }
+    });
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.isMobile = window.innerWidth <= 768;
@@ -23,9 +33,7 @@ export class HeaderComponent {
   }
 
   selectMode(mode: string) {
-    this.selectedMode = mode;
-    this.closeMenus();
-    console.log(`Navigating to ${mode}`);
+    this.router.navigate([mode === 'modo1' ? '/home' : '/guiado']);
   }
 
   toggleDropdown() {
@@ -49,5 +57,15 @@ export class HeaderComponent {
   logout() {
     this.closeMenus();
     console.log('Logging out...');
+  }
+
+  private updateSelectedModeFromUrl(url: string) {
+    if (url.includes('/home')) {
+      this.selectedMode = 'modo1';
+    } else if (url.includes('/guiado')) {
+      this.selectedMode = 'modo2';
+    } else {
+      this.selectedMode = ''; // Opcional: manejar rutas no definidas
+    }
   }
 }

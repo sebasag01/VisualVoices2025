@@ -1,15 +1,22 @@
+@font-face {
+  font-family: 'Chauphilomene';
+  src: url('/assets/fonts/chauphilomene.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
+
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #f2c464;
-  }
-  .cont1{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f2c464;
+  font-family: 'Chauphilomene', sans-serif; /* Usa la fuente personalizada */
+}
+  
   .logo img {
     height: 80px;
   }
@@ -25,10 +32,11 @@
     border: none;
     border-radius: 20px; /* Bordes redondeados */
     font-size: 20px;
-    font-weight: bold;
+    
     padding: 8px 20px; /* Espaciado interno */
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
+    font-family: 'Chauphilomene', sans-serif; /* Usa la fuente personalizada */
   }
   
   .menu-buttons button.active {
