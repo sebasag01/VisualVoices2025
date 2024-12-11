@@ -1,3 +1,7 @@
+/*
+    Ruta base: /api/categorias
+*/
+
 const { Router } = require('express');
 const {
     obtenerCategorias,

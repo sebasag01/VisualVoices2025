@@ -9,14 +9,11 @@ const {validarCampos} = require('../middleware/validar-campos');
 const {validarJWT} = require('../middleware/validar-jwt');
 const { tieneRol } = require('../middleware/validar-rol');
 
-
-
 const router = Router();
 
 router.get('/', obtenerUsuarios);
 
 router.post('/', [
-    validarJWT,
     check('nombre', 'El argumento nombre es obligatorio').not().isEmpty(),
     check('apellidos', 'El argumento apellidos es obligatorio').not().isEmpty(),
     check('email', 'El argumento email es obligatorio').not().isEmpty(),

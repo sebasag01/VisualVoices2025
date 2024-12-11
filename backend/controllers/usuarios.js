@@ -60,6 +60,7 @@ const obtenerUsuarios = async(req, res) => {
 }
 
 const crearUsuario = async (req, res = response) => {
+    console.log(req.body); // Log para verificar los datos recibidos
     const { email, password, rol } = req.body;
 
     try {

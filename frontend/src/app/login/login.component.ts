@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { UsuariosService } from '../services/usuarios.service';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule,Router  } from '@angular/router';
 
 
 
@@ -19,7 +19,7 @@ export class LoginComponent {
 
 
 
-  constructor(private usuariosService: UsuariosService) {}
+  constructor(private usuariosService: UsuariosService, private router: Router) {}
 
   loginUser() {
     this.usuariosService.login(this.userLogin).subscribe({
@@ -27,6 +27,7 @@ export class LoginComponent {
         console.log('Login exitoso:', response);
         localStorage.setItem('token', response.token); 
         alert('Inicio de sesión exitoso');
+        this.router.navigate(['/home']); // Redirigir a la página 'home'
       },
       error: (error) => {
         console.error('Error en el inicio de sesión:', error);

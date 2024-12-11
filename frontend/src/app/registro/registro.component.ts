@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { UsuariosService } from '../services/usuarios.service';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router'; 
+import { RouterModule, Router } from '@angular/router'; 
 import {EventEmitter, Output } from '@angular/core';
 
 
@@ -17,13 +17,15 @@ export class RegistroComponent {
   @Output() toggleLogin = new EventEmitter<void>();  
 
 
-  constructor(private usuariosService: UsuariosService) {}
+  constructor(private usuariosService: UsuariosService, private router: Router) {}
 
   registerUser() {
+    console.log('Datos enviados:', this.user); // Log para verificar los datos
     this.usuariosService.register(this.user).subscribe({
       next: (response) => {
         console.log('Registro exitoso:', response);
         alert('Usuario registrado con éxito.');
+        this.router.navigate(['/home']); // Redirigir a la página 'home'
       },
       error: (error) => {
         console.error('Error en el registro:', error);
