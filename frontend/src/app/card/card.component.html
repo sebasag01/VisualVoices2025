@@ -1,0 +1,20 @@
+<div class="card-container">
+    <div
+      class="card"
+      [class.card-leaving]="isLeaving"
+      (animationend)="onAnimationEnd()"
+    >
+      <div class="explanation">{{ explanation }}</div>
+      <button class="word-button" (click)="onWordButtonClick()">
+        {{ word }}
+      </button>
+      <button class="repeat-button" (click)="onRepeatButtonClick()">
+        🔄
+      </button>
+      <div class="navigation">
+        <button class="prev-button" (click)="prevCard()">⬅</button>
+        <button class="next-button" (click)="nextCard()">➡</button>
+      </div>
+    </div>
+  </div>
+  

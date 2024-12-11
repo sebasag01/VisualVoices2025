@@ -1,0 +1,28 @@
+<app-header></app-header>
+
+<div class="container">
+  <div class="content">
+    <p class="instructions">EXPLORA LIBREMENTE LOS BOTONES</p>
+    <p class="instructions">CLICA Y TE MOSTRAREMOS CÓMO SE SIGNA</p>
+    <div class="layout">
+      <div class="image-container">
+        <img src="assets/foto-ejemplo.png" alt="Monigote" class="monigote" />
+      </div>
+      <div class="button-grid">
+        <div class="main-buttons">
+          <button class="main-button active" (click)="selectCategory('saludos')">Saludos y cortesía</button>
+          <button class="main-button" (click)="selectCategory('necesidades')">Necesidades básicas</button>
+          <button class="main-button" (click)="selectCategory('familia')">Familia</button>
+        </div>
+        <div class="grid-buttons">
+          <button *ngFor="let word of filteredWords" class="secondary-button">
+            {{ word }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<app-footer></app-footer>

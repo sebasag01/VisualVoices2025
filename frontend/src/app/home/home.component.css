@@ -1,0 +1,103 @@
+@font-face {
+  font-family: 'lexend';
+  src: url('/assets/fonts/lexend.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  
+}
+
+.instructions {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: 'lexend';
+  
+}
+
+.layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px; /* Espacio entre la imagen y el botón */
+  width: 100%;
+  padding: 20px;
+}
+
+.image-container {
+  flex: 0 0 auto; /* Mantén el tamaño original de la imagen */
+  text-align: center;
+}
+
+.monigote {
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Contenedor del recuadro amarillo */
+.button-grid {
+  flex: 0 0 auto; /* No depende del tamaño de otros contenedores */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffeb99;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px; /* Opcional: limita el ancho */
+  text-align: center;
+}
+
+/* Botones principales */
+.main-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.main-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: 2px solid black;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.main-button.active {
+  background-color: yellow;
+}
+
+/* Contenedor de botones secundarios */
+.grid-buttons {
+  display: grid;
+  
+  gap: 10px;
+  width: 50%;
+  flex-wrap: wrap; /* Permite que los botones se ajusten en pantallas pequeñas */
+}
+
+.secondary-button {
+  padding: 10px;
+  font-size: 0.9rem;
+  border: 1px solid black;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.secondary-button:hover {
+  background-color: #e8e8e8;
+}
+
+.secondary-button:active {
+  background-color: #cccccc;
+}
