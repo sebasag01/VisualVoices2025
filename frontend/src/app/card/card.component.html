@@ -4,16 +4,20 @@
       [class.card-leaving]="isLeaving"
       (animationend)="onAnimationEnd()"
     >
-      <div class="explanation">{{ explanation }}</div>
-      <button class="word-button" (click)="onWordButtonClick()">
-        {{ word }}
-      </button>
-      <button class="repeat-button" (click)="onRepeatButtonClick()">
-        🔄
-      </button>
+      <div class="explanation">Explicación guiada para cada botón</div>
+      <div class="word-repeat-container">
+        <button class="word-button" (click)="onWordButtonClick()">PALABRA</button>
+        <button class="repeat-button" (click)="onRepeatButtonClick()">
+          <img src="assets/repeat-icon.png" alt="Repetir" class="icon">
+        </button>
+      </div>
       <div class="navigation">
-        <button class="prev-button" (click)="prevCard()">⬅</button>
-        <button class="next-button" (click)="nextCard()">➡</button>
+        <button class="prev-button" (click)="prevCard()">
+          <img src="assets/left-arrow.png" alt="Anterior" class="arrow-icon">
+        </button>
+        <button class="next-button" (click)="nextCard()">
+          <img src="assets/right-arrow.png" alt="Siguiente" class="arrow-icon">
+        </button>
       </div>
     </div>
   </div>
