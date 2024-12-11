@@ -56,16 +56,17 @@ export class CanvasComponent implements AfterViewInit {
     this.renderer = new THREE.WebGLRenderer({ canvas });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    //this.renderer.setClearColor(0xf5f5dc); // Color de fondo crema
   }
 
   private addLights(): void {
-    const light = new THREE.PointLight(0xffffff, 1, .5);
+    const light = new THREE.PointLight(0xffffff, 1, 0.000001);
     light.position.set(10, 10, 10);
     this.scene.add(light);
 
-    const light2 = new THREE.PointLight(0xffffff, 1, .50);
+    /*const light2 = new THREE.PointLight(0xffffff, 1, 0.02);
     light2.position.set(-10, -10, -10);
-    this.scene.add(light2);
+    this.scene.add(light2);*/
   }
 
   private loadModel(): void {
