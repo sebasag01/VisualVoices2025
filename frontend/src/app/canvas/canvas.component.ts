@@ -4,7 +4,6 @@ import { OrbitControls } from 'three-stdlib';
 import { GLTFLoader } from 'three-stdlib';
 import gsap from 'gsap';
 
-
 @Component({
   selector: 'app-canvas',
   standalone: true,
@@ -19,14 +18,26 @@ export class CanvasComponent implements AfterViewInit {
   private scene!: THREE.Scene;
   private camera!: THREE.PerspectiveCamera;
   private controls!: OrbitControls;
-  
+  private loader: GLTFLoader = new GLTFLoader();
+  private currentPoseIndex: number = 0;
+  private poses: THREE.Group[] = [];
+  private avatar!: THREE.Group;
+  private animationInProgress: boolean = false;
+
+  private animacion: string[] = [
+    'assets/models/hola/hola.gltf',
+    'assets/models/hola/hola_1.gltf',
+    'assets/models/hola/hola_2.gltf',
+    'assets/models/hola/hola_3.gltf',
+    'assets/models/hola/hola_4.gltf',
+  ];
 
   ngAfterViewInit(): void {
     this.initScene();
     this.initCamera();
     this.initRenderer();
     this.addLights();
-    this.loadModel();
+    this.loadModels();
     this.addControls();
     this.animate();
     this.handleResize();
@@ -43,8 +54,8 @@ export class CanvasComponent implements AfterViewInit {
     };
     this.camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100);
     this.camera.position.set(0, -10, 15);
-    this.camera.lookAt(0, 0, 0); // Apunta al centro de la escena
-    this.scene.add(this.camera)
+    this.camera.lookAt(10, 0, 0);
+    this.scene.add(this.camera);
   }
 
   private initRenderer(): void {
@@ -56,48 +67,62 @@ export class CanvasComponent implements AfterViewInit {
     this.renderer = new THREE.WebGLRenderer({ canvas });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    //this.renderer.setClearColor(0xf5f5dc); // Color de fondo crema
   }
 
   private addLights(): void {
     const light = new THREE.PointLight(0xffffff, 1, 0.000001);
     light.position.set(10, 10, 10);
     this.scene.add(light);
-
-    /*const light2 = new THREE.PointLight(0xffffff, 1, 0.02);
-    light2.position.set(-10, -10, -10);
-    this.scene.add(light2);*/
   }
 
-  private loadModel(): void {
-    const loader = new GLTFLoader();
-    loader.load(
-      'assets/Modelo_pruebas.gltf',
-      (gltf) => {
-        const model = gltf.scene;
-  
-        // Ajustar posición y escala
-        model.position.set(0, 0, 0); // Centrar el modelo
-        model.scale.set(3, 3, 3);   // Escala normal
-        model.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-            const mesh = child as THREE.Mesh;
-            mesh.material = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Color rojo
-            mesh.material.needsUpdate = true;
-          }
-        });
-        // Verificar que el modelo se haya cargado correctamente
-        console.log('Modelo cargado:', model);
-  
-        this.scene.add(model);
-  
-        // Animación inicial
-        const tl = gsap.timeline({ defaults: { duration: 1 } });
-        tl.fromTo(model.scale, { x: 0, y: 0, z: 0 }, { x: 1, y: 1, z: 1 });
-      },
-      undefined,
-      (error) => console.error('Error al cargar el modelo:', error)
-    );
+  private loadModels(): void {
+    const promises = this.animacion.map((poseFile) => {
+      return new Promise<THREE.Group>((resolve, reject) => {
+        this.loader.load(
+          poseFile,
+          (gltf) => resolve(gltf.scene),
+          undefined,
+          (error) => reject(error)
+        );
+      });
+    });
+
+    Promise.all(promises)
+      .then((loadedPoses) => {
+        this.poses = loadedPoses;
+        this.avatar = this.poses[0];
+        this.scene.add(this.avatar);
+        this.startPoseAnimation();
+      })
+      .catch((error) => console.error('Error loading poses:', error));
+  }
+
+  private startPoseAnimation(): void {
+    if (this.animationInProgress) return;
+    this.animationInProgress = true;
+
+    const poseInterval = setInterval(() => {
+      if (this.avatar) this.scene.remove(this.avatar);
+
+      this.avatar = this.poses[this.currentPoseIndex];
+      this.avatar.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          mesh.material = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Color rojo
+          mesh.material.needsUpdate = true;
+        }
+      });
+
+      this.scene.add(this.avatar);
+
+      this.currentPoseIndex++;
+
+      if (this.currentPoseIndex >= this.poses.length) {
+        clearInterval(poseInterval);
+        this.animationInProgress = false;
+        console.log('Animation finished.');
+      }
+    }, 2000);
   }
 
   private addControls(): void {
