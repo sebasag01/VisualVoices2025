@@ -10,19 +10,27 @@
       </div>
       <div class="button-grid">
         <div class="main-buttons">
-          <button class="main-button active" (click)="selectCategory('saludos')">Saludos y cortesía</button>
-          <button class="main-button" (click)="selectCategory('necesidades')">Necesidades básicas</button>
-          <button class="main-button" (click)="selectCategory('familia')">Familia</button>
+          <!-- Botones dinámicos para las categorías -->
+          <button 
+            *ngFor="let categoria of categorias" 
+            class="main-button" 
+            [class.active]="categoria._id === currentCategoryId"
+            (click)="selectCategory(categoria._id)">
+            {{ categoria.nombre }}
+          </button>
         </div>
         <div class="grid-buttons">
-          <button *ngFor="let word of filteredWords" class="secondary-button">
-            {{ word }}
+          <!-- Botones dinámicos para las palabras -->
+          <button 
+            *ngFor="let palabra of palabras" 
+            class="secondary-button"
+            (click)="seleccionarPalabra(palabra)">
+            {{ palabra.palabra  }}
           </button>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 
 <app-footer></app-footer>
