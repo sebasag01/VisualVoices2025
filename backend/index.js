@@ -1,6 +1,7 @@
 // Importación de módulos
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const { dbConnection } = require('./database/configdb');
 const usuariosRoute = require('./routes/usuarios');
@@ -14,11 +15,13 @@ const app = express();
 // Conexión a la base de datos
 dbConnection();
 
+app.use(cookieParser());
+
 // Configurar CORS
 app.use(cors({
     origin: ['http://localhost:4200', 'https://visualvoices.ovh'], // Permitir orígenes específicos
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // Incluir OPTIONS
-    allowedHeaders: ['Content-Type', 'Authorization','x-token'], // Asegurar que 'Authorization' está incluido si se usa token
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true // Permitir envío de cookies si es necesario
 }));
 

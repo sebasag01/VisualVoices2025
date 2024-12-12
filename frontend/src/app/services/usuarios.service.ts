@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment'; // Importar el entorno
+import { HttpHeaders } from '@angular/common/http';
+
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +30,7 @@ export class UsuariosService {
 
   // Iniciar sesión de usuario
   login(user: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, user); // Utilizar la URL del entorno
+    return this.http.post(`${this.apiUrl}/login`, user, { withCredentials: true }); // Asegúrate de usar 'withCredentials'
   }
   
   
@@ -44,9 +46,7 @@ export class UsuariosService {
   }
 
   getAuthenticatedUser(): Observable<any> {
-    const token = localStorage.getItem('token'); // Obtén el token del localStorage
-    const headers = { 'x-token': token || '' }; // Asegúrate de incluir el token
-    return this.http.get(`${this.apiUrl}/login/usuario`, { headers });
+    return this.http.get(`${this.apiUrl}/login/usuario`, { withCredentials: true });
   }
 
 

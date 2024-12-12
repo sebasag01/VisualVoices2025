@@ -79,6 +79,7 @@ export class HeaderComponent {
   obtenerUsuario(): void {
     this.usuariosService.getAuthenticatedUser().subscribe({
       next: (response) => {
+        console.log('Respuesta de la API:', response);
         this.usuario = response.usuario; // Guardar los datos del usuario
         console.log('Usuario autenticado:', this.usuario);
       },

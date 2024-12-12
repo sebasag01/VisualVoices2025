@@ -25,7 +25,6 @@ export class LoginComponent {
     this.usuariosService.login(this.userLogin).subscribe({
       next: (response) => {
         console.log('Login exitoso:', response);
-        localStorage.setItem('token', response.token); 
         alert('Inicio de sesión exitoso');
         this.router.navigate(['/home']); // Redirigir a la página 'home'
       },

@@ -1,20 +1,19 @@
 const jwt = require('jsonwebtoken');
 
 const validarJWT = (req, res, next) => {
-    const token = req.header('x-token');
+    const token = req.cookies?.token; // Asegúrate de que req.cookies existe
 
     if (!token) {
         return res.status(401).json({
             ok: false,
-            msg: 'No hay token en la peticion',
+            msg: 'No hay token en la petición',
         });
     }
 
     try {
-        const { uid, rol } = jwt.verify(token, process.env.JWTSECRET); // Decodifica el token
+        const { uid, rol } = jwt.verify(token, process.env.JWTSECRET);
         req.uid = uid;
-        req.rol = rol; // Asigna el rol
-        console.log(`Rol del usuario autenticado: ${rol}`); // Log para depuración
+        req.rol = rol;
         next();
     } catch (err) {
         return res.status(401).json({
