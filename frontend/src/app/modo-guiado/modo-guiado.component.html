@@ -2,26 +2,22 @@
 
 <div class="container">
   <div class="content">
-    <p class="instructions">EXPLORA LIBREMENTE LOS BOTONES. CLICA Y TE MOSTRARREMOS CÓMO SE SIGNA...</p>
+    <p class="instructions">EXPLORA LIBREMENTE LOS BOTONES. CLICA Y TE MOSTRAREMOS CÓMO SE SIGNA...</p>
     <div class="layout">
       <div class="image-container">
         <img src="assets/foto-ejemplo.png" alt="Monigote" class="monigote" />
       </div>
-      
-        <app-card
-          [word]="currentWord"
-          [explanation]="currentExplanation"
-          (wordClick)="handleWordClick()"
-          (repeatClick)="handleRepeatClick()"
-          (prevClick)="prevWord()"
-          (nextClick)="nextWord()"
-        ></app-card>
-          
-        
-      
+
+      <app-card
+        [word]="currentWord"
+        [explanation]="currentExplanation"
+        (wordClick)="handleWordClick()"
+        (repeatClick)="handleRepeatClick()"
+        (prevClick)="prevWord()"
+        (nextClick)="nextWord()"
+      ></app-card>
     </div>
   </div>
 </div>
 
 <app-footer></app-footer>
-
