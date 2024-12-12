@@ -4,9 +4,9 @@ const validarJWT = (req, res, next) => {
     const token = req.header('x-token');
 
     if (!token) {
-        return res.status(400).json({
+        return res.status(401).json({
             ok: false,
-            msg: 'Falta token de autorización',
+            msg: 'No hay token en la peticion',
         });
     }
 
@@ -17,7 +17,7 @@ const validarJWT = (req, res, next) => {
         console.log(`Rol del usuario autenticado: ${rol}`); // Log para depuración
         next();
     } catch (err) {
-        return res.status(400).json({
+        return res.status(401).json({
             ok: false,
             msg: 'Token no válido',
         });

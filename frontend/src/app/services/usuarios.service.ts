@@ -42,4 +42,14 @@ export class UsuariosService {
   deleteUsuario(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  getAuthenticatedUser(): Observable<any> {
+    const token = localStorage.getItem('token'); // Obtén el token del localStorage
+    const headers = { 'x-token': token || '' }; // Asegúrate de incluir el token
+    return this.http.get(`${this.apiUrl}/login/usuario`, { headers });
+  }
+
+
+
+
 }

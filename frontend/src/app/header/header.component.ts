@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
+import { UsuariosService } from '../services/usuarios.service';
 
 @Component({
   standalone: true,
@@ -14,14 +15,20 @@ export class HeaderComponent {
   dropdownOpen: boolean = false;
   mobileMenuOpen: boolean = false;
   isMobile: boolean = window.innerWidth <= 768;
+  usuario: any = null; // Propiedad para almacenar los datos del usuario
 
-  constructor(private router: Router) {
+
+  constructor(private router: Router, private usuariosService: UsuariosService) {
     // Escuchar cambios en la navegación
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.updateSelectedModeFromUrl(event.urlAfterRedirects);
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.obtenerUsuario();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -67,5 +74,17 @@ export class HeaderComponent {
     } else {
       this.selectedMode = ''; // Opcional: manejar rutas no definidas
     }
+  }
+
+  obtenerUsuario(): void {
+    this.usuariosService.getAuthenticatedUser().subscribe({
+      next: (response) => {
+        this.usuario = response.usuario; // Guardar los datos del usuario
+        console.log('Usuario autenticado:', this.usuario);
+      },
+      error: (error) => {
+        console.error('Error al obtener el usuario:', error);
+      },
+    });
   }
 }

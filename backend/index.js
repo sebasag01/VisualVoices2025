@@ -18,7 +18,7 @@ dbConnection();
 app.use(cors({
     origin: ['http://localhost:4200', 'https://visualvoices.ovh'], // Permitir orígenes específicos
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // Incluir OPTIONS
-    allowedHeaders: ['Content-Type', 'Authorization'], // Asegurar que 'Authorization' está incluido si se usa token
+    allowedHeaders: ['Content-Type', 'Authorization','x-token'], // Asegurar que 'Authorization' está incluido si se usa token
     credentials: true // Permitir envío de cookies si es necesario
 }));
 

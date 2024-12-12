@@ -2,8 +2,43 @@ const { Router } = require('express');
 const { login } = require('../controllers/auth');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middleware/validar-campos');
+const { validarJWT } = require('../middleware/validar-jwt');
+const Usuario = require('../models/usuarios');
+
 const router = Router();
 
+
+router.get('/usuario', validarJWT, async (req, res) => {
+    const { uid } = req;
+
+    try {
+        // Buscar al usuario completo por su ID
+        const usuario = await Usuario.findById(uid, 'nombre rol'); // Solo obtenemos los campos necesarios
+
+        if (!usuario) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Usuario no encontrado',
+            });
+        }
+
+        // Enviar únicamente los datos mínimos necesarios
+        res.json({
+            ok: true,
+            usuario: {
+                uid: usuario._id, // Usamos _id como uid
+                nombre: usuario.nombre,
+                rol: usuario.rol,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error al obtener el usuario',
+        });
+    }
+});
 
 router.post('/', [
     check('password', 'El argumento pasword es obligatorio').not().isEmpty(),
