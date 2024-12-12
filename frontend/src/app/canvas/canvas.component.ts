@@ -127,9 +127,9 @@ export class CanvasComponent implements AfterViewInit {
 
   private addControls(): void {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;
-    this.controls.enablePan = false;
-    this.controls.enableZoom = false;
+    // this.controls.enableDamping = true;
+    // this.controls.enablePan = false;
+    // this.controls.enableZoom = false;
 
     // Control del giro en los ejes X y Z
     this.controls.minPolarAngle = Math.PI / 2; // Límite inferior (90 grados)
