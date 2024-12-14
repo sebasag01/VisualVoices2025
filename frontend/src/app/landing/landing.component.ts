@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, LoginComponent, RegistroComponent]
 })
 export class LandingComponent {
-  isRegisterVisible: boolean = true;
+  isRegisterVisible: boolean = false; // Mostrar el login por defecto
 
   @ViewChild('registerSection') registerSection!: ElementRef;
   @ViewChild('loginSection') loginSection!: ElementRef;
@@ -21,7 +21,6 @@ export class LandingComponent {
   showRegister(): void {
     this.isRegisterVisible = true;
 
-    // Esperar un ciclo para que Angular actualice el DOM antes de desplazarse
     setTimeout(() => {
       this.scrollToSection(this.registerSection);
     }, 0);
@@ -31,16 +30,15 @@ export class LandingComponent {
   showLogin(): void {
     this.isRegisterVisible = false;
 
-    // Esperar un ciclo para que Angular actualice el DOM antes de desplazarse
     setTimeout(() => {
       this.scrollToSection(this.loginSection);
     }, 0);
   }
 
-  // Método para hacer scroll a la sección correspondiente
   private scrollToSection(section: ElementRef): void {
     if (section) {
       section.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 }
+

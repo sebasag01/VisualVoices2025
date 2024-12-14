@@ -62,9 +62,22 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.closeMenus();
-    console.log('Logging out...');
+    this.closeMenus(); // Cierra cualquier menú abierto
+    console.log('[DEBUG] Cerrando sesión...');
+    
+    this.usuariosService.logout().subscribe({
+      next: (response) => {
+        console.log('[DEBUG] Respuesta del logout:', response);
+        this.usuario = null; // Eliminar el usuario del estado local
+        this.router.navigate(['/landing']); // Redirigir al landing
+      },
+      error: (error) => {
+        console.error('[ERROR] Error al cerrar sesión:', error);
+        alert('Error al cerrar sesión.');
+      },
+    });
   }
+  
 
   private updateSelectedModeFromUrl(url: string) {
     if (url.includes('/home')) {

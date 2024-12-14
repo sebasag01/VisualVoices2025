@@ -7,12 +7,10 @@ import { HomeComponent } from './home/home.component';
 import { ModoGuiadoComponent } from './modo-guiado/modo-guiado.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'landing', pathMatch: 'full' }, 
+  { path: '', component: LandingComponent },
   { path: 'landing', component: LandingComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'registro', component: RegistroComponent },
   { path: 'pruebas', component: PruebasComponent }, 
   { path: 'home', component: HomeComponent },
   { path: 'guiado', component: ModoGuiadoComponent },
-  
 ];
+

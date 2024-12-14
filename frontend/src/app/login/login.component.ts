@@ -15,6 +15,7 @@ import { RouterModule,Router  } from '@angular/router';
 })
 export class LoginComponent {
   userLogin = { email: '', password: '' }; 
+  rememberMe = false; // Nueva propiedad para "Recuérdame"
   @Output() toggleRegister = new EventEmitter<void>();  
 
 
@@ -22,16 +23,27 @@ export class LoginComponent {
   constructor(private usuariosService: UsuariosService, private router: Router) {}
 
   loginUser() {
-    this.usuariosService.login(this.userLogin).subscribe({
+    const loginPayload = {
+      email: this.userLogin.email.trim(),
+      password: this.userLogin.password.trim(),
+      rememberMe: this.rememberMe,
+    };
+  
+    console.log('[DEBUG] Payload enviado al login:', loginPayload);
+  
+    this.usuariosService.login(loginPayload).subscribe({
       next: (response) => {
-        console.log('Login exitoso:', response);
+        console.log('[DEBUG] Login exitoso, respuesta del servidor:', response);
+  
         alert('Inicio de sesión exitoso');
-        this.router.navigate(['/home']); // Redirigir a la página 'home'
+        this.router.navigate(['/home']);
       },
       error: (error) => {
-        console.error('Error en el inicio de sesión:', error);
+        console.error('[ERROR] Error en el inicio de sesión:', error);
         alert('Error en el inicio de sesión. Revisa tus credenciales.');
       },
     });
   }
-}
+  
+  
+}  

@@ -41,7 +41,6 @@ app.use('/api/login', loginRoute);
 app.use('/api/categorias', categoriasRoutes);
 app.use('/api/palabras', palabrasRoutes);
 
-
 // Abrir la aplicacíon en el puerto 3000
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en el puerto ', process.env.PORT);

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from './services/api.service';
 import { CommonModule } from '@angular/common'; // Importa CommonModule para tener acceso a directivas como *ngIf y *ngFor
 import { UsuariosComponent } from './usuarios/usuarios.component'; // Importar UsuariosComponent
-import { RouterModule } from '@angular/router';
+import { RouterModule,Router  } from '@angular/router';
 import { HeaderComponent } from "./header/header.component"; // Importar RouterModule para router-outlet
 import { UsuariosService } from './services/usuarios.service'; 
 import { response } from 'express';
@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   response: any;
   usuario: any = null;
 
-  constructor(private apiService: ApiService, private usuariosService: UsuariosService) {}
+  constructor(private apiService: ApiService, private usuariosService: UsuariosService, private router: Router) {}
 
   ngOnInit() {
     this.apiService.getHelloWorld().subscribe({
@@ -34,19 +34,54 @@ export class AppComponent implements OnInit {
         }
       },
     });
-    //cargar los datos del usuario autenticado
+
+    // Intentar cargar datos del usuario autenticado si existe un token
     this.cargarUsuarioAutenticado();
+    this.redirigirSiAutenticado();
+
+  }
+
+  redirigirSiAutenticado(): void {
+    const token = this.getCookie('token');
+    if (token) {
+      console.log('[DEBUG] Redirigiendo a /home debido a token presente');
+      this.router.navigate(['/home']);
+    } else {
+      console.log('[DEBUG] Redirigiendo a /landing debido a falta de token');
+      this.router.navigate(['/landing']);
+    }
+  }
+
+  cargarUsuarioAutenticado(): void {
+  console.log('[DEBUG] Verificando autenticación mediante el backend...');
+
+  this.usuariosService.getAuthenticatedUser().subscribe({
+    next: (response) => {
+      console.log('[DEBUG] Respuesta de la API /login/usuario:', response);
+
+      this.usuario = response.usuario; // Guardar el usuario autenticado
+      console.log('[DEBUG] Usuario autenticado cargado:', this.usuario);
+
+      // Redirigir al home si el usuario está autenticado y está en landing
+      if (this.router.url === '/landing') {
+        console.log('[DEBUG] Redirigiendo a /home');
+        this.router.navigate(['/home']);
+      }
+    },
+    error: (error) => {
+      console.error('[ERROR] No autenticado o token inválido:', error);
+
+      // Limpiar estado y redirigir al landing
+      this.usuario = null;
+      this.router.navigate(['/landing']);
+    },
+  });
+}
+  getCookie(name: string): string | null {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+    return null;
   }
   
-  cargarUsuarioAutenticado(): void {
-    this.usuariosService.getAuthenticatedUser().subscribe({
-      next: (response) => {
-        this.usuario = response.usuario;
-        console.log('Usuario autenticado:', this.usuario);
-      },
-      error: (error) => {
-        console.error('Error al obtener el usuario autenticado:', error);
-      },
-    });
-  }
 }

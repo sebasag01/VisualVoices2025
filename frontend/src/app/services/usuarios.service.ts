@@ -25,16 +25,13 @@ export class UsuariosService {
 
   // Registro de un nuevo usuario
   register(user: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/usuarios`, user, { withCredentials: true });
+    return this.http.post(`${this.apiUrl}/register`, user, { withCredentials: true });
   }
 
   // Iniciar sesión de usuario
   login(user: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, user, { withCredentials: true }); // Asegúrate de usar 'withCredentials'
   }
-  
-  
-
   // Actualizar un usuario por ID
   updateUsuario(id: string, usuario: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, usuario);
@@ -48,8 +45,10 @@ export class UsuariosService {
   getAuthenticatedUser(): Observable<any> {
     return this.http.get(`${this.apiUrl}/login/usuario`, { withCredentials: true });
   }
-
-
-
-
+  
+  logout(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login/logout`, {}, { withCredentials: true });
+  }
+  
+  
 }

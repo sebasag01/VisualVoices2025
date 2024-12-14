@@ -23,12 +23,22 @@
           required
         />
         <button type="submit" class="btn">Iniciar sesión</button>
-        <div class="divider">
+        <input
+          type="checkbox"
+          id="rememberMe"
+          [(ngModel)]="rememberMe"
+          name="rememberMe"
+        />
+        <label for="rememberMe">Recuérdame</label>
+        
+        <!--<div class="divider">
           <span class="divider-text">O</span>
         </div>
         <button type="button" class="btn google-login">
           Inicia sesión con Google
         </button>
+      -->
+        
         <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
         <p class="register">¿No tienes cuenta?
           <a href="javascript:void(0);" (click)="toggleRegister.emit()">Regístrate</a>
