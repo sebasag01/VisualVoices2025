@@ -37,8 +37,11 @@ app.get('/api', (req, res) => {
     res.json({ message: 'API funcionando correctamente' });
 });
 
-app.use('/api/usuarios', require('./routes/usuarios'));
-app.use('/api/login', require('./routes/auth'));
+app.use('/api/usuarios', usuariosRoute);
+app.use('/api/login', loginRoute);
+app.use('/api/categorias', categoriasRoutes);
+app.use('/api/palabras', palabrasRoutes);
+app.use('/api/gltf', gltfRoutes);
 
 // Abrir la aplicacíon en el puerto 3000
 app.listen(process.env.PORT, () => {
