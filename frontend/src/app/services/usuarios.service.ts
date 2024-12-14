@@ -25,7 +25,7 @@ export class UsuariosService {
 
   // Registro de un nuevo usuario
   register(user: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/usuarios`, user);
+    return this.http.post(`${this.apiUrl}/usuarios`, user, { withCredentials: true });
   }
 
   // Iniciar sesión de usuario

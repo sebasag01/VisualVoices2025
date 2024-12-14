@@ -15,7 +15,7 @@ import { PalabrasService } from '../services/palabras.service'; // Importa el se
 export class ModoGuiadoComponent implements OnInit {
   words: any[] = []; // Lista dinámica de palabras
   currentIndex = 0; // Índice actual de la palabra
-  maxWords = 2; // Limitar las palabras mostradas (opcional)
+  maxWords = 5; // Limitar las palabras mostradas (opcional)
 
   constructor(private palabrasService: PalabrasService) {}
 
