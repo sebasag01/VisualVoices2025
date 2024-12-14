@@ -1,0 +1,8 @@
+<div class="upload-container">
+    <h2>Subir Archivo GLTF</h2>
+    <form (submit)="uploadFile($event)">
+      <input type="file" name="file" (change)="onFileSelected($event)" accept=".gltf" />
+      <button type="submit">Subir Archivo</button>
+    </form>
+  </div>
+  

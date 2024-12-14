@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { dbConnection } = require('./database/configdb');
+const gltfRoutes = require('./routes/gltf');
 
 // Crear una aplicación de express
 const app = express();
@@ -31,6 +32,7 @@ app.get('/api', (req, res) => {
 
 app.use('/api/usuarios', require('./routes/usuarios'));
 app.use('/api/login', require('./routes/auth'));
+app.use('/api/gltf', gltfRoutes);
 
 // Abrir la aplicacíon en el puerto 3000
 app.listen(process.env.PORT, () => {
