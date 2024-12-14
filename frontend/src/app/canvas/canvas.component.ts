@@ -54,7 +54,7 @@ export class CanvasComponent implements AfterViewInit {
     };
     this.camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100);
     this.camera.position.set(0, 1, 5);
-    this.camera.lookAt(0, 1, 0);
+    this.camera.lookAt(-3, 1, 0);
     this.scene.add(this.camera);
   }
 
@@ -113,6 +113,7 @@ export class CanvasComponent implements AfterViewInit {
         }
       });
 
+      this.avatar.position.set(-3, 0, 0); // Mueve el avatar hacia la izquierda
       this.scene.add(this.avatar);
 
       this.currentPoseIndex++;
