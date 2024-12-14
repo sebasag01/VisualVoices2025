@@ -8,6 +8,7 @@ const usuariosRoute = require('./routes/usuarios');
 const loginRoute = require('./routes/auth');
 const palabrasRoutes = require('./routes/palabras');
 const categoriasRoutes = require('./routes/categorias');
+const gltfRoutes = require('./routes/gltf');
 
 // Crear una aplicación de express
 const app = express();
@@ -36,10 +37,8 @@ app.get('/api', (req, res) => {
     res.json({ message: 'API funcionando correctamente' });
 });
 
-app.use('/api/usuarios', usuariosRoute);
-app.use('/api/login', loginRoute);
-app.use('/api/categorias', categoriasRoutes);
-app.use('/api/palabras', palabrasRoutes);
+app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/login', require('./routes/auth'));
 
 // Abrir la aplicacíon en el puerto 3000
 app.listen(process.env.PORT, () => {

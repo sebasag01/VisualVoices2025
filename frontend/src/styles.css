@@ -13,3 +13,8 @@
   
 
 
+app-canvas
+{
+    display: flex;
+    width: 50vw;
+}
