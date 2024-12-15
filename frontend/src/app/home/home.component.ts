@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { CategoriasService } from '../services/categorias.service';
+import { CanvasComponent } from '../canvas/canvas.component';
+import { AnimacionService } from '../services/animacion.service'; // Importa el servicio
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent], 
+  imports: [CommonModule, HeaderComponent, FooterComponent,CanvasComponent], 
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
@@ -15,8 +17,10 @@ export class HomeComponent implements OnInit {
   categorias: any[] = []; // Lista de categorías obtenidas de la base de datos
   palabras: any[] = []; // Lista de palabras obtenidas de la base de datos
   currentCategoryId: string | null = null; // Categoría actual seleccionada
+  currentAnimationUrls: string[] = []; // URLs de las animaciones seleccionadas
 
-  constructor(private categoriasService: CategoriasService) {}
+  constructor(private categoriasService: CategoriasService,private animacionService: AnimacionService) {}
+  
 
   ngOnInit(): void {
     this.cargarCategorias(); // Cargar las categorías al inicio
@@ -52,24 +56,18 @@ export class HomeComponent implements OnInit {
     console.log('Palabra seleccionada:', palabra);
 
     if (palabra.animaciones && palabra.animaciones.length > 0) {
-        console.log(`Cargando animaciones para ${palabra.palabra}:`);
-        console.log('Estructura de animaciones:', palabra.animaciones);
+      const animacionesUrls = palabra.animaciones.map(
+        (animacion: any) => `http://localhost:3000/api/gltf/animaciones/${animacion.filename}`
+      );
 
-        palabra.animaciones.forEach((animacion: any, index: number) => {
-            if (typeof animacion === 'object' && animacion !== null) {
-                console.log(`Frame ${index + 1}: ${animacion.filename}`);
-                const url = `http://localhost:3000/api/gltf/animaciones/${animacion.filename}`;
-                console.log(`URL de la animación: ${url}`);
-            } else {
-                console.warn(`El campo animaciones no es un objeto. Valor recibido:`, animacion);
-            }
-        });
+      console.log('URLs de las animaciones:', animacionesUrls);
 
-        console.log('Se están "cargando" los archivos de animación...');
+      // Envía las animaciones al servicio
+      this.animacionService.cargarAnimaciones(animacionesUrls);
     } else {
-        console.warn('No hay animaciones asociadas a esta palabra.');
+      console.warn('No hay animaciones asociadas a esta palabra.');
     }
-  }
+}
 
 
   
