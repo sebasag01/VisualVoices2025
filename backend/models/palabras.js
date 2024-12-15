@@ -10,6 +10,10 @@ const PalabraSchema = Schema({
         ref: 'Categoria', // Referencia al modelo Categoría
         required: false,
     },
+    animaciones: [{ 
+        type: Schema.Types.ObjectId, // Referencia a los archivos GLTF
+        ref: 'gltfFiles.files' 
+    }]
 });
 
 module.exports = model('Palabra', PalabraSchema);
