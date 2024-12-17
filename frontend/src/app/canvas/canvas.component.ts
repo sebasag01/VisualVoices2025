@@ -53,9 +53,14 @@ export class CanvasComponent implements AfterViewInit {
   private initCamera(): void {
     const sizes = { width: window.innerWidth, height: window.innerHeight };
     this.camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100);
-    this.camera.position.set(0, 1, 5);
+    
+    // Ajusta la posición de la cámara para que enfoque bien el modelo
+    this.camera.position.set(-1.5, 5.5, 5); // Posición en X, Y, Z
+    this.camera.lookAt(0, 0, 0); // La cámara mira hacia el centro de la escena
+  
     this.scene.add(this.camera);
   }
+  
 
   private initRenderer(): void {
     if (!this.canvasRef) {
@@ -161,9 +166,15 @@ export class CanvasComponent implements AfterViewInit {
     this.loader.load(
       defaultPoseUrl,
       (gltf) => {
-        this.avatar = gltf.scene; // Asigna el modelo cargado a la variable avatar
+        this.avatar = gltf.scene;
+  
+        // Calcular y ajustar el centro del modelo
+        const box = new THREE.Box3().setFromObject(this.avatar);
+        const center = box.getCenter(new THREE.Vector3());
+        this.avatar.position.sub(center); // Centrar el modelo en la posición (0, 0, 0)
+  
         this.scene.add(this.avatar); // Añade el modelo a la escena
-        console.log('Pose inicial cargada correctamente.');
+        console.log('Pose inicial cargada y centrada correctamente.');
       },
       undefined,
       (error) => {
@@ -171,5 +182,6 @@ export class CanvasComponent implements AfterViewInit {
       }
     );
   }
+  
   
 }
