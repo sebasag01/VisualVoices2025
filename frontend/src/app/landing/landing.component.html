@@ -1,6 +1,3 @@
-
-
-
 <header class="header">
     <link rel="canonical" href="https://visualvoices.ovh/landing">
   <div class="logo-container">
@@ -11,7 +8,6 @@
       <button class="btn login" (click)="showLogin()">INICIA SESIÓN</button>
   </div>
 </header>
-
 
 
 <main class="main-container">
@@ -27,20 +23,28 @@
   </div> 
 
   <div class="container_abajo" id="container-abajo">
-      <div *ngIf="isRegisterVisible" class="landing-register" id="register-section" #registerSection>
-          <app-registro (toggleLogin)="showLogin()"></app-registro>
+      <div [class.visible]="isRegisterVisible" class="landing-register" id="register-section">
+          <div class="canvas-section">
+              <app-canvas></app-canvas>
+          </div>
+          <div class="form-section">
+              <app-registro (toggleLogin)="showLogin()"></app-registro>
+          </div>
       </div>
 
-      <div *ngIf="!isRegisterVisible" class="landing-login" id="login-section" #loginSection>
-          <app-login (toggleRegister)="showRegister()"></app-login>
+      <div [class.visible]="!isRegisterVisible" class="landing-login" id="login-section">
+          <div class="canvas-section">
+              <app-canvas></app-canvas>
+          </div>
+          <div class="form-section">
+              <app-login (toggleRegister)="showRegister()"></app-login>
+          </div>
       </div>
   </div> 
 
 </main>
 
 
-
-
 <footer class="footer">
-  <p>© 2024 GraphicCare. Todos los derechos reservados. Conocenos en <a href="https://www.visualvoices.ovh/GraphicCare">GraphicCare</a></p>
+  <p> 2024 GraphicCare. Todos los derechos reservados. Conocenos en <a href="https://www.visualvoices.ovh/GraphicCare">GraphicCare</a></p>
 </footer>

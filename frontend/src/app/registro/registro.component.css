@@ -54,39 +54,68 @@ body {
 }
 
 .registro-form {
+    width: 100%;
+    min-width: 320px;
+    max-width: 450px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 20px;
+    padding: 40px;
+    background-color: #f9e59f;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .registro-title {
-    font-size: 1.2rem;
+    font-size: 28px;
     font-weight: bold;
-    margin-bottom: 20px;
-    color: #000;
     text-align: center;
+    margin-bottom: 15px;
+    color: #000;
 }
 
 .input-field {
-    width: 90%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 16px;
+    background-color: white;
 }
 
 .btn {
-    width: 90%;
-    padding: 12px;
-    margin: 15px 0;
-    background-color: #000; /* Fondo negro */
-    color: #fff;
+    width: 100%;
+    padding: 16px;
+    background-color: #000;
+    color: white;
     border: none;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #333;
+}
+
+.login {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.login a {
+    color: #f4b400;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.login a:hover {
+    color: #d19600;
 }
 
 .google-login {
@@ -111,16 +140,3 @@ body {
     font-size: 0.9rem;
     color: #666;
 }
-
-.login {
-    font-size: 0.9rem;
-    margin-top: 10px;
-}
-
-.login a {
-    color: #f4b400;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-

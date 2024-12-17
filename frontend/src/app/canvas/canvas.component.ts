@@ -55,7 +55,7 @@ export class CanvasComponent implements AfterViewInit {
     this.camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100);
     
     // Ajusta la posición de la cámara para que enfoque bien el modelo
-    this.camera.position.set(-1.5, 5.5, 5); // Posición en X, Y, Z
+    this.camera.position.set(0, 5.5, 5); // Posición en X, Y, Z
     this.camera.lookAt(0, 0, 0); // La cámara mira hacia el centro de la escena
   
     this.scene.add(this.camera);
@@ -71,7 +71,7 @@ export class CanvasComponent implements AfterViewInit {
     this.renderer = new THREE.WebGLRenderer({ canvas });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.setClearColor(0xf5f5dc);
+    this.renderer.setClearColor(0xfff8d4);
   }
 
   private addLights(): void {

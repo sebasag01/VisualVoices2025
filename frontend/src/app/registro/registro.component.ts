@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { UsuariosService } from '../services/usuarios.service';
-import { CanvasComponent } from '../canvas/canvas.component'; // Ajusta la ruta según tu estructura de carpetas
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router'; 
 import {EventEmitter, Output } from '@angular/core';
@@ -10,7 +9,7 @@ import {EventEmitter, Output } from '@angular/core';
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [FormsModule,RouterModule, CanvasComponent],
+  imports: [FormsModule,RouterModule],
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.css'],
 })

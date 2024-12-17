@@ -4,11 +4,13 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { CardComponent } from '../card/card.component';
 import { PalabrasService } from '../services/palabras.service'; // Importa el servicio
+import { CanvasComponent } from '../canvas/canvas.component';
+import { AnimacionService } from '../services/animacion.service'; // Importa el servicio
 
 @Component({
   selector: 'app-modo-guiado',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent, CardComponent],
+  imports: [CommonModule, HeaderComponent, FooterComponent, CardComponent,CanvasComponent],
   templateUrl: './modo-guiado.component.html',
   styleUrls: ['./modo-guiado.component.css'],
 })
