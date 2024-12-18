@@ -1,13 +1,15 @@
 import { Component, ElementRef, AfterViewInit, ViewChild, Input } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
 import { GLTFLoader } from 'three-stdlib';
 import { AnimacionService } from '../services/animacion.service'; // Importa el servicio
+import { GltfService } from '../services/gltf.service';
 
 @Component({
   selector: 'app-canvas',
   standalone: true,
-  imports: [],
+  imports: [HttpClientModule],
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css'],
 })
@@ -25,7 +27,10 @@ export class CanvasComponent implements AfterViewInit {
   private poses: THREE.Group[] = [];
   private avatar!: THREE.Group;
 
-  constructor(private animacionService: AnimacionService) {
+  constructor(
+    private animacionService: AnimacionService,
+    private gltfService: GltfService
+  ) {
     // Suscribirse al servicio para recibir las animaciones
     this.animacionService.animaciones$.subscribe((urls: string[]) => {
       if (urls.length > 0) {
@@ -140,7 +145,6 @@ export class CanvasComponent implements AfterViewInit {
   }
   
   
-  
 
   private animate(): void {
     const loop = () => {
@@ -161,27 +165,44 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   private loadDefaultPose(): void {
-    const defaultPoseUrl = 'assets/models/hola/hola.gltf'; // URL ajustada
-  
-    this.loader.load(
-      defaultPoseUrl,
-      (gltf) => {
-        this.avatar = gltf.scene;
-  
-        // Calcular y ajustar el centro del modelo
-        const box = new THREE.Box3().setFromObject(this.avatar);
-        const center = box.getCenter(new THREE.Vector3());
-        this.avatar.position.sub(center); // Centrar el modelo en la posición (0, 0, 0)
-  
-        this.scene.add(this.avatar); // Añade el modelo a la escena
-        console.log('Pose inicial cargada y centrada correctamente.');
+    console.log('Iniciando carga del modelo por defecto...');
+    this.gltfService.getDefaultModel().subscribe({
+      next: (blob: Blob) => {
+        console.log('Blob recibido:', blob);
+        // Crear una URL temporal para el blob
+        const url = URL.createObjectURL(blob);
+        console.log('URL temporal creada:', url);
+        
+        this.loader.load(
+          url,
+          (gltf) => {
+            console.log('Modelo cargado exitosamente:', gltf);
+            this.avatar = gltf.scene;
+            
+            // Calcular y ajustar el centro del modelo
+            const box = new THREE.Box3().setFromObject(this.avatar);
+            const center = box.getCenter(new THREE.Vector3());
+            this.avatar.position.sub(center);
+            
+            this.scene.add(this.avatar);
+            console.log('Avatar añadido a la escena');
+            
+            // Liberar la URL temporal
+            URL.revokeObjectURL(url);
+          },
+          (progress) => {
+            console.log('Progreso de carga:', (progress.loaded / progress.total * 100) + '%');
+          },
+          (error) => {
+            console.error('Error al cargar el modelo:', error);
+            URL.revokeObjectURL(url);
+          }
+        );
       },
-      undefined,
-      (error) => {
-        console.error('Error al cargar la pose inicial:', error);
+      error: (error) => {
+        console.error('Error al obtener el modelo de la base de datos:', error);
       }
-    );
+    });
   }
-  
   
 }

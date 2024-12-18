@@ -18,16 +18,27 @@ router.get('/animaciones/:filename', async (req, res) => {
         const db = mongoose.connection.db; // Conexión a la base de datos
         const bucket = new mongoose.mongo.GridFSBucket(db, { bucketName: 'gltfFiles' });
 
-        // Stream del archivo GLTF desde GridFS
-        const downloadStream = bucket.openDownloadStreamByName(filename);
+        // Primero verificamos si el archivo existe
+        const files = await bucket.find({ filename: filename }).toArray();
+        if (!files || files.length === 0) {
+            console.error('Archivo no encontrado:', filename);
+            return res.status(404).json({ msg: 'Archivo no encontrado' });
+        }
 
-        // Pipea el archivo al cliente
-        downloadStream.on('error', (err) => {
-            console.error('Error al descargar el archivo:', err);
-            res.status(404).json({ msg: 'Archivo no encontrado' });
+        // Configuramos los headers apropiados
+        res.set('Content-Type', 'model/gltf+json');
+        res.set('Access-Control-Allow-Origin', '*');
+        res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+        res.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
+        // Creamos el stream y lo enviamos
+        const downloadStream = bucket.openDownloadStreamByName(filename);
+        
+        downloadStream.on('error', (error) => {
+            console.error('Error en el stream:', error);
+            res.status(500).json({ msg: 'Error al leer el archivo' });
         });
 
-        res.set('Content-Type', 'model/gltf+json'); // Tipo de contenido GLTF
         downloadStream.pipe(res);
     } catch (error) {
         console.error('Error al servir el archivo GLTF:', error);
