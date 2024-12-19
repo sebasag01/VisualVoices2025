@@ -170,3 +170,10 @@
     font-size: 0.9rem;
     color: #666;
   }
+
+  .error-message {
+    color: red;
+    font-size: 0.93rem;
+    margin-top: 10px;
+  }
+  

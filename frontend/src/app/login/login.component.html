@@ -39,4 +39,5 @@
     <p class="register">¿No tienes cuenta?
         <a href="javascript:void(0);" (click)="toggleRegister.emit()">Regístrate</a>
     </p>
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
 </form>
