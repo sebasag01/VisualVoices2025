@@ -12,11 +12,10 @@ export class CategoriasService {
   constructor(private http: HttpClient) {}
 
   obtenerCategorias(): Observable<any> {
-    return this.http.get(`${this.baseUrl}`);
+    return this.http.get(`${this.baseUrl}`, { withCredentials: true });
   }
-  
-  obtenerPalabrasPorCategoria(categoriaId: string): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/palabras/categoria?categoria=${categoriaId}`);
-}
 
+  obtenerPalabrasPorCategoria(categoriaId: string): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/palabras/categoria?categoria=${categoriaId}`, { withCredentials: true });
+  }
 }

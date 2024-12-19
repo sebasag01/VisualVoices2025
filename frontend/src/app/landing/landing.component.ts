@@ -3,6 +3,7 @@ import { LoginComponent } from '../login/login.component';
 import { RegistroComponent } from '../registro/registro.component';
 import { CommonModule } from '@angular/common';
 import { CanvasComponent } from '../canvas/canvas.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-landing',
@@ -13,6 +14,7 @@ import { CanvasComponent } from '../canvas/canvas.component';
   imports: [CommonModule, LoginComponent, RegistroComponent,CanvasComponent]
 })
 export class LandingComponent {
+  environment = environment;
   isRegisterVisible: boolean = false; // Mostrar el login por defecto
 
   @ViewChild('registerSection') registerSection!: ElementRef;

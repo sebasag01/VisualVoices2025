@@ -85,9 +85,6 @@ export class HomeComponent implements OnInit {
     console.warn('No hay animaciones asociadas a esta palabra.');
   }
 }
-}
-
-  
 
   /*
   cargarAnimacionesSecuenciales(animaciones: any[]): void {
@@ -97,7 +94,7 @@ export class HomeComponent implements OnInit {
   
     const cargarSiguienteFrame = () => {
       if (index < animaciones.length) {
-        const url = `http://localhost:3000/api/gltf/animaciones/${animaciones[index].filename}`;
+        const url = `${environment.apiUrl}/gltf/animaciones/${animaciones[index].filename}`;
         console.log(`Cargando frame: ${url}`);
   
         loader.load(
@@ -122,4 +119,4 @@ export class HomeComponent implements OnInit {
     cargarSiguienteFrame();
   }
   */
-
+}

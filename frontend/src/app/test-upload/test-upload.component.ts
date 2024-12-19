@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment'; // Asegúrate de que la ruta es correcta
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-test-upload',
@@ -14,12 +14,16 @@ export class TestUploadComponent {
 
   constructor(private http: HttpClient) {}
 
-  // Manejar la selección del archivo
   onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
+    const file = event.target.files[0];
+    if (file && file.type === 'model/gltf+json' || file.name.endsWith('.gltf')) {
+      this.selectedFile = file;
+    } else {
+      alert('Por favor, selecciona un archivo GLTF válido.');
+      event.target.value = '';
+    }
   }
 
-  // Subir el archivo al backend
   uploadFile(event: Event) {
     event.preventDefault();
 
@@ -27,22 +31,35 @@ export class TestUploadComponent {
       const formData = new FormData();
       formData.append('file', this.selectedFile);
 
-      // Usar apiUrl desde el entorno
       const uploadUrl = `${environment.apiUrl}/gltf/upload`;
 
-      this.http.post(uploadUrl, formData).subscribe(
-        (response) => {
+      this.http.post(uploadUrl, formData, { 
+        withCredentials: true,
+        observe: 'response'
+      }).subscribe({
+        next: (response) => {
           console.log('Archivo subido:', response);
           alert('Archivo subido correctamente');
+          // Limpiar el input file
+          const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+          if (fileInput) fileInput.value = '';
+          this.selectedFile = null;
         },
-        (error) => {
-          console.error('Error al subir archivo:', error);
-          alert('Error al subir archivo');
+        error: (error: HttpErrorResponse) => {
+          console.error('Error completo:', error);
+          let errorMessage = 'Error al subir el archivo: ';
+          
+          if (error.error instanceof ErrorEvent) {
+            errorMessage += error.error.message;
+          } else {
+            errorMessage += `Código ${error.status}: ${error.message}`;
+          }
+          
+          alert(errorMessage);
         }
-      );
+      });
     } else {
       alert('Por favor selecciona un archivo.');
     }
   }
 }
-

@@ -18,20 +18,20 @@ router.get('/animaciones/:filename', async (req, res) => {
         const db = mongoose.connection.db; // Conexión a la base de datos
         const bucket = new mongoose.mongo.GridFSBucket(db, { bucketName: 'gltfFiles' });
 
-        // Primero verificamos si el archivo existe
+        // Verificar si el archivo existe
         const files = await bucket.find({ filename: filename }).toArray();
         if (!files || files.length === 0) {
             console.error('Archivo no encontrado:', filename);
             return res.status(404).json({ msg: 'Archivo no encontrado' });
         }
 
-        // Configuramos los headers apropiados
+        // Configurar los headers apropiados
         res.set('Content-Type', 'model/gltf+json');
-        res.set('Access-Control-Allow-Origin', '*');
+        // No establecer Access-Control-Allow-Origin aquí, dejarlo para el middleware CORS
         res.set('Cross-Origin-Resource-Policy', 'cross-origin');
-        res.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        res.set('Cache-Control', 'public, max-age=31536000'); // Cache por 1 año
 
-        // Creamos el stream y lo enviamos
+        // Crear y enviar el stream
         const downloadStream = bucket.openDownloadStreamByName(filename);
         
         downloadStream.on('error', (error) => {

@@ -6,6 +6,7 @@ import { CardComponent } from '../card/card.component';
 import { PalabrasService } from '../services/palabras.service'; // Importa el servicio
 import { CanvasComponent } from '../canvas/canvas.component';
 import { AnimacionService } from '../services/animacion.service'; // Importa el servicio
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-modo-guiado',
@@ -61,7 +62,7 @@ export class ModoGuiadoComponent implements OnInit {
     
     if (currentWord && currentWord.animaciones && currentWord.animaciones.length > 0) {
       const animacionesUrls = currentWord.animaciones.map(
-        (animacion: any) => `https://visualvoices.ovh/api/gltf/animaciones/${animacion.filename}`
+        (animacion: any) => `${environment.apiUrl}/gltf/animaciones/${animacion.filename}`
       );
       console.log('Cargando animaciones:', animacionesUrls); // Log para depuración
       this.animacionService.cargarAnimaciones(animacionesUrls);
