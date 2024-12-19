@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment'; // Asegúrate de que la ruta es correcta
 
 @Component({
   selector: 'app-test-upload',
   standalone: true,
   templateUrl: './test-upload.component.html',
   styleUrls: ['./test-upload.component.css'],
-  imports: [], // Puedes importar aquí otros componentes si los necesitas
+  imports: [],
 })
 export class TestUploadComponent {
   selectedFile: File | null = null;
@@ -26,7 +27,10 @@ export class TestUploadComponent {
       const formData = new FormData();
       formData.append('file', this.selectedFile);
 
-      this.http.post('http://localhost:3000/api/gltf/upload', formData).subscribe(
+      // Usar apiUrl desde el entorno
+      const uploadUrl = `${environment.apiUrl}/gltf/upload`;
+
+      this.http.post(uploadUrl, formData).subscribe(
         (response) => {
           console.log('Archivo subido:', response);
           alert('Archivo subido correctamente');
@@ -41,3 +45,4 @@ export class TestUploadComponent {
     }
   }
 }
+

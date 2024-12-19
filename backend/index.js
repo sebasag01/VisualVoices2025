@@ -20,7 +20,7 @@ app.use(cookieParser());
 
 // Configurar CORS
 app.use(cors({
-    origin: ['http://localhost:4200', 'https://visualvoices.ovh'], // Permitir orígenes específicos
+    origin: ['https://visualvoices.ovh'], // Permitir orígenes específicos
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // Incluir OPTIONS
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true // Permitir envío de cookies si es necesario

@@ -61,7 +61,7 @@ export class ModoGuiadoComponent implements OnInit {
     
     if (currentWord && currentWord.animaciones && currentWord.animaciones.length > 0) {
       const animacionesUrls = currentWord.animaciones.map(
-        (animacion: any) => `http://localhost:3000/api/gltf/animaciones/${animacion.filename}`
+        (animacion: any) => `https://visualvoices.ovh/api/gltf/animaciones/${animacion.filename}`
       );
       console.log('Cargando animaciones:', animacionesUrls); // Log para depuración
       this.animacionService.cargarAnimaciones(animacionesUrls);
