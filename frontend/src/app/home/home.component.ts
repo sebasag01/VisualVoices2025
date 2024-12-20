@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit {
     });
 
     // Enviar las animaciones al servicio
-    this.animacionService.cargarAnimaciones(animacionesUrls);
+    this.animacionService.cargarAnimaciones(animacionesUrls, true); // Marcamos como manual = true
   } else {
     console.warn('No hay animaciones asociadas a esta palabra.');
   }

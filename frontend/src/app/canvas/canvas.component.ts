@@ -1,10 +1,11 @@
-import { Component, ElementRef, AfterViewInit, ViewChild, Input } from '@angular/core';
+import { Component, ElementRef, AfterViewInit, ViewChild, Input, OnDestroy } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
 import { GLTFLoader } from 'three-stdlib';
-import { AnimacionService } from '../services/animacion.service'; // Importa el servicio
+import { AnimacionService } from '../services/animacion.service';
 import { GltfService } from '../services/gltf.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-canvas',
@@ -13,31 +14,53 @@ import { GltfService } from '../services/gltf.service';
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css'],
 })
-export class CanvasComponent implements AfterViewInit {
+export class CanvasComponent implements AfterViewInit, OnDestroy {
   @ViewChild('webglCanvas', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
   
-  @Input() animationUrls: string[] = []; // Recibe las URLs de las animaciones
+  @Input() animationUrls: string[] = [];
 
   private renderer!: THREE.WebGLRenderer;
   private scene!: THREE.Scene;
   private camera!: THREE.PerspectiveCamera;
   private controls!: OrbitControls;
   private loader: GLTFLoader = new GLTFLoader();
-  private currentPoseIndex: number = 0;
   private poses: THREE.Group[] = [];
-  private avatar!: THREE.Group;
+  private avatar!: THREE.Group | undefined;
+  private animacionSubscription: Subscription;
 
   constructor(
     private animacionService: AnimacionService,
     private gltfService: GltfService
   ) {
     // Suscribirse al servicio para recibir las animaciones
-    this.animacionService.animaciones$.subscribe((urls: string[]) => {
+    this.animacionSubscription = this.animacionService.animaciones$.subscribe((urls: string[]) => {
+      // Si hay URLs pero no hay permiso para reproducir, ignorar
       if (urls.length > 0) {
-        console.log('URLs de las animaciones recibidas:', urls);
-        this.cargarAnimacionesDinamicas(urls);
+        const permitido = this.animacionService.permitirReproduccion();
+        console.log('Estado de reproducción:', permitido);
+        
+        if (permitido) {
+          console.log('URLs de las animaciones recibidas:', urls);
+          // Esperar un momento antes de cargar las animaciones
+          setTimeout(() => {
+            if (this.animacionService.permitirReproduccion()) {
+              this.cargarAnimacionesDinamicas(urls);
+            }
+          }, 100);
+        } else {
+          console.log('Ignorando animaciones - reproducción no permitida');
+          this.limpiarCanvas();
+        }
+      } else {
+        this.limpiarCanvas();
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.animacionSubscription) {
+      this.animacionSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -58,14 +81,10 @@ export class CanvasComponent implements AfterViewInit {
   private initCamera(): void {
     const sizes = { width: window.innerWidth, height: window.innerHeight };
     this.camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100);
-    
-    // Ajusta la posición de la cámara para que enfoque bien el modelo
     this.camera.position.set(0, 5.5, 5); // Posición en X, Y, Z
     this.camera.lookAt(0, 0, 0); // La cámara mira hacia el centro de la escena
-  
     this.scene.add(this.camera);
   }
-  
 
   private initRenderer(): void {
     if (!this.canvasRef) {
@@ -95,8 +114,14 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   private cargarAnimacionesDinamicas(urls: string[]): void {
-    this.poses = []; // Reinicia las poses, pero no limpies la escena.
-  
+    // Verificar una última vez antes de cargar
+    if (!this.animacionService.permitirReproduccion()) {
+      console.log('Cancelando carga de animaciones - reproducción no permitida');
+      return;
+    }
+    
+    this.poses = []; // Reinicia las poses
+
     const promises = urls.map((url) => {
       return new Promise<THREE.Group>((resolve, reject) => {
         this.loader.load(
@@ -107,7 +132,7 @@ export class CanvasComponent implements AfterViewInit {
         );
       });
     });
-  
+
     Promise.all(promises)
       .then((loadedPoses) => {
         this.poses = loadedPoses;
@@ -116,34 +141,29 @@ export class CanvasComponent implements AfterViewInit {
       })
       .catch((error) => console.error('Error cargando las animaciones:', error));
   }
-  
 
   private reproducirAnimacionSecuencial(): void {
     let index = 0;
-  
     const poseInterval = setInterval(() => {
-      const currentPose = this.poses[index]; // Obtén la nueva pose actual.
+      const currentPose = this.poses[index];
   
       if (this.avatar) {
-        // Reemplaza solo los hijos actuales del avatar sin eliminarlo de la escena.
-        this.avatar.clear(); // Limpia los hijos del avatar existente.
+        this.avatar.clear(); // Limpia los hijos del avatar existente
         currentPose.children.forEach((child) => {
-          this.avatar.add(child.clone()); // Clona y agrega los nuevos hijos.
+          this.avatar?.add(child.clone()); // Clona y agrega los nuevos hijos
         });
       } else {
-        // Si no existe avatar, inicialízalo con la primera pose.
         this.avatar = currentPose.clone();
         this.scene.add(this.avatar);
       }
   
       index++;
       if (index >= this.poses.length) {
-        clearInterval(poseInterval); // Detén la animación cuando termine.
+        clearInterval(poseInterval);
         console.log('Animación completada.');
       }
-    }, 1000); // Intervalo de tiempo entre frames (ajustable).
+    }, 1000); // Intervalo ajustable
   }
-  
   
 
   private animate(): void {
@@ -165,44 +185,56 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   private loadDefaultPose(): void {
-    console.log('Iniciando carga del modelo por defecto...');
-    this.gltfService.getDefaultModel().subscribe({
-      next: (blob: Blob) => {
-        console.log('Blob recibido:', blob);
-        // Crear una URL temporal para el blob
-        const url = URL.createObjectURL(blob);
-        console.log('URL temporal creada:', url);
-        
-        this.loader.load(
-          url,
-          (gltf) => {
-            console.log('Modelo cargado exitosamente:', gltf);
-            this.avatar = gltf.scene;
-            
-            // Calcular y ajustar el centro del modelo
-            const box = new THREE.Box3().setFromObject(this.avatar);
-            const center = box.getCenter(new THREE.Vector3());
-            this.avatar.position.sub(center);
-            
-            this.scene.add(this.avatar);
-            console.log('Avatar añadido a la escena');
-            
-            // Liberar la URL temporal
-            URL.revokeObjectURL(url);
-          },
-          (progress) => {
-            console.log('Progreso de carga:', (progress.loaded / progress.total * 100) + '%');
-          },
-          (error) => {
-            console.error('Error al cargar el modelo:', error);
-            URL.revokeObjectURL(url);
-          }
-        );
-      },
-      error: (error) => {
-        console.error('Error al obtener el modelo de la base de datos:', error);
-      }
-    });
+    if (!this.animacionService.hayAnimacionesActivas()) {
+      console.log('Iniciando carga del modelo por defecto...');
+      this.gltfService.getDefaultModel().subscribe({
+        next: (blob: Blob) => {
+          console.log('Blob recibido:', blob);
+          const url = URL.createObjectURL(blob);
+          console.log('URL temporal creada:', url);
+  
+          this.loader.load(
+            url,
+            (gltf) => {
+              console.log('Modelo cargado exitosamente:', gltf);
+              this.avatar = gltf.scene;
+  
+              const box = new THREE.Box3().setFromObject(this.avatar);
+              const center = box.getCenter(new THREE.Vector3());
+              this.avatar.position.sub(center);
+  
+              this.scene.add(this.avatar);
+              console.log('Avatar añadido a la escena');
+              URL.revokeObjectURL(url);
+            },
+            (progress) => {
+              console.log(
+                'Progreso de carga:',
+                (progress.loaded / progress.total) * 100 + '%'
+              );
+            },
+            (error) => {
+              console.error('Error al cargar el modelo:', error);
+              URL.revokeObjectURL(url);
+            }
+          );
+        },
+        error: (error) => {
+          console.error('Error al obtener el modelo de la base de datos:', error);
+        },
+      });
+    }
+  }
+  
+
+  limpiarCanvas(): void {
+    if (this.avatar) {
+      this.scene.remove(this.avatar); // Elimina el avatar de la escena
+      this.avatar.clear(); // Limpia sus hijos
+    }
+    this.avatar = undefined; // Resetea el avatar
+    this.poses = []; // Reinicia las poses
+    console.log('Canvas limpiado.');
   }
   
 }

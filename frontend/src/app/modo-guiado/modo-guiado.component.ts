@@ -65,7 +65,7 @@ export class ModoGuiadoComponent implements OnInit {
         (animacion: any) => `${environment.apiUrl}/gltf/animaciones/${animacion.filename}`
       );
       console.log('Cargando animaciones:', animacionesUrls); // Log para depuración
-      this.animacionService.cargarAnimaciones(animacionesUrls);
+      this.animacionService.cargarAnimaciones(animacionesUrls, true); // Marcamos como manual = true
     } else {
       console.warn('No hay animaciones disponibles para esta palabra');
     }

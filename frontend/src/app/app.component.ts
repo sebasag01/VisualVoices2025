@@ -5,6 +5,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component'; // Importar U
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { HeaderComponent } from "./header/header.component"; // Importar RouterModule para router-outlet
 import { UsuariosService } from './services/usuarios.service'; 
+import { AnimacionService } from './services/animacion.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,7 @@ export class AppComponent implements OnInit {
   response: any;
   usuario: any = null;
 
-  constructor(private apiService: ApiService, private usuariosService: UsuariosService, private router: Router) {}
+  constructor(private apiService: ApiService, private usuariosService: UsuariosService, private router: Router,private animacionService: AnimacionService) {}
 
   ngOnInit() {
     this.apiService.getHelloWorld().subscribe({
@@ -37,7 +38,14 @@ export class AppComponent implements OnInit {
     // Suscribirse a los cambios de ruta
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
+        console.log('[DEBUG] Ruta cambiada, limpiando animaciones.');
+        this.animacionService.limpiarAnimaciones(); // Limpia las animaciones al cambiar de ruta
         this.redirigirSiAutenticado();
+        
+        // Permitir nuevas animaciones después de un breve retraso
+        setTimeout(() => {
+          this.animacionService.finalizarCambioPagina();
+        }, 500);
       }
     });
   }
