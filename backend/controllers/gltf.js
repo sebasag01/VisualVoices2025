@@ -2,50 +2,57 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
-const subirArchivoGltf = async (req, res) => {
-    if (!req.file) {
+const subirArchivosGltf = async (req, res) => {
+    if (!req.files || req.files.length === 0) {
         return res.status(400).json({ msg: 'No se ha proporcionado ningún archivo' });
     }
 
     try {
-        const fileStream = fs.createReadStream(req.file.path);
         const db = mongoose.connection.db;
         const bucket = new mongoose.mongo.GridFSBucket(db, { bucketName: 'gltfFiles' });
 
-        // Verificar si el archivo ya existe
-        const existingFiles = await bucket.find({ filename: req.file.originalname }).toArray();
-        if (existingFiles.length > 0) {
-            // Si existe, eliminar el archivo anterior
-            for (const file of existingFiles) {
-                await bucket.delete(file._id);
+        const resultados = [];
+
+        for (const file of req.files) {
+            const fileStream = fs.createReadStream(file.path);
+
+            // Verificar si el archivo ya existe
+            const existingFiles = await bucket.find({ filename: file.originalname }).toArray();
+            if (existingFiles.length > 0) {
+                for (const existingFile of existingFiles) {
+                    await bucket.delete(existingFile._id);
+                }
             }
+
+            const uploadStream = bucket.openUploadStream(file.originalname, {
+                contentType: 'model/gltf+json',
+            });
+
+            fileStream.pipe(uploadStream);
+
+            await new Promise((resolve, reject) => {
+                uploadStream.on('error', (error) => {
+                    console.error(`Error al subir ${file.originalname}:`, error);
+                    reject(error);
+                });
+
+                uploadStream.on('finish', () => {
+                    console.log(`Archivo ${file.originalname} subido correctamente`);
+                    resultados.push({ filename: file.originalname, status: 'success' });
+                    resolve();
+                });
+            });
+
+            fs.unlinkSync(file.path);
         }
 
-        const uploadStream = bucket.openUploadStream(req.file.originalname, {
-            contentType: 'model/gltf+json'
-        });
-
-        fileStream.pipe(uploadStream);
-
-        uploadStream.on('error', (error) => {
-            console.error('Error al subir el archivo:', error);
-            fs.unlinkSync(req.file.path);
-            res.status(500).json({ msg: 'Error al subir el archivo' });
-        });
-
-        uploadStream.on('finish', () => {
-            console.log('Archivo subido correctamente');
-            fs.unlinkSync(req.file.path);
-            res.status(200).json({ msg: 'Archivo subido correctamente' });
-        });
+        res.status(200).json({ msg: 'Archivos subidos correctamente', resultados });
     } catch (error) {
-        console.error('Error en subirArchivoGltf:', error);
-        if (req.file && req.file.path) {
-            fs.unlinkSync(req.file.path);
-        }
-        res.status(500).json({ msg: 'Error al procesar el archivo', error: error.message });
+        console.error('Error en subirArchivosGltf:', error);
+        res.status(500).json({ msg: 'Error al procesar los archivos', error: error.message });
     }
 };
+
 
 const descargarArchivoGltf = async (req, res) => {
     try {
@@ -74,6 +81,6 @@ const descargarArchivoGltf = async (req, res) => {
 };
 
 module.exports = {
-    subirArchivoGltf,
+    subirArchivosGltf,
     descargarArchivoGltf
 };

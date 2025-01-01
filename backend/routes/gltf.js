@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { subirArchivoGltf, descargarArchivoGltf } = require('../controllers/gltf');
+const { subirArchivosGltf, descargarArchivoGltf } = require('../controllers/gltf');
 const multer = require('multer');
 const mongoose = require('mongoose');
 
@@ -7,7 +7,7 @@ const upload = multer({ dest: 'uploads/' }); // Carpeta temporal para almacenar 
 const router = Router();
 
 // Subir un archivo GLTF
-router.post('/upload', upload.single('file'), subirArchivoGltf);
+router.post('/upload', upload.array('files', 10), subirArchivosGltf); // Máximo 10 archivos
 // Descargar un archivo GLTF (usando un nombre específico)
 router.get('/download/:name', descargarArchivoGltf);
 
