@@ -5,14 +5,16 @@ import { LandingComponent } from './landing/landing.component';
 import { PruebasComponent } from './pruebas/pruebas.component';
 import { HomeComponent } from './home/home.component';
 import { ModoGuiadoComponent } from './modo-guiado/modo-guiado.component';
+import { TestUploadComponent } from './test-upload/test-upload.component';
+import { AdminGuard } from './guards/admin.guard'; // Importa el guardia
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'landing', pathMatch: 'full' }, 
+  { path: '', component: LandingComponent },
   { path: 'landing', component: LandingComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'registro', component: RegistroComponent },
   { path: 'pruebas', component: PruebasComponent }, 
   { path: 'home', component: HomeComponent },
   { path: 'guiado', component: ModoGuiadoComponent },
-  
+  { path: 'test-upload', component: TestUploadComponent }, //canActivate: [AdminGuard] }, // Protege esta ruta
+  { path: '**', redirectTo: 'landing' },
 ];
+

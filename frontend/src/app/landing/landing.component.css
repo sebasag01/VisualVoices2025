@@ -56,7 +56,6 @@
                             FIN DEL HEADER
 --------------------------------------------------------------------------- */
 
-
 /* ---------------------------------------------------------------------------
                             BOTONES
 --------------------------------------------------------------------------- */
@@ -108,7 +107,6 @@
                        LANDING PRINCIPAL
 --------------------------------------------------------------------------- */
 
-
 .text-content {
   flex: 1; 
   flex-direction: column; 
@@ -152,8 +150,81 @@
                     FIN DEL LANDING PRINCIPAL
 --------------------------------------------------------------------------- */
 
+/* ---------------------------------------------------------------------------
+                            CONTENEDOR DE LOGIN/REGISTRO
+--------------------------------------------------------------------------- */
+.container_abajo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    width: 100%;
+    background-color: #fff8d4;
+}
 
+.landing-register, .landing-login {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0 auto;
+    gap: 100px;
+    padding-right: 80px;
+}
 
+.canvas-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 0;
+    max-width: 500px;
+}
+
+.form-section {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    min-width: 320px;
+    max-width: 450px;
+}
+
+/* Ocultar el formulario no activo */
+.landing-register:not(.visible),
+.landing-login:not(.visible) {
+    display: none;
+}
+
+app-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+app-login, app-registro {
+    width: 100%;
+    display: block;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #fff8d4;
+}
+
+.container_arriba {
+    background-color: #f2c464;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------------------------------------------------------------------------
+                            FIN DEL CONTENEDOR DE LOGIN/REGISTRO
+--------------------------------------------------------------------------- */
 
 html,
 body {
@@ -172,9 +243,7 @@ body {
   background-color: #f2c464 !important;
   height: 100vh;
 
-
-
-} 
+}
 
  body, html {
   height: 100%;
@@ -208,18 +277,8 @@ body {
   margin-top: -70px; 
 
 
-}
-
-
-.container_abajo {
-  display: flex;
-  flex-direction: column;
-  width: 100%; 
-  max-width: 100%; 
-  min-height: 100vh; 
 
 }
-
 
 .graphic {
   flex: 1; 
@@ -319,5 +378,3 @@ p {
 /* ---------------------------------------------------------------------------
                             FIN DEL FOOTER
 --------------------------------------------------------------------------- */
-
-

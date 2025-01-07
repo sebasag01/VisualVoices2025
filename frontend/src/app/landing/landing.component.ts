@@ -2,17 +2,20 @@ import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/co
 import { LoginComponent } from '../login/login.component';
 import { RegistroComponent } from '../registro/registro.component';
 import { CommonModule } from '@angular/common';
+import { CanvasComponent } from '../canvas/canvas.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
   templateUrl: './landing.component.html',
-  styleUrl: './landing.component.css',
+  styleUrls: ['./landing.component.css'],
   encapsulation: ViewEncapsulation.None,  // Desactiva el encapsulamiento
-  imports: [CommonModule, LoginComponent, RegistroComponent]
+  imports: [CommonModule, LoginComponent, RegistroComponent,CanvasComponent]
 })
 export class LandingComponent {
-  isRegisterVisible: boolean = true;
+  environment = environment;
+  isRegisterVisible: boolean = false; // Mostrar el login por defecto
 
   @ViewChild('registerSection') registerSection!: ElementRef;
   @ViewChild('loginSection') loginSection!: ElementRef;
@@ -20,24 +23,25 @@ export class LandingComponent {
   // Mostrar la sección de registro y hacer scroll
   showRegister(): void {
     this.isRegisterVisible = true;
-
-    // Esperar un ciclo para que Angular actualice el DOM antes de desplazarse
     setTimeout(() => {
-      this.scrollToSection(this.registerSection);
-    }, 0);
+      const container = document.getElementById('container-abajo');
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
   }
 
   // Mostrar la sección de inicio de sesión y hacer scroll
   showLogin(): void {
     this.isRegisterVisible = false;
-
-    // Esperar un ciclo para que Angular actualice el DOM antes de desplazarse
     setTimeout(() => {
-      this.scrollToSection(this.loginSection);
-    }, 0);
+      const container = document.getElementById('container-abajo');
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
   }
 
-  // Método para hacer scroll a la sección correspondiente
   private scrollToSection(section: ElementRef): void {
     if (section) {
       section.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });

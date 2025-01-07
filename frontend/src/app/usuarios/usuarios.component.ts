@@ -35,17 +35,22 @@ export class UsuariosComponent implements OnInit {
   }
 
   registerUser() {
-    this.usuariosService.register(this.user).subscribe(
-      response => {
-        console.log(response.message);
-        // Reiniciar el formulario con el objeto correcto
+    this.usuariosService.register(this.user).subscribe({
+      next: (response) => {
+        console.log(response.msg);
+        alert('Registro exitoso');
+        // Reiniciar el formulario
         this.user = { email: '', nombre: '', apellidos: '', password: '' };
+        // Redirigir al usuario a la página de inicio
+        window.location.href = '/home';
       },
-      error => {
+      error: (error) => {
         console.error('Error en el registro:', error);
-      }
-    );
-  }
+        alert('Error en el registro. Revisa los datos.');
+      },
+    });
+}
+
   
 
   loginUser() {
@@ -53,7 +58,7 @@ export class UsuariosComponent implements OnInit {
       next: (response) => {
         console.log('Login exitoso:', response);
         // Guardar el token en localStorage
-        localStorage.setItem('token', response.token);
+        //localStorage.setItem('token', response.token);
         alert('Inicio de sesión exitoso');
         // Limpiar el formulario
         this.userLogin = { email: '', password: '' };

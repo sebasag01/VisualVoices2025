@@ -9,6 +9,10 @@
       <button [class.active]="selectedMode === 'modo2'" (click)="selectMode('modo2')">MODO 2</button>
       <button [class.active]="selectedMode === 'modo3'" (click)="selectMode('modo3')">MODO 3</button>
     </div>
+
+    <div class="user-info" *ngIf="usuario">
+      <span>Bienvenido, {{ usuario.nombre }}</span> <!-- Mostrar el nombre del usuario -->
+    </div>
   
     <div class="user-icon" *ngIf="!isMobile" (click)="toggleDropdown()">
         <img src="assets/usu.png" alt="Usuario" />

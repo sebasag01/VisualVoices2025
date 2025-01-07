@@ -1,26 +1,40 @@
-<div class="main-container">
+<form class="registro-form" (ngSubmit)="registerUser()">
+    <h2 class="registro-title">Regístrate y aprende lengua de signos</h2>
+    <input 
+        type="email" 
+        placeholder="Correo electrónico" 
+        [(ngModel)]="user.email" 
+        name="email" 
+        class="input-field" 
+        required 
+    />
+    <input 
+        type="password" 
+        placeholder="Contraseña" 
+        [(ngModel)]="user.password" 
+        name="password" 
+        class="input-field" 
+        required 
+    />
+    <input 
+        type="text" 
+        placeholder="Nombre completo" 
+        [(ngModel)]="user.nombre" 
+        name="nombre" 
+        class="input-field" 
+        required 
+    />
+    <input 
+        type="text" 
+        placeholder="Apellidos" 
+        [(ngModel)]="user.apellidos" 
+        name="apellidos" 
+        class="input-field" 
+        required
+    />
+    <button type="submit" class="btn">Siguiente</button>
     
-    <div class="content">
-      <div class="image-container">
-        <img src="assets/foto-ejemplo.png" alt="Imagen" class="side-image" />
-      </div>
-      <div class="registro-container">
-        <form class="registro-form" (ngSubmit)="registerUser()">
-          <h2 class="registro-title">Regístrate y aprende lengua de signos</h2>
-          <input type="email" placeholder="Correo electrónico" [(ngModel)]="user.email" name="email" class="input-field" required />
-          <input type="password" placeholder="Contraseña" [(ngModel)]="user.password" name="password" class="input-field" required />
-          <input type="text" placeholder="Nombre completo" [(ngModel)]="user.nombre" name="nombre" class="input-field" required />
-          <input type="text" placeholder="Apellidos" [(ngModel)]="user.apellidos" name="apellidos" class="input-field" />
-          <button type="submit" class="btn">Siguiente</button>
-          <div class="divider">
-            <span class="divider-text">O</span>
-          </div>
-          <button type="button" class="btn google-login">Inicia sesión con Google</button>
-          <p class="login">¿Tienes una cuenta? 
-            <a href="javascript:void(0);" (click)="toggleLogin.emit()">Inicia sesión</a>
-          </p>
-        </form>
-      </div>
-    </div>
-  </div>
-  
+    <p class="login">¿Tienes una cuenta? 
+        <a href="javascript:void(0);" (click)="toggleLogin.emit()">Inicia sesión</a>
+    </p>
+</form>

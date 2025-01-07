@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
+import { UsuariosService } from '../services/usuarios.service';
 
 @Component({
   standalone: true,
@@ -14,14 +15,20 @@ export class HeaderComponent {
   dropdownOpen: boolean = false;
   mobileMenuOpen: boolean = false;
   isMobile: boolean = window.innerWidth <= 768;
+  usuario: any = null; // Propiedad para almacenar los datos del usuario
 
-  constructor(private router: Router) {
+
+  constructor(private router: Router, private usuariosService: UsuariosService) {
     // Escuchar cambios en la navegación
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.updateSelectedModeFromUrl(event.urlAfterRedirects);
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.obtenerUsuario();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -55,9 +62,22 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.closeMenus();
-    console.log('Logging out...');
+    this.closeMenus(); // Cierra cualquier menú abierto
+    console.log('[DEBUG] Cerrando sesión...');
+    
+    this.usuariosService.logout().subscribe({
+      next: (response) => {
+        console.log('[DEBUG] Respuesta del logout:', response);
+        this.usuario = null; // Eliminar el usuario del estado local
+        this.router.navigate(['/landing']); // Redirigir al landing
+      },
+      error: (error) => {
+        console.error('[ERROR] Error al cerrar sesión:', error);
+        alert('Error al cerrar sesión.');
+      },
+    });
   }
+  
 
   private updateSelectedModeFromUrl(url: string) {
     if (url.includes('/home')) {
@@ -67,5 +87,18 @@ export class HeaderComponent {
     } else {
       this.selectedMode = ''; // Opcional: manejar rutas no definidas
     }
+  }
+
+  obtenerUsuario(): void {
+    this.usuariosService.getAuthenticatedUser().subscribe({
+      next: (response) => {
+        console.log('Respuesta de la API:', response);
+        this.usuario = response.usuario; // Guardar los datos del usuario
+        console.log('Usuario autenticado:', this.usuario);
+      },
+      error: (error) => {
+        console.error('Error al obtener el usuario:', error);
+      },
+    });
   }
 }

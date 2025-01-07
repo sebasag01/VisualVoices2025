@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const { response } = require('express');
 const validator = require('validator');
+const { generarJWT } = require('../helpers/jwt');
 
 const obtenerUsuarios = async(req, res) => {
 
@@ -91,9 +92,26 @@ const crearUsuario = async (req, res = response) => {
         // Guardar el usuario en la base de datos
         await usuario.save();
 
+        // Generar el JWT
+        const token = await generarJWT(usuario._id, 'ROL_USUARIO');
+
+        // Guardar el token en una cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: false, // Cambiar a true en producción con HTTPS
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000, // 24 horas
+        });
+
         res.status(201).json({
             ok: true,
-            usuario,
+            msg: 'Usuario registrado correctamente',
+            usuario: {
+                uid: usuario._id,
+                nombre: usuario.nombre,
+                email: usuario.email,
+                rol: 'ROL_USUARIO',
+            },
         });
 
     } catch (error) {

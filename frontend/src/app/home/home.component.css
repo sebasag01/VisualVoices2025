@@ -10,7 +10,8 @@
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  
+  background-color: #fff8d4;
+
 }
 
 .instructions {
@@ -23,79 +24,92 @@
 
 .layout {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 30px; /* Espacio entre la imagen y el botón */
+  justify-content: space-between;
+  align-items: center;
+  gap: 60px;
   width: 100%;
-  padding: 20px;
+  padding: 20px 40px;
+  min-height: 70vh;
 }
 
 .image-container {
-  flex: 0 0 auto; /* Mantén el tamaño original de la imagen */
-  text-align: center;
+  flex: 0 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 500px;
 }
 
-.monigote {
-  width: 100%;
-  max-width: 300px;
-}
-
-/* Contenedor del recuadro amarillo */
 .button-grid {
-  flex: 0 0 auto; /* No depende del tamaño de otros contenedores */
+  flex: 0 1 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   background-color: #ffeb99;
-  padding: 20px;
+  padding: 30px;
   border-radius: 10px;
-  max-width: 500px; /* Opcional: limita el ancho */
-  text-align: center;
+  width: 380px;
+  height: fit-content;
+  margin-right: 20px;
+  margin-left: 120px;
 }
 
 /* Botones principales */
 .main-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  
+  gap: 15px;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .main-button {
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 1rem;
   border: 2px solid black;
   background-color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.main-button:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-2px);
 }
 
 .main-button.active {
-  background-color: yellow;
+  background-color: #FFD700;
+  border-color: #000;
 }
 
 /* Contenedor de botones secundarios */
 .grid-buttons {
   display: grid;
-  
-  gap: 10px;
-  width: 50%;
-  flex-wrap: wrap; /* Permite que los botones se ajusten en pantallas pequeñas */
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  width: 100%;
+  padding: 10px;
 }
 
 .secondary-button {
-  padding: 10px;
+  padding: 10px 15px;
   font-size: 0.9rem;
   border: 1px solid black;
   background-color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .secondary-button:hover {
-  background-color: #e8e8e8;
+  background-color: #f5f5f5;
+  transform: translateY(-2px);
 }
 
 .secondary-button:active {

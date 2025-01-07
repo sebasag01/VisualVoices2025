@@ -1,0 +1,23 @@
+.upload-container {
+    margin: 50px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  input[type='file'] {
+    margin: 20px 0;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
