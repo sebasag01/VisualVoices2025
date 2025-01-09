@@ -123,8 +123,6 @@ const crearUsuario = async (req, res = response) => {
     }
 };
 
-   
-
 const actualizarUsuario = async(req, res = response) => {
     
     const { password, email, ...object } = req.body;
@@ -181,7 +179,7 @@ const borrarUsuario = async(req, res = response) => {
             });
         }
 
-        const resultado = await Usuario.findByIdAndRemove(uid);
+        const resultado = await Usuario.findByIdAndDelete(uid);
 
         res.json({
             ok: true,

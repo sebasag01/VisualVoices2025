@@ -59,6 +59,9 @@ export class HeaderComponent {
   navigateTo(destination: string) {
     this.closeMenus();
     console.log(`Navigating to ${destination}`);
+    if (destination === 'admin') {
+      this.router.navigate(['/admin']); // Redirigir a la ruta de administración
+    } 
   }
 
   logout() {

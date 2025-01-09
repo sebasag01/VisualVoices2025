@@ -38,9 +38,12 @@ const crearPalabra = async (req, res) => {
     try {
         const nuevaPalabra = new Palabra(req.body);
         await nuevaPalabra.save();
+        //usamos populate después de guardar la nueva palabra para asegurarnos que la respuesta enviada al cliente incluya la información completa de la categoría
+        const palabraConCategoria = await nuevaPalabra.populate('categoria', 'nombre');
+
         res.status(201).json({
             ok: true,
-            palabra: nuevaPalabra,
+            palabra: palabraConCategoria,
         });
     } catch (error) {
         console.error(error);

@@ -19,6 +19,7 @@
         <div class="dropdown" *ngIf="dropdownOpen">
           <a (click)="navigateTo('perfil')">Mi Perfil</a>
           <a (click)="navigateTo('ajustes')">Ajustes</a>
+          <a *ngIf="usuario.rol === 'ROL_ADMIN'" (click)="navigateTo('admin')">Admin</a>
           <a (click)="logout()">Cerrar Sesión</a>
         </div>
       </div>
