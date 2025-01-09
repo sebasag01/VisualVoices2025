@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
         // Si el usuario está en `/landing` o `/`, redirigir a `/home`
         if (currentRoute === '/landing' || currentRoute === '/') {
           console.log('[DEBUG] Redirigiendo a /home para usuario autenticado');
-          this.router.navigate(['/home']);
+          this.router.navigate(['/guiado']);
         }
       },
       error: (error) => {
