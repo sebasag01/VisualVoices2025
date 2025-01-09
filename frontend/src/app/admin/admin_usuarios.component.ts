@@ -38,7 +38,7 @@ import { ViewEncapsulation } from '@angular/core';
               <td>{{ usuario.email }}</td>
               <td>{{ usuario.rol }}</td>
               <td>
-                <button class="btn btn-primary btn-sm me-2" (click)="updateUsuario(usuario)">Editar</button>
+                <button class="btn btn-primary btn-sm me-2" (click)="editarUsuario(usuario)">Editar</button>
                 <button class="btn btn-danger btn-sm" (click)="deleteUsuario(usuario.uid)">Eliminar</button>
               </td>
             </tr>
@@ -50,7 +50,7 @@ import { ViewEncapsulation } from '@angular/core';
     <!-- Modal -->
     <div *ngIf="showModal" class="modal-backdrop" (click)="closeModalOnBackdrop($event)">
       <div class="modal-content">
-        <h3>Agregar Nuevo Usuario</h3>
+        <h3>{{ isEditing ? 'Editar Usuario' : 'Agregar Nuevo Usuario' }}</h3>
         <form (ngSubmit)="submitForm()">
           <div class="form-group">
             <label for="nombre">Nombre</label>
@@ -64,7 +64,7 @@ import { ViewEncapsulation } from '@angular/core';
             <label for="email">Email</label>
             <input type="email" id="email" [(ngModel)]="nuevoUsuario.email" name="email" required />
           </div>
-          <div class="form-group">
+          <div class="form-group" *ngIf="!isEditing">
             <label for="password">Contraseña</label>
             <input
               type="password"
@@ -83,18 +83,19 @@ import { ViewEncapsulation } from '@angular/core';
           </div>
           <div class="form-actions">
             <button type="button" class="btn btn-secondary" (click)="toggleModal()">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
           </div>
         </form>
       </div>
     </div>
   `
-  
 })
 export class AdminUsuariosComponent implements OnInit {
   usuarios: any[] = [];
   showModal = false;
-  nuevoUsuario = { nombre: '', apellidos: '', email: '',password: '', rol: 'ROL_USUARIO' };
+  isEditing = false; // Indica si estamos editando
+  nuevoUsuario = { nombre: '', apellidos: '', email: '', password: '', rol: 'ROL_USUARIO' };
+  usuarioId: string | null = null; // Almacena el ID del usuario a editar
 
   constructor(private usuariosService: UsuariosService) {}
 
@@ -112,7 +113,11 @@ export class AdminUsuariosComponent implements OnInit {
 
   toggleModal() {
     this.showModal = !this.showModal;
-    console.log('Modal state:', this.showModal);
+    if (!this.showModal) {
+      this.isEditing = false; // Restablece el estado
+      this.nuevoUsuario = { nombre: '', apellidos: '', email: '', password: '', rol: 'ROL_USUARIO' }; // Resetea el formulario
+      this.usuarioId = null;
+    }
   }
 
   closeModalOnBackdrop(event: MouseEvent) {
@@ -122,22 +127,55 @@ export class AdminUsuariosComponent implements OnInit {
   }
 
   submitForm() {
-    this.usuariosService.createUsuario(this.nuevoUsuario).subscribe({
-      next: (data) => {
-        console.log('Usuario creado:', data);
-        this.usuarios.push(data.usuario);
-        this.toggleModal();
-      },
-      error: (err) => {
-        console.error('Error creando usuario:', err);
-      },
-    });
+    if (this.isEditing) {
+      // Editar usuario
+      this.usuariosService.updateUsuario(this.usuarioId!, {
+        nombre: this.nuevoUsuario.nombre,
+        apellidos: this.nuevoUsuario.apellidos,
+        email: this.nuevoUsuario.email,
+        rol: this.nuevoUsuario.rol
+      }).subscribe({
+        next: (data) => {
+          console.log('Usuario actualizado:', data);
+          const index = this.usuarios.findIndex(u => u.uid === this.usuarioId);
+          if (index !== -1) {
+            this.usuarios[index] = data.usuario; // Actualiza el usuario en la lista
+          }
+          this.toggleModal(); // Cierra el modal
+        },
+        error: (err) => {
+          console.error('Error actualizando usuario:', err);
+        }
+      });
+    } else {
+      // Crear nuevo usuario
+      this.usuariosService.createUsuario(this.nuevoUsuario).subscribe({
+        next: (data) => {
+          console.log('Usuario creado:', data);
+          this.usuarios.push(data.usuario); // Agrega el nuevo usuario a la lista
+          this.toggleModal(); // Cierra el modal
+        },
+        error: (err) => {
+          console.error('Error creando usuario:', err);
+        }
+      });
+    }
   }
+  
 
-  updateUsuario(usuario: any) {
-    console.log('Editar usuario:', usuario);
-    // Aquí puedes implementar la lógica para editar el usuario
+  editarUsuario(usuario: any) {
+    this.isEditing = true; // Cambia a modo edición
+    this.usuarioId = usuario.uid; // Almacena el ID del usuario
+    this.nuevoUsuario = {
+      nombre: usuario.nombre,
+      apellidos: usuario.apellidos,
+      email: usuario.email,
+      password: '', // No incluir la contraseña
+      rol: usuario.rol
+    }; 
+    this.toggleModal(); // Abre el modal
   }
+  
 
   deleteUsuario(uid: string) {
     if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {

@@ -68,7 +68,7 @@ const editarPalabra = async (req, res) => {
                 ...(animaciones && { animaciones }) // Actualiza si existe
             },
             { new: true } // Devuelve el documento actualizado
-        );
+        ).populate('categoria', 'nombre');
 
         if (!palabraEditada) {
             return res.status(404).json({ ok: false, msg: 'Palabra no encontrada' });

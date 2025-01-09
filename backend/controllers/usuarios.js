@@ -129,6 +129,8 @@ const actualizarUsuario = async(req, res = response) => {
     const uid = req.params.id;
 
     try{
+        console.log('Datos recibidos para actualizar:', req.body); // LOG para depuración
+
         const existeEmail = await Usuario.findOne({ email: email });
 
         if(existeEmail){
@@ -145,6 +147,8 @@ const actualizarUsuario = async(req, res = response) => {
 
         object.email = email;
         const usuario = await Usuario.findByIdAndUpdate(uid, object, { new: true });
+        
+        console.log('Usuario actualizado:', usuario); // LOG para depuración
 
         res.json({
             ok: true,
