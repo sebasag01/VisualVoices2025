@@ -11,6 +11,12 @@
   align-items: center;
   padding: 20px;
   background-color: #fff8d4;
+  max-width: 100% !important; 
+  width: 100% !important;
+}
+
+.content{
+  background-color: #fff8d4;
 
 }
 
@@ -65,7 +71,7 @@
 }
 
 .main-button {
-  padding: 12px 24px;
+  padding: 10px 10px;
   font-size: 1rem;
   border: 2px solid black;
   background-color: white;

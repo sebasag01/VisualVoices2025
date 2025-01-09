@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
-
+:root {
+    --cui-header-border: 0 !important; 
+}
 // If you want to override variables do it here
 @import "variables";
 
@@ -21,5 +23,3 @@
 // Examples
 // We use those styles to show code examples, you should remove them in your application.
 @import "examples";
-
-

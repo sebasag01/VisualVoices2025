@@ -34,7 +34,7 @@
   position: relative;
   top: 0;
   left: 0;
-  
+  border-bottom: none !important;
 }
 
 .logo-container {
@@ -364,7 +364,7 @@ body {
   font-family: "ChauPhilomene" !important;
   margin: 0;
   padding: 20px 0;
-
+  justify-content: center !important;
 }
 
 footer p {

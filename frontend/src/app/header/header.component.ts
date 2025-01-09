@@ -40,7 +40,7 @@ export class HeaderComponent {
   }
 
   selectMode(mode: string) {
-    this.router.navigate([mode === 'modo1' ? '/home' : '/guiado']);
+    this.router.navigate([mode === 'modo1' ? '/guiado' : '/home']);
   }
 
   toggleDropdown() {
@@ -84,9 +84,9 @@ export class HeaderComponent {
 
   private updateSelectedModeFromUrl(url: string) {
     if (url.includes('/home')) {
-      this.selectedMode = 'modo1';
-    } else if (url.includes('/guiado')) {
       this.selectedMode = 'modo2';
+    } else if (url.includes('/guiado')) {
+      this.selectedMode = 'modo1';
     } else {
       this.selectedMode = ''; // Opcional: manejar rutas no definidas
     }
