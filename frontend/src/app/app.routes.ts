@@ -27,7 +27,7 @@ export const routes: Routes = [
   { path: 'pruebas', component: PruebasComponent }, 
   { path: 'home', component: HomeComponent },
   { path: 'guiado', component: ModoGuiadoComponent },
-  { path: 'test-upload', component: TestUploadComponent }, //canActivate: [AdminGuard] }, // Protege esta ruta
+  { path: 'test-upload', component: TestUploadComponent, canActivate: [AdminRoleGuard] }, //canActivate: [AdminGuard] }, // Protege esta ruta
   { path: '**', redirectTo: 'landing' },
 ];
 

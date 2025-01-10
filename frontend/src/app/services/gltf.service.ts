@@ -54,4 +54,10 @@ export class GltfService {
   getDefaultModel(): Observable<Blob> {
     return this.getModelByFilename('hola.gltf');
   }
+
+  getAllGltfFiles(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/gltf/all`, { withCredentials: true });
+  }
+  
+
 }

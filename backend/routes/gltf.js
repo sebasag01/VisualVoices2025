@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { subirArchivosGltf, descargarArchivoGltf } = require('../controllers/gltf');
+const { subirArchivosGltf, descargarArchivoGltf,listAllGltfFiles } = require('../controllers/gltf');
 const multer = require('multer');
 const mongoose = require('mongoose');
 
@@ -10,6 +10,9 @@ const router = Router();
 router.post('/upload', upload.array('files', 10), subirArchivosGltf); // Máximo 10 archivos
 // Descargar un archivo GLTF (usando un nombre específico)
 router.get('/download/:name', descargarArchivoGltf);
+// Esto haría que GET /api/gltf/ devuelva la lista con todos los archivos
+router.get('/all', listAllGltfFiles); 
+
 
 // Ruta para obtener un archivo GLTF por filename desde GridFS
 router.get('/animaciones/:filename', async (req, res) => {

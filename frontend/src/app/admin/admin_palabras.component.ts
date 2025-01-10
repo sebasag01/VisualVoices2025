@@ -4,6 +4,7 @@ import { PalabrasService } from '../services/palabras.service';
 import { ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CategoriasService } from '../services/categorias.service'; // Importa el servicio de categorías
+import { GltfService } from '../services/gltf.service'; // <-- Importa el servicio
 
 @Component({
   selector: 'app-admin-palabras',
@@ -14,6 +15,16 @@ import { CategoriasService } from '../services/categorias.service'; // Importa e
       './admin.component.scss'
     ],
   template: `
+  <!-- Notificaciones de éxito y error -->
+  <div class="container mt-3">
+    <div *ngIf="mensajeExito" class="alert alert-success" role="alert">
+      {{ mensajeExito }}
+    </div>
+    <div *ngIf="mensajeError" class="alert alert-danger" role="alert">
+      {{ mensajeError }}
+    </div>
+  </div>
+
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h2>Gestión de Palabras</h2>
@@ -38,6 +49,7 @@ import { CategoriasService } from '../services/categorias.service'; // Importa e
             <td>
               <button class="btn btn-primary btn-sm me-2" (click)="editarPalabra(palabra)">Editar</button>
               <button class="btn btn-danger btn-sm" (click)="borrarPalabra(palabra._id)">Eliminar</button>
+              <button class="btn btn-info btn-sm" (click)="abrirAnimacionesModal(palabra)">Enlazar Animaciones</button>
             </td>
           </tr>
         </tbody>
@@ -69,22 +81,105 @@ import { CategoriasService } from '../services/categorias.service'; // Importa e
     </div>
   </div>
 
+  <div 
+  *ngIf="showAnimacionesModal" 
+  class="modal-backdrop" 
+  (click)="cerrarAnimacionesModal()"
+  >
+  <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Enlazar Animaciones a "{{ palabraSeleccionada?.palabra }}"</h3>
+
+      <label for="prefijoSelect">Selecciona un prefijo</label>
+      <select id="prefijoSelect" #prefijoSelect>
+        <option *ngFor="let p of prefijos" [value]="p">{{ p }}</option>
+      </select>
+
+      <div class="form-actions mt-3">
+        <button 
+          class="btn btn-primary"
+          (click)="asignarAnimacionesAPalabra(prefijoSelect.value)"
+        >
+          Guardar animaciones
+        </button>
+        <button class="btn btn-secondary" (click)="cerrarAnimacionesModal()">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
   `,
 })
 
 export class AdminPalabrasComponent implements OnInit {
   palabras: any[] = [];
   categorias: any[] = [];
+  //mesajes exito o error
+  mensajeExito: string | null = null;
+  mensajeError: string | null = null;
+  
+  // Control del modal de palabra
   showModal = false;
-  isEditing = false; // Indica si estamos en modo edición
+  isEditing = false;
   nuevaPalabra = { palabra: '', categoria: null };
-  palabraId: string | null = null; // Almacena el ID de la palabra en edición
+  palabraId: string | null = null; 
 
-  constructor(private palabrasService: PalabrasService, private categoriasService: CategoriasService) {}
+  // -- NUEVAS PROPIEDADES PARA ANIMACIONES --
+  showAnimacionesModal = false;        // Modal distinto para "enlazar animaciones"
+  allGltfFiles: any[] = [];            // Aquí guardamos todos los GLTF files
+  agrupaciones: { [prefijo: string]: any[] } = {}; 
+  prefijos: string[] = [];            // Para mostrar en un <select> si quieres
+
+  // Guardamos la palabra que está recibiendo las animaciones
+  palabraSeleccionada: any = null;
+
+  constructor(
+    private palabrasService: PalabrasService, 
+    private categoriasService: CategoriasService,
+    private gltfService: GltfService
+  ) {}
 
   ngOnInit() {
     this.obtenerPalabras();
     this.obtenerCategorias();
+    this.cargarAllAnimaciones(); // Llamamos desde el inicio para tener la info
+  }
+
+  // Llamar al backend para conseguir todos los GLTF files
+  cargarAllAnimaciones() {
+    this.gltfService.getAllGltfFiles().subscribe({
+      next: (files) => {
+        console.log('Archivos GLTF recibidos:', files);
+        this.allGltfFiles = files;
+        this.agruparPorPrefijo();
+      },
+      error: (err) => {
+        console.error('Error al cargar animaciones:', err);
+      }
+    });
+  }
+
+  // Función para agrupar por prefijo. Depende de cómo quieras "partir" el filename.
+  agruparPorPrefijo() {
+    // Reiniciamos las variables
+    this.agrupaciones = {};
+    this.prefijos = [];
+
+    for (const file of this.allGltfFiles) {
+      // Suponiendo que el prefijo es todo antes del primer '_'
+      // Si tu convención es distinta, ajústala (por ejemplo, quitar la extensión .gltf)
+      const filename = file.filename || '';
+      const filenameSinExtension = filename.replace('.gltf', '');
+      const [prefijo] = filenameSinExtension.split('_'); 
+      
+      if (!this.agrupaciones[prefijo]) {
+        this.agrupaciones[prefijo] = [];
+      }
+      this.agrupaciones[prefijo].push(file);
+    }
+
+    // Con los keys del objeto armamos la lista de prefijos
+    this.prefijos = Object.keys(this.agrupaciones);
   }
 
   obtenerPalabras() {
@@ -177,5 +272,57 @@ export class AdminPalabrasComponent implements OnInit {
       });
     }
   }
+
+  abrirAnimacionesModal(palabra: any) {
+    this.palabraSeleccionada = palabra;
+    this.showAnimacionesModal = true;
+  }
+
+  cerrarAnimacionesModal() {
+    this.showAnimacionesModal = false;
+    this.palabraSeleccionada = null;
+  }
+
+  // Cuando el usuario elige un prefijo y confirma:
+  asignarAnimacionesAPalabra(prefijo: string) {
+    if (!this.palabraSeleccionada || !this.agrupaciones[prefijo]) return;
+
+    // Obtenemos los IDs de los GLTF files
+    const animacionesIds = this.agrupaciones[prefijo].map(file => file._id);
+
+    const datosActualizados = {
+      // conservamos la palabra y categoría actual si no quieres sobrescribir
+      palabra: this.palabraSeleccionada.palabra,
+      categoria: this.palabraSeleccionada.categoria?._id || null,
+      // agregamos la propiedad animaciones
+      animaciones: animacionesIds
+    };
+
+    // Llamamos al servicio para actualizar la palabra
+    this.palabrasService.editarPalabra(this.palabraSeleccionada._id, datosActualizados)
+      .subscribe({
+        next: (respuesta) => {
+          console.log('Palabra actualizada con animaciones:', respuesta);
+          // Actualizamos en local
+          const i = this.palabras.findIndex(p => p._id === this.palabraSeleccionada._id);
+          if (i >= 0) {
+            this.palabras[i] = respuesta.palabra; // o la estructura que devuelva
+          }
+          const nombrePalabra = this.palabraSeleccionada?.palabra;
+          this.cerrarAnimacionesModal();
+          
+          this.mensajeExito = `Animaciones asignadas correctamente a "${nombrePalabra}".`;
+          setTimeout(() => this.mensajeExito = null, 3000);
+
+        },
+        error: (err) => {
+          console.error('Error al asignar animaciones:', err);
+          this.mensajeError = 'Ocurrió un error al asignar las animaciones.';
+          setTimeout(() => this.mensajeError = null, 3000);
+        }
+      });
+  }
+
+
 }
 

@@ -80,7 +80,27 @@ const descargarArchivoGltf = async (req, res) => {
     }
 };
 
+// controllers/gltf.js
+const listAllGltfFiles = async (req, res) => {
+    try {
+      const db = mongoose.connection.db;
+      const bucket = new mongoose.mongo.GridFSBucket(db, { bucketName: 'gltfFiles' });
+  
+      // Traer todos los documentos de la colección gltfFiles.files
+      const files = await bucket.find().toArray();
+  
+      return res.json(files);
+    } catch (error) {
+      console.error('Error listing GLTF files:', error);
+      return res.status(500).json({
+        msg: 'Error al listar los archivos GLTF',
+      });
+    }
+};
+  
+
 module.exports = {
     subirArchivosGltf,
-    descargarArchivoGltf
+    descargarArchivoGltf,
+    listAllGltfFiles
 };

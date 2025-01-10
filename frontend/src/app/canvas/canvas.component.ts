@@ -106,10 +106,16 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   private addControls(): void {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enableZoom = false;
+
     this.controls.minPolarAngle = Math.PI / 2;
     this.controls.maxPolarAngle = Math.PI / 2;
-    this.controls.minAzimuthAngle = -Math.PI / 6;
-    this.controls.maxAzimuthAngle = Math.PI / 6;
+    // Limitar la rotación horizontal (azimutal)
+    this.controls.minAzimuthAngle = -Math.PI / 12; // -15 grados
+    this.controls.maxAzimuthAngle = Math.PI / 12;  // 15 grado
+
+    this.controls.autoRotate = false;
+
     this.controls.update();
   }
 
@@ -162,7 +168,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         clearInterval(poseInterval);
         console.log('Animación completada.');
       }
-    }, 1000); // Intervalo ajustable
+    }, 120); // Intervalo ajustable
   }
   
 
