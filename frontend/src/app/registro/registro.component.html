@@ -1,40 +1,44 @@
 <form class="registro-form" (ngSubmit)="registerUser()">
-    <h2 class="registro-title">Regístrate y aprende lengua de signos</h2>
-    <input 
-        type="email" 
-        placeholder="Correo electrónico" 
-        [(ngModel)]="user.email" 
-        name="email" 
-        class="input-field" 
-        required 
-    />
-    <input 
-        type="password" 
-        placeholder="Contraseña" 
-        [(ngModel)]="user.password" 
-        name="password" 
-        class="input-field" 
-        required 
-    />
-    <input 
-        type="text" 
-        placeholder="Nombre completo" 
-        [(ngModel)]="user.nombre" 
-        name="nombre" 
-        class="input-field" 
-        required 
-    />
-    <input 
-        type="text" 
-        placeholder="Apellidos" 
-        [(ngModel)]="user.apellidos" 
-        name="apellidos" 
-        class="input-field" 
-        required
-    />
-    <button type="submit" class="btn">Siguiente</button>
-    
-    <p class="login">¿Tienes una cuenta? 
-        <a href="javascript:void(0);" (click)="toggleLogin.emit()">Inicia sesión</a>
-    </p>
+  <h2 class="registro-title">VISUAL VOICES</h2>
+  <input
+    type="email"
+    placeholder="Correo electrónico"
+    [(ngModel)]="user.email"
+    name="email"
+    class="input-field"
+    required
+  />
+  <input
+    type="password"
+    placeholder="Contraseña"
+    [(ngModel)]="user.password"
+    name="password"
+    class="input-field"
+    required
+  />
+  <input
+    type="text"
+    placeholder="Nombre completo"
+    [(ngModel)]="user.nombre"
+    name="nombre"
+    class="input-field"
+    required
+  />
+  <input
+    type="text"
+    placeholder="Apellidos"
+    [(ngModel)]="user.apellidos"
+    name="apellidos"
+    class="input-field"
+    required
+  />
+  <button type="submit" class="btn">Siguiente</button>
 </form>
+
+<!-- Cuadro con el mensaje y enlace de "Inicia sesión" -->
+<div class="login-box">
+  <p class="login">
+    ¿Tienes una cuenta?
+    <a href="javascript:void(0);" (click)="toggleLogin.emit()">Inicia sesión</a>
+  </p>
+</div>

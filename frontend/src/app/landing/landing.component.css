@@ -129,6 +129,8 @@
   font-family: "Lexend", sans-serif;
   font-size: 2rem;
   color: black;
+  font-weight: bold; /* Esto pone el texto en negrita */
+
 }
 
 .frase-2{
@@ -160,6 +162,7 @@
     padding: 40px;
     width: 100%;
     background-color: #fff8d4;
+    
 }
 
 .landing-register, .landing-login {

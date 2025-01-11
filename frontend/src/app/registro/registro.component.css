@@ -67,7 +67,8 @@ body {
 }
 
 .registro-title {
-    font-size: 28px;
+    font-family: "ChauPhilomene", sans-serif; 
+    font-size: 45px;
     font-weight: bold;
     text-align: center;
     margin-bottom: 15px;
@@ -103,8 +104,8 @@ body {
 
 .login {
     text-align: center;
-    margin-top: 15px;
-    font-size: 14px;
+    /* margin-top: 15px; */
+    font-size: 16px;
 }
 
 .login a {
@@ -116,6 +117,19 @@ body {
 
 .login a:hover {
     color: #d19600;
+}
+
+/* Cuadro con el mensaje "Inicia sesión" */
+.login-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    background-color: #f9e59f; /* Fondo similar al de los campos */
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 70px;
 }
 
 .google-login {

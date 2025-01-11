@@ -1,43 +1,52 @@
 <form class="login-form" (ngSubmit)="loginUser()">
-    <h2 class="registro-title">Hola de nuevo!</h2>
-    <input
-        type="email"
-        placeholder="Correo electrónico"
-        [(ngModel)]="userLogin.email"
-        name="email"
-        class="input-field"
-        required
-    />
-    <input
-        type="password"
-        placeholder="Contraseña"
-        [(ngModel)]="userLogin.password"
-        name="password"
-        class="input-field"
-        required
-    />
-    <button type="submit" class="btn">Iniciar sesión</button>
+  <h2 class="registro-title">VISUAL VOICES</h2>
+  <input
+    type="email"
+    placeholder="Correo electrónico"
+    [(ngModel)]="userLogin.email"
+    name="email"
+    class="input-field"
+    required
+  />
+  <input
+    type="password"
+    placeholder="Contraseña"
+    [(ngModel)]="userLogin.password"
+    name="password"
+    class="input-field"
+    required
+  />
+  <div class="remember-forgot">
     <div class="remember-me">
-        <input
-            type="checkbox"
-            id="rememberMe"
-            [(ngModel)]="rememberMe"
-            name="rememberMe"
-        />
-        <label for="rememberMe">Recuérdame</label>
+      <input
+        type="checkbox"
+        id="rememberMe"
+        [(ngModel)]="rememberMe"
+        name="rememberMe"
+      />
+      <label for="rememberMe">Recuérdame</label>
     </div>
-    
-    <!--<div class="divider">
+    <a href="#" class="forgot-password">¿Olvidaste la contraseña?</a>
+  </div>
+
+  <button type="submit" class="btn">Entrar</button>
+
+  <!-- <a href="#" class="forgot-password">¿Has olvidado la contraseña?</a>  -->
+  <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+</form>
+
+<div class="register-box">
+  <p class="register">
+    ¿No tienes cuenta?
+    <a href="javascript:void(0);" (click)="toggleRegister.emit()">   Regístrate</a>
+  </p>
+</div>
+
+<!--<div class="divider">
       <span class="divider-text">O</span>
     </div>
     <button type="button" class="btn google-login">
       Inicia sesión con Google
     </button>
   -->
-    
-    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
-    <p class="register">¿No tienes cuenta?
-        <a href="javascript:void(0);" (click)="toggleRegister.emit()">Regístrate</a>
-    </p>
-    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
-</form>
