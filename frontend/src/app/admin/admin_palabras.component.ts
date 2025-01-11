@@ -37,6 +37,7 @@ import { GltfService } from '../services/gltf.service'; // <-- Importa el servic
           <tr>
             <th>ID</th>
             <th>Palabra</th>
+            <th>Explicación</th>
             <th>Categoría</th>
             <th>Acciones</th>
           </tr>
@@ -46,6 +47,7 @@ import { GltfService } from '../services/gltf.service'; // <-- Importa el servic
             <td>{{ palabra._id }}</td>
             <td>{{ palabra.palabra }}</td>
             <td>{{ palabra.categoria?.nombre || 'Sin categoría' }}</td>
+            <td>{{ palabra.explicacion || 'Sin explicación' }}</td>
             <td>
               <button class="btn btn-primary btn-sm me-2" (click)="editarPalabra(palabra)">Editar</button>
               <button class="btn btn-danger btn-sm" (click)="borrarPalabra(palabra._id)">Eliminar</button>
@@ -66,6 +68,17 @@ import { GltfService } from '../services/gltf.service'; // <-- Importa el servic
           <label for="palabra">Palabra</label>
           <input type="text" id="palabra" [(ngModel)]="nuevaPalabra.palabra" name="palabra" required />
         </div>
+        <div class="form-group">
+          <label for="explicacion">Explicación</label>
+          <textarea
+            id="explicacion"
+            [(ngModel)]="nuevaPalabra.explicacion"
+            name="explicacion"
+            rows="3"
+            placeholder="Añade una explicación para esta palabra (opcional)"
+          ></textarea>
+        </div>
+
         <div class="form-group">
           <label for="categoria">Categoría</label>
           <select id="categoria" [(ngModel)]="nuevaPalabra.categoria" name="categoria">
@@ -121,7 +134,7 @@ export class AdminPalabrasComponent implements OnInit {
   // Control del modal de palabra
   showModal = false;
   isEditing = false;
-  nuevaPalabra = { palabra: '', categoria: null };
+  nuevaPalabra = { palabra: '', categoria: null, explicacion: '' };
   palabraId: string | null = null; 
 
   // -- NUEVAS PROPIEDADES PARA ANIMACIONES --
@@ -210,7 +223,7 @@ export class AdminPalabrasComponent implements OnInit {
     this.showModal = !this.showModal;
     if (!this.showModal) {
       this.isEditing = false; // Restablece el estado
-      this.nuevaPalabra = { palabra: '', categoria: null }; // Resetea el formulario
+      this.nuevaPalabra = { palabra: '', categoria: null, explicacion: '' }; // Resetea el formulario
       this.palabraId = null;
     }
   }
@@ -255,7 +268,7 @@ export class AdminPalabrasComponent implements OnInit {
   editarPalabra(palabra: any) {
     this.isEditing = true; // Cambia a modo edición
     this.palabraId = palabra._id; // Almacena el ID de la palabra a editar
-    this.nuevaPalabra = { palabra: palabra.palabra, categoria: palabra.categoria?._id || null }; // Carga los datos en el formulario
+    this.nuevaPalabra = { palabra: palabra.palabra, categoria: palabra.categoria?._id || null, explicacion: palabra.explicacion || '' }; // Carga los datos en el formulario
     this.toggleModal(); // Abre el modal
   }
 

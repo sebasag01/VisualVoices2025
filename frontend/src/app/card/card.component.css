@@ -9,6 +9,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    
   }
   
   .card {
@@ -21,6 +22,11 @@
     background-color: transparent;
     box-shadow: none;
     animation: slide-in 0.3s ease-in-out; /* Animación de entrada por defecto */
+    --cui-card-border-width: 0;
+    --cui-card-border-color: transparent;
+    border: none !important;
+    border-width: 0 !important;
+    border-color: transparent !important;
   }
   
   .card-leaving {
@@ -28,7 +34,7 @@
   }
   
   .explanation {
-    font-size: 30px;
+    font-size: 25px;
     color: #9a5416; /* Texto naranja oscuro */
     background-color: #ffae66; /* Fondo anaranjado */
     padding: 12px;

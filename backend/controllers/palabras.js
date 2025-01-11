@@ -57,7 +57,7 @@ const crearPalabra = async (req, res) => {
 // Editar una palabra
 const editarPalabra = async (req, res) => {
     const { id } = req.params;
-    const { palabra, categoria, animaciones } = req.body; // Asegurarse de incluir animaciones
+    const { palabra, categoria, animaciones,explicacion } = req.body; // Asegurarse de incluir animaciones
 
     try {
         const palabraEditada = await Palabra.findByIdAndUpdate(
@@ -65,7 +65,9 @@ const editarPalabra = async (req, res) => {
             { 
                 ...(palabra && { palabra }), // Actualiza si existe
                 ...(categoria && { categoria }), // Actualiza si existe
-                ...(animaciones && { animaciones }) // Actualiza si existe
+                ...(animaciones && { animaciones }), // Actualiza si existe
+                ...(explicacion && { explicacion }), // Actualiza la explicación si existe
+
             },
             { new: true } // Devuelve el documento actualizado
         ).populate('categoria', 'nombre');

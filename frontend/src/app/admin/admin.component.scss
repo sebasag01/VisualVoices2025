@@ -171,7 +171,15 @@ button {
   margin-top: 1rem;
 }
 
+textarea {
+  width: 100%; /* Asegura que ocupe todo el ancho disponible */
+  height: 100px; /* Ajusta la altura del cuadro */
+  resize: vertical; /* Permite cambiar la altura si es necesario */
+}
 
+.table td button {
+  margin: 0 5px 5px 0; /* Espaciado entre botones */
+}
 
 
 
