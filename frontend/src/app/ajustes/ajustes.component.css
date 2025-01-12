@@ -5,6 +5,7 @@
     font-style: normal;
   }
 .settings-panel {
+    
     width: 100%;
     background-color: #f5f5d6;
     padding: 20px;
@@ -13,7 +14,7 @@
     display: flex;
     justify-content: center; /* Centra el contenido horizontalmente */
     align-items: center; /* Centra el contenido verticalmente */
-    height: 70vh; /* Asegura que ocupe toda la altura de la pantalla */
+    height: 75vh; /* Asegura que ocupe toda la altura de la pantalla */
   }
   .cuadrofondo{
     width: 850px; /* Reduce el ancho del cuadro fondo */

@@ -16,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class RegistroComponent {
   user = { email: '', password: '', nombre: '', apellidos: '' };
+  passwordFieldType: string = 'password'; // Controla si el campo es 'password' o 'text'
   @Output() toggleLogin = new EventEmitter<void>();  
 
 
@@ -34,5 +35,9 @@ export class RegistroComponent {
         this.toastr.error('Error al registrar usuario', 'Error');
       },
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 }

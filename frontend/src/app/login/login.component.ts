@@ -16,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 export class LoginComponent {
   userLogin = { email: '', password: '' }; 
   rememberMe = false; // Nueva propiedad para "Recuérdame"
+  passwordFieldType: string = 'password'; // Controla si el campo es 'password' o 'text'
   errorMessage: string | null = null;
   @Output() toggleRegister = new EventEmitter<void>();  
 
@@ -47,6 +48,12 @@ export class LoginComponent {
       },
     });
   }
+
+  togglePasswordVisibility(): void {
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+  }
+  
+  
   
   
 }  

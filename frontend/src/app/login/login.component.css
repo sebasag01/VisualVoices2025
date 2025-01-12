@@ -216,4 +216,38 @@
     font-size: 0.93rem;
     margin-top: 10px;
   }
+
+  .password-container {
+    position: relative;
+    width: 100%; /* Asegura que el contenedor de la contraseña tenga el mismo ancho que los otros inputs */
+  }
+  
+  .password-container .input-field {
+    width: 100%; /* Asegura que el input ocupe todo el ancho del contenedor */
+    padding-right: 40px; /* Añade espacio para el ícono del ojo */
+  }
+  
+  .toggle-password-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+    outline: none;
+    padding: 0;
+
+  }
+  
+.toggle-password-btn:hover {
+  background-color: inherit; /* O usa un color específico */
+  color: inherit; /* Mantiene el color original */
+  text-decoration: none; /* Elimina subrayados en enlaces */
+  cursor: default; /* Opcional, si no quieres el puntero de enlace */
+
+  /* Añadido para centrar el contenido en pantallas pequeñas */
+}
   
