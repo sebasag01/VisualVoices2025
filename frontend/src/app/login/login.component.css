@@ -81,7 +81,8 @@
   }
   
   .registro-title {
-    font-size: 28px;
+    font-family: "ChauPhilomene", sans-serif; 
+    font-size: 45px;
     font-weight: bold;
     text-align: center;
     margin-bottom: 15px;
@@ -120,24 +121,63 @@
     align-items: center;
     gap: 8px;
     margin: 5px 0;
-    font-size: 14px;
+    /* font-size: 14px; */
   }
+
+  .remember-forgot {
+    display: flex;
+    justify-content: space-between; /* Espaciado entre los elementos */
+    align-items: center; /* Centrar verticalmente */
+    margin: 10px 0; /* Espaciado vertical */
+    width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+    font-size: 14px; /* Tamaño del texto */
+}
+
   
   .forgot-password {
     color: #666;
     text-decoration: none;
-    text-align: center;
-    font-size: 14px;
+    /* font-size: 14px; */
     transition: color 0.3s ease;
   }
   
   .forgot-password:hover {
     color: #333;
   }
+
+  .register-box {
+    margin-top: 20px; /* Espacio entre el formulario y el cuadro */
+    padding: 15px; /* Espaciado interno */
+    background-color: #f9e59f; /* Fondo amarillo suave */
+    border-radius: 15px; /* Bordes redondeados */
+    text-align: center; /* Centra el texto */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombras para resaltar */
+
+    /* Añadido para centrar completamente el texto */
+    display: flex; /* Activar flexbox */
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    height: 70px; /* Ajustar la altura del cuadro según sea necesario */
+}
+
+.register-box .register {
+    font-size: 16px; /* Tamaño del texto */
+}
+
+.register-box .register a {
+    color: #f4b400; /* Color del enlace */
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.register-box .register a:hover {
+    color: #d19600;
+}
+
   
   .register {
     text-align: center;
-    margin-top: 15px;
     font-size: 14px;
   }
   

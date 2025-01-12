@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
   palabras: any[] = []; // Lista de palabras obtenidas de la base de datos
   currentCategoryId: string | null = null; // Categoría actual seleccionada
   currentAnimationUrls: string[] = []; // URLs de las animaciones seleccionadas
+Math: any;
 
   constructor(private categoriasService: CategoriasService, private animacionService: AnimacionService) {}
 
@@ -31,6 +32,11 @@ export class HomeComponent implements OnInit {
       next: (data) => {
         this.categorias = data;
         console.log('Categorías cargadas:', this.categorias);
+
+        if (this.categorias.length > 0) {
+          // Selecciona automáticamente la primera categoría
+          this.selectCategory(this.categorias[0]._id);
+        }
       },
       error: (error) => {
         console.error('Error al cargar las categorías:', error);
