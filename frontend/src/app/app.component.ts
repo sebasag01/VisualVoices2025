@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
     }
   
     // Lista de rutas permitidas sin autenticación
-    const allowedRoutes = ['/landing', '/home', '/guiado'];
+    const allowedRoutes = ['/landing'];
   
     // Si la ruta actual está permitida, no hacer nada
     if (allowedRoutes.includes(currentRoute)) {
