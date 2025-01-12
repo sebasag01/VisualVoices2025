@@ -12,10 +12,14 @@ import { AdminRoleGuard } from './guards/admin-role.guard';
 import { AdminUsuariosComponent } from './admin/admin_usuarios.component';
 import { AdminPalabrasComponent } from './admin/admin_palabras.component';
 import { AdminCategoriasComponent } from './admin/admin_categorias.component';
+import { AjustesComponent } from './ajustes/ajustes.component';
+import { MiperfilComponent } from './miperfil/miperfil.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'landing', component: LandingComponent },
+  {path: 'ajustes', component: AjustesComponent },
+  {path: 'perfil', component: MiperfilComponent },
   { path: 'admin', component: AdminComponent, canActivate: [AdminRoleGuard], 
     children: [
       { path: '', redirectTo: 'usuarios', pathMatch: 'full' },

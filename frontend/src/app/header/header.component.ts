@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { UsuariosService } from '../services/usuarios.service';
 
+
 @Component({
   standalone: true,
   selector: 'app-header',
@@ -61,7 +62,10 @@ export class HeaderComponent {
     console.log(`Navigating to ${destination}`);
     if (destination === 'admin') {
       this.router.navigate(['/admin']); // Redirigir a la ruta de administración
-    } 
+    } else if (destination === 'ajustes') {
+      this.router.navigate(['/ajustes']);}
+      else if (destination === 'perfil') {
+        this.router.navigate(['/perfil']);}
   }
 
   logout() {
