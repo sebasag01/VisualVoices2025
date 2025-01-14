@@ -5,16 +5,16 @@
   font-style: normal;
 }
 
-/* .header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   background-color: #f2c464;
   font-family: 'Chauphilomene', sans-serif; 
-} */
+}
 
-.header {
+/* .header {
   position: fixed;
   top: 10px;
   left: 0;
@@ -29,7 +29,7 @@
   font-family: "Chauphilomene", sans-serif;
   margin-left: 10px;
   margin-right: 10px;
-}
+} */
 
 .logo img {
   height: 80px;
