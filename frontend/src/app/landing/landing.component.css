@@ -472,3 +472,14 @@ body {
 /* ---------------------------------------------------------------------------
                             FIN DEL FOOTER
 --------------------------------------------------------------------------- */
+
+/*CHATBOT*/
+df-messenger {
+  width: 100%;
+  height: 500px; /* Cambia la altura deseada */
+}
+
+df-messenger::part(chat-wrapper) {
+  height: 500px !important; /* Ajusta la altura aquí */
+}
+

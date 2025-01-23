@@ -5,13 +5,16 @@ import { CommonModule } from '@angular/common';
 import { CanvasComponent } from '../canvas/canvas.component';
 import { environment } from '../../environments/environment';
 
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
 @Component({
   selector: 'app-landing',
   standalone: true,
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.css'],
   encapsulation: ViewEncapsulation.None,  // Desactiva el encapsulamiento
-  imports: [CommonModule, LoginComponent, RegistroComponent,CanvasComponent]
+  imports: [CommonModule, LoginComponent, RegistroComponent,CanvasComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LandingComponent {
   environment = environment;

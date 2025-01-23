@@ -1,5 +1,8 @@
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+   
+    
   </head>  
 
 <header class="header">
@@ -12,6 +15,7 @@
       <button class="btn login" (click)="showLogin()">INICIA SESIÓN</button>
   </div>
 </header>
+
 
 
 <main class="main-container">
@@ -45,6 +49,15 @@
           </div>
       </div>
   </div> 
+  
+<!--CHATBOT-->
+
+<df-messenger
+  chat-title="MANOlo"
+  agent-id="2faf7558-0b47-4132-8b38-a0f11b4e1ac2"
+  language-code="es"
+  style="width: 350px; height: 500px;">
+</df-messenger>
 
 </main>
 
