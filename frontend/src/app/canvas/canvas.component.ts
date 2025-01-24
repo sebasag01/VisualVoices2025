@@ -204,7 +204,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
             (gltf) => {
               console.log('Modelo cargado exitosamente:', gltf);
               this.avatar = gltf.scene;
-  
+
               const box = new THREE.Box3().setFromObject(this.avatar);
               const center = box.getCenter(new THREE.Vector3());
               this.avatar.position.sub(center);
