@@ -16,30 +16,30 @@ import { ViewEncapsulation } from '@angular/core';
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h2>Gestión de Usuarios</h2>
-        <button class="btn btn-success" (click)="toggleModal()">Agregar Usuario</button>
+        <button class="btn btn-success" (click)="toggleModal()"> <i class="fas fa-plus"></i> Agregar Usuario</button>
       </div>
       <div class="card-body">
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th>UID</th>
               <th>Nombre</th>
               <th>Apellidos</th>
               <th>Email</th>
               <th>Rol</th>
+              <th>Nivel</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let usuario of usuarios">
-              <td>{{ usuario.uid }}</td>
               <td>{{ usuario.nombre }}</td>
               <td>{{ usuario.apellidos }}</td>
               <td>{{ usuario.email }}</td>
               <td>{{ usuario.rol }}</td>
+              <td>{{ usuario.currentLevel }}</td>
               <td>
-                <button class="btn btn-primary btn-sm me-2" (click)="editarUsuario(usuario)">Editar</button>
-                <button class="btn btn-danger btn-sm" (click)="deleteUsuario(usuario.uid)">Eliminar</button>
+                <button class="btn btn-primary btn-sm me-2" (click)="editarUsuario(usuario)"><i class="fas fa-edit"></i> Editar</button>
+                <button class="btn btn-danger btn-sm" (click)="deleteUsuario(usuario.uid)"><i class="fas fa-trash-alt"></i> Eliminar</button>
               </td>
             </tr>
           </tbody>

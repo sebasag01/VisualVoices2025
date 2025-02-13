@@ -181,5 +181,26 @@ textarea {
   margin: 0 5px 5px 0; /* Espaciado entre botones */
 }
 
+.btn-success {
+  background-color: #5856d6 !important; /* el color que quieras */
+  border-color: #5856d6 !important;
+  color: #fff !important;              /* para el texto */
+  &:hover {
+    background-color: #4b49b6 !important; /* el color que quieras */
+    border-color: #4645ab !important;
+  }
+}
+
+.btn-info {
+  background-color: #5856d6 !important; /* el color que quieras */
+  border-color: #5856d6 !important;
+  color: #fff !important;              /* para el texto */
+  &:hover {
+    background-color: #4b49b6 !important; /* el color que quieras */
+    border-color: #4645ab !important;
+  }
+}
+
+
 
 

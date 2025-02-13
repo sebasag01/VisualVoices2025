@@ -28,30 +28,34 @@ import { GltfService } from '../services/gltf.service'; // <-- Importa el servic
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h2>Gestión de Palabras</h2>
-      <button class="btn btn-success" (click)="toggleModal()">Agregar Palabra</button>
-    </div>
+      <button class="btn btn-success" (click)="toggleModal()">
+        <i class="fas fa-plus"></i> Agregar Palabra
+      </button>    
+  </div>
     <div class="card-body">
       <!-- Tabla de palabras -->
       <table class="table table-striped table-hover">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Palabra</th>
             <th>Explicación</th>
             <th>Categoría</th>
+            <th>Nivel</th>
+            <th>Orden</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let palabra of palabras">
-            <td>{{ palabra._id }}</td>
             <td>{{ palabra.palabra }}</td>
             <td>{{ palabra.categoria?.nombre || 'Sin categoría' }}</td>
             <td>{{ palabra.explicacion || 'Sin explicación' }}</td>
+            <td>{{ palabra.nivel || 1 }}</td>
+            <td>{{ palabra.orden || 0 }}</td>  
             <td>
-              <button class="btn btn-primary btn-sm me-2" (click)="editarPalabra(palabra)">Editar</button>
-              <button class="btn btn-danger btn-sm" (click)="borrarPalabra(palabra._id)">Eliminar</button>
-              <button class="btn btn-info btn-sm" (click)="abrirAnimacionesModal(palabra)">Enlazar Animaciones</button>
+              <button class="btn btn-primary btn-sm me-2" (click)="editarPalabra(palabra)"> <i class="fas fa-edit"></i> Editar</button>
+              <button class="btn btn-danger btn-sm" (click)="borrarPalabra(palabra._id)"> <i class="fas fa-trash-alt"></i> Eliminar</button>
+              <button class="btn btn-info btn-sm" (click)="abrirAnimacionesModal(palabra)"> <i class="fas fa-link"></i> Enlazar Animaciones</button>
             </td>
           </tr>
         </tbody>
@@ -86,6 +90,29 @@ import { GltfService } from '../services/gltf.service'; // <-- Importa el servic
             <option *ngFor="let categoria of categorias" [ngValue]="categoria._id">{{ categoria.nombre }}</option>
           </select>
         </div>
+
+        <div class="form-group">
+          <label for="nivel">Nivel</label>
+          <input
+            type="number"
+            id="nivel"
+            [(ngModel)]="nuevaPalabra.nivel"
+            name="nivel"
+            placeholder="Ej: 1, 2, 3..."
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="orden">Orden</label>
+          <input
+            type="number"
+            id="orden"
+            [(ngModel)]="nuevaPalabra.orden"
+            name="orden"
+            placeholder="Ej: 1, 2, 3..."
+          />
+        </div>
+
         <div class="form-actions">
           <button type="button" class="btn btn-secondary" (click)="toggleModal()">Cancelar</button>
           <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
@@ -134,7 +161,7 @@ export class AdminPalabrasComponent implements OnInit {
   // Control del modal de palabra
   showModal = false;
   isEditing = false;
-  nuevaPalabra = { palabra: '', categoria: null, explicacion: '' };
+  nuevaPalabra = { palabra: '', categoria: null, explicacion: '', nivel: 1, orden: 0 };
   palabraId: string | null = null; 
 
   // -- NUEVAS PROPIEDADES PARA ANIMACIONES --
@@ -223,7 +250,7 @@ export class AdminPalabrasComponent implements OnInit {
     this.showModal = !this.showModal;
     if (!this.showModal) {
       this.isEditing = false; // Restablece el estado
-      this.nuevaPalabra = { palabra: '', categoria: null, explicacion: '' }; // Resetea el formulario
+      this.nuevaPalabra = { palabra: '', categoria: null, explicacion: '', nivel: 1, orden: 0 }; // Resetea el formulario
       this.palabraId = null;
     }
   }
@@ -268,7 +295,7 @@ export class AdminPalabrasComponent implements OnInit {
   editarPalabra(palabra: any) {
     this.isEditing = true; // Cambia a modo edición
     this.palabraId = palabra._id; // Almacena el ID de la palabra a editar
-    this.nuevaPalabra = { palabra: palabra.palabra, categoria: palabra.categoria?._id || null, explicacion: palabra.explicacion || '' }; // Carga los datos en el formulario
+    this.nuevaPalabra = { palabra: palabra.palabra, categoria: palabra.categoria?._id || null, explicacion: palabra.explicacion || '', nivel: palabra.nivel || 1, orden: palabra.orden || 1 }; // Carga los datos en el formulario
     this.toggleModal(); // Abre el modal
   }
 

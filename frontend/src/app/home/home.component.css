@@ -19,7 +19,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  min-height: 80vh;
   background-color: #fff8d4;
   max-width: 100% !important; 
   width: 100% !important;
@@ -45,8 +45,6 @@
   align-items: center;
   gap: 60px;
   width: 100%;
-  padding: 20px 40px;
-  min-height: 70vh;
 }
 
 .image-container {
@@ -68,7 +66,6 @@
   border-radius: 10px;
   width: 550px;
   height: 400px; 
-  margin-right: 20px;
   margin-left: 120px;
   overflow: hidden; 
 }
