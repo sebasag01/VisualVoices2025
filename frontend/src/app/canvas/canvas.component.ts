@@ -81,7 +81,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   private initCamera(): void {
     const sizes = { width: window.innerWidth, height: window.innerHeight };
     this.camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100);
-    this.camera.position.set(0, 5.5, 5); // Posición en X, Y, Z
+    this.camera.position.set(0, 1.5, 8.5); // Posición en X, Y, Z
     this.camera.lookAt(0, 0, 0); // La cámara mira hacia el centro de la escena
     this.scene.add(this.camera);
   }
@@ -95,7 +95,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     this.renderer = new THREE.WebGLRenderer({ canvas });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.setClearColor(0xfff8d4);
+    this.renderer.setClearColor(0x000000, 0);
   }
 
   private addLights(): void {
@@ -115,13 +115,13 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   private addControls(): void {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableZoom = false;
+    this.controls.enableZoom = true;
 
-    this.controls.minPolarAngle = Math.PI / 2;
-    this.controls.maxPolarAngle = Math.PI / 2;
+    //this.controls.minPolarAngle = Math.PI / 2;
+    //this.controls.maxPolarAngle = Math.PI / 2;
     // Limitar la rotación horizontal (azimutal)
-    this.controls.minAzimuthAngle = -Math.PI / 12; // -15 grados
-    this.controls.maxAzimuthAngle = Math.PI / 12;  // 15 grado
+    //this.controls.minAzimuthAngle = -Math.PI / 12; // -15 grados
+    //this.controls.maxAzimuthAngle = Math.PI / 12;  // 15 grado
 
     this.controls.autoRotate = false;
 
@@ -218,6 +218,9 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
               const center = box.getCenter(new THREE.Vector3());
               this.avatar.position.sub(center);
   
+              this.avatar.scale.set(1.5, 1.4, 1.5);
+              this.avatar.position.y -= -0.3; // Ajusta el valor a tu gusto
+
               this.scene.add(this.avatar);
               console.log('Avatar añadido a la escena');
               URL.revokeObjectURL(url);
@@ -250,6 +253,17 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     this.avatar = undefined; // Resetea el avatar
     this.poses = []; // Reinicia las poses
     console.log('Canvas limpiado.');
+  }
+
+  public resetView(): void {
+    // Posición “inicial” que quieres
+    this.camera.position.set(0, 1.5, 8.5);
+    // Dónde mira la cámara
+    this.camera.lookAt(0, 0, 0);
+  
+    // Asegúrate de reiniciar el target de OrbitControls
+    this.controls.target.set(0, 0, 0);
+    this.controls.update();
   }
   
 }
