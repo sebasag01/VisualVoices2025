@@ -18,13 +18,14 @@
     z-index: 0;
     max-width: 800px;
     max-height: 600px;
+    pointer-events: none;
+
 }
 
 .reset-btn {
     position: absolute;
-    top: 20px;
-    right: 20px; 
-    padding: 8px 16px;
-    cursor: pointer;
+    top: 10px;   /* Ajusta según necesites */
+    right: 10px; /* Ajusta según necesites */
+    z-index: 9999;
   }
   

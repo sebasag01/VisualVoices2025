@@ -6,11 +6,13 @@ import { GLTFLoader } from 'three-stdlib';
 import { AnimacionService } from '../services/animacion.service';
 import { GltfService } from '../services/gltf.service';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-canvas',
   standalone: true,
-  imports: [HttpClientModule],
+  imports: [CommonModule,HttpClientModule],
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css'],
 })
@@ -18,6 +20,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   @ViewChild('webglCanvas', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
   
   @Input() animationUrls: string[] = [];
+  @Input() showResetButton: boolean = false;
+
 
   private renderer!: THREE.WebGLRenderer;
   private scene!: THREE.Scene;
@@ -64,6 +68,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    console.log('showResetButton:', this.showResetButton);
     this.initScene();
     this.initCamera();
     this.initRenderer();
