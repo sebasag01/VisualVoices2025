@@ -94,6 +94,85 @@
   display: flex;
   width: 100%;
   height: 100vh;
+  flex-direction: row-reverse; /* Invierte el orden de los elementos */
+
+}
+
+.landing-left {
+  width: 50%;
+  background-color: #f2c464;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-top-left {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px; /* Ajusta la separación entre la bombilla y el texto */
+
+}
+
+.logo-container {
+  width: 100px;
+  height: auto;
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column; /* Pone "Visual" arriba y "Voices" abajo */
+  text-align: left; /* Asegura alineación a la izquierda */
+  line-height: 1; /* Ajusta el espacio entre líneas */}
+
+.form-section {
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-top: 100px; /* Aumenta este valor para moverlo más abajo */
+  margin-left: 100px; /* Aumenta este valor para moverlo más a la derecha */
+}
+
+.landing-right {
+  width: 50%;
+  background-color: #f2c464;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Lo mueve hacia abajo */
+  align-items: flex-end; /* Lo mueve hacia la derecha */
+  padding-right: 50px; /* Ajusta la distancia hacia la derecha */
+  padding-top: 50px; /* Ajusta la distancia hacia abajo */
+}
+
+.canvas-section {
+  width: 100%;
+  max-width: 400px; /* Ajusta el tamaño del avatar si es necesario */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+/* .landing-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
 }
 
 
@@ -102,8 +181,8 @@
   background-color: #f2c464;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Alinea arriba */
-  align-items: flex-start; /* Alinea a la izquierda */
+  justify-content: flex-start; 
+  align-items: flex-start; 
   padding: 40px;
   text-align: left;
   position: relative;
@@ -114,9 +193,9 @@
   align-items: center; 
   gap: 15px; 
   margin-bottom: 20px;
-}
+} */
 
-.logo-container  {
+/* .logo-container  {
   width: 200px; 
   height: auto;
   text-align: center;
@@ -126,12 +205,12 @@
   display: flex;
   flex-direction: column;
   text-align: center;
-}
+} */
 
 .main-title {
   font-family: "Chauphilomene", sans-serif;
-  font-size: 5rem;
-  font-weight: bold;
+  font-size: 2.5rem;
+  /* font-weight: bold; */
   color: black;
   margin: 0;
 }
@@ -144,29 +223,28 @@
 }
 
 
-.landing-right {
+/* .landing-right {
   width: 50%;
-  background-color: #fff8d4; 
+  background-color: #f2c464; 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-/* Estilos del formulario */
 .form-section {
   width: 100%;
   max-width: 450px;
   display: flex;
   justify-content: center;
-}
+} */
 
-.canvas-section {
+/* .canvas-section {
   width: 100%;
   max-width: 500px;
   display: flex;
   justify-content: center;
-}
+} */
 
 .landing .canvas {
   background-color: lightblue;
@@ -462,7 +540,7 @@ body {
 
 
 .footer {
-  background-color: #f2c464; 
+  background-color: #f7d07b ; 
   color: black;
   text-align: center;
   padding: 20px;
@@ -473,6 +551,8 @@ body {
   display: flex;
   justify-content: space-between; 
   align-items: center; 
+  border-top: none; /* Elimina cualquier borde superior */
+  box-shadow: none; /* Elimina cualquier sombra */
 }
 
 

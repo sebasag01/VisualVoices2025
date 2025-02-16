@@ -14,9 +14,12 @@ import { AdminPalabrasComponent } from './admin/admin_palabras.component';
 import { AdminCategoriasComponent } from './admin/admin_categorias.component';
 import { AjustesComponent } from './ajustes/ajustes.component';
 import { MiperfilComponent } from './miperfil/miperfil.component';
+import { ModeSelectorComponent } from './mode-selector/mode-selector.component';
+
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
+  { path: 'mode-selector', component: ModeSelectorComponent },
   { path: 'landing', component: LandingComponent },
   {path: 'ajustes', component: AjustesComponent },
   {path: 'perfil', component: MiperfilComponent },

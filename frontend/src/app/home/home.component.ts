@@ -19,9 +19,12 @@ export class HomeComponent implements OnInit {
   palabras: any[] = []; // Lista de palabras obtenidas de la base de datos
   currentCategoryId: string | null = null; // Categoría actual seleccionada
   currentAnimationUrls: string[] = []; // URLs de las animaciones seleccionadas
-Math: any;
+  Math: any;
 
-  constructor(private categoriasService: CategoriasService, private animacionService: AnimacionService) {}
+  constructor(
+    private categoriasService: CategoriasService,
+    private animacionService: AnimacionService
+  ) {}
 
   ngOnInit(): void {
     this.cargarCategorias(); // Cargar las categorías al inicio
@@ -51,7 +54,10 @@ Math: any;
     this.categoriasService.obtenerPalabrasPorCategoria(categoriaId).subscribe({
       next: (data) => {
         this.palabras = data;
-        console.log(`Palabras cargadas para la categoría ${categoriaId}:`, this.palabras);
+        console.log(
+          `Palabras cargadas para la categoría ${categoriaId}:`,
+          this.palabras
+        );
       },
       error: (error) => {
         console.error('Error al cargar las palabras:', error);
@@ -60,37 +66,43 @@ Math: any;
   }
 
   seleccionarPalabra(palabra: any): void {
-  console.log('Palabra seleccionada:', palabra);
-  console.log('Animaciones asociadas:', palabra.animaciones);
+    console.log('Palabra seleccionada:', palabra);
+    console.log('Animaciones asociadas:', palabra.animaciones);
 
-  if (palabra.animaciones && palabra.animaciones.length > 0) {
-    // Si hay animaciones, construimos las URLs
-    const animacionesUrls = palabra.animaciones.map(
-      (animacion: any) => `${environment.apiUrl}/gltf/animaciones/${animacion.filename}`
-    );
+    if (palabra.animaciones && palabra.animaciones.length > 0) {
+      // Si hay animaciones, construimos las URLs
+      const animacionesUrls = palabra.animaciones.map(
+        (animacion: any) =>
+          `${environment.apiUrl}/gltf/animaciones/${animacion.filename}`
+      );
 
-    console.log('URLs de las animaciones generadas:', animacionesUrls);
+      console.log('URLs de las animaciones generadas:', animacionesUrls);
 
-    // Verificar que las animaciones están correctamente formateadas
-    animacionesUrls.forEach((url: string) => {
-      console.log(`Comprobando animación en URL: ${url}`);
-      fetch(url).then(response => {
-        if (response.ok) {
-          console.log(`Animación encontrada: ${url}`);
-        } else {
-          console.warn(`Error al acceder a la animación: ${url}`);
-        }
-      }).catch(error => {
-        console.error(`Error al intentar acceder a la animación: ${url}`, error);
+      // Verificar que las animaciones están correctamente formateadas
+      animacionesUrls.forEach((url: string) => {
+        console.log(`Comprobando animación en URL: ${url}`);
+        fetch(url)
+          .then((response) => {
+            if (response.ok) {
+              console.log(`Animación encontrada: ${url}`);
+            } else {
+              console.warn(`Error al acceder a la animación: ${url}`);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              `Error al intentar acceder a la animación: ${url}`,
+              error
+            );
+          });
       });
-    });
 
-    // Enviar las animaciones al servicio
-    this.animacionService.cargarAnimaciones(animacionesUrls, true); // Marcamos como manual = true
-  } else {
-    console.warn('No hay animaciones asociadas a esta palabra.');
+      // Enviar las animaciones al servicio
+      this.animacionService.cargarAnimaciones(animacionesUrls, true); // Marcamos como manual = true
+    } else {
+      console.warn('No hay animaciones asociadas a esta palabra.');
+    }
   }
-}
 
   /*
   cargarAnimacionesSecuenciales(animaciones: any[]): void {
