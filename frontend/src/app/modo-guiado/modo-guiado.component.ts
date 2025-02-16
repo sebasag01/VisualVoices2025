@@ -88,7 +88,7 @@ export class ModoGuiadoComponent implements OnInit {
         },
         {
           element: '#avatar-element',
-          intro: 'Aquí tienes tu avatar 3D. ¡Interactúa con él para ver animaciones!',
+          intro: 'Aquí tienes tu avatar 3D. ¡Interactúa con él!',
           position: 'right'
         },
       ],
