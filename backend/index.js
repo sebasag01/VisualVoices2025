@@ -9,6 +9,9 @@ const loginRoute = require('./routes/auth');
 const palabrasRoutes = require('./routes/palabras');
 const categoriasRoutes = require('./routes/categorias');
 const gltfRoutes = require('./routes/gltf');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+
 
 // Crear una aplicación de express
 const app = express();
@@ -17,6 +20,11 @@ const app = express();
 dbConnection();
 
 app.use(cookieParser());
+
+app.use(helmet());
+
+app.use(mongoSanitize());
+
 
 // Configurar CORS
 const allowedOrigins = process.env.NODE_ENV === 'production' 
@@ -55,6 +63,8 @@ app.use('/api/login', loginRoute);
 app.use('/api/categorias', categoriasRoutes);
 app.use('/api/palabras', palabrasRoutes);
 app.use('/api/gltf', gltfRoutes);
+//app.use('/api/stats', require('./routes/stats'));
+
 
 // Abrir la aplicacíon en el puerto 3000
 app.listen(process.env.PORT, () => {

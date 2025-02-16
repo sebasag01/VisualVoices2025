@@ -57,7 +57,7 @@ const crearPalabra = async (req, res) => {
 // Editar una palabra
 const editarPalabra = async (req, res) => {
     const { id } = req.params;
-    const { palabra, categoria, animaciones,explicacion } = req.body; // Asegurarse de incluir animaciones
+    const { palabra, categoria, animaciones,explicacion,nivel, orden } = req.body; // Asegurarse de incluir animaciones
 
     try {
         const palabraEditada = await Palabra.findByIdAndUpdate(
@@ -67,6 +67,9 @@ const editarPalabra = async (req, res) => {
                 ...(categoria && { categoria }), // Actualiza si existe
                 ...(animaciones && { animaciones }), // Actualiza si existe
                 ...(explicacion && { explicacion }), // Actualiza la explicación si existe
+                ...(nivel !== undefined && { nivel }), // Actualiza el nivel si existe
+                ...(orden !== undefined && { orden }) // Actualiza el orden si existe
+
 
             },
             { new: true } // Devuelve el documento actualizado
@@ -147,6 +150,36 @@ const obtenerPalabrasPorCategoria = async (req, res) => {
 };
 
 
+// Controlador para obtener palabras por nivel
+const obtenerPalabrasPorNivel = async (req, res) => {
+    try {
+      const { nivel } = req.query;
+      // Convertimos el nivel a número por seguridad
+      const nivelNum = parseInt(nivel, 10);
+  
+      // Si no viene nivel en la query, podrías devolver error o devolver todas.
+      if (!nivelNum) {
+        return res.status(400).json({ msg: 'Falta el parámetro nivel' });
+      }
+  
+      // Buscar solo las palabras con ese nivel
+      const palabras = await Palabra.find({ nivel: nivelNum })
+        .sort({ orden: 1 }) // 1 = orden ascendente
+        .populate('categoria', 'nombre')
+        .populate({
+            path: 'animaciones',
+            select: 'filename',
+        });
+
+  
+      res.json(palabras);
+    } catch (error) {
+      console.error('Error al obtener palabras por nivel:', error);
+      res.status(500).json({ msg: 'Error al obtener palabras' });
+    }
+  };
+  
+
 
 
 module.exports = {
@@ -156,5 +189,6 @@ module.exports = {
     editarPalabra,
     borrarPalabra,
     asociarCategoria,
-    obtenerPalabrasPorCategoria
+    obtenerPalabrasPorCategoria,
+    obtenerPalabrasPorNivel
 };

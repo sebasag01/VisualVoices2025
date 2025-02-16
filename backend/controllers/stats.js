@@ -1,0 +1,50 @@
+// controllers/stats.js
+const Stats = require('../models/stats');
+
+// POST /api/stats/start-level
+// body: { userId, level }
+const startLevel = async (req, res) => {
+  try {
+    const { userId, level } = req.body;
+    const newSession = new Stats({ userId, level });
+    await newSession.save();
+
+    res.json({
+      ok: true,
+      msg: 'Sesión de nivel iniciada',
+      statsId: newSession._id,
+    });
+  } catch (error) {
+    console.error('Error al iniciar nivel:', error);
+    res.status(500).json({ ok: false, msg: 'Error al iniciar nivel' });
+  }
+};
+const endLevel = async (req, res) => {
+    try {
+      const { statsId } = req.params; // se envía como /api/stats/end-level/:statsId
+      const session = await Stats.findById(statsId);
+      if (!session) {
+        return res.status(404).json({ ok: false, msg: 'Sesión no encontrada' });
+      }
+  
+      // Marcamos la hora de finalización
+      session.endTime = new Date();
+      session.durationMs = session.endTime.getTime() - session.startTime.getTime();
+  
+      await session.save();
+  
+      res.json({
+        ok: true,
+        msg: 'Sesión de nivel finalizada',
+        durationMs: session.durationMs,
+      });
+    } catch (error) {
+      console.error('Error al finalizar nivel:', error);
+      res.status(500).json({ ok: false, msg: 'Error al finalizar nivel' });
+    }
+  };
+  
+  module.exports = {
+    startLevel,
+    endLevel
+  };

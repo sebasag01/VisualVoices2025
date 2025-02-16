@@ -17,7 +17,17 @@ const PalabraSchema = Schema({
     animaciones: [{ 
         type: Schema.Types.ObjectId, // Referencia a los archivos GLTF
         ref: 'gltfFiles.files' 
-    }]
+    }],
+    nivel: {
+        type: Number,
+        default: 1,
+        required: true
+    },
+    orden: {
+        type: Number,
+        default: 0,
+        required: true
+      }      
 });
 
 module.exports = model('Palabra', PalabraSchema);

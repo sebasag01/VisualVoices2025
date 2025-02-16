@@ -19,6 +19,11 @@ export class PalabrasService {
     return this.http.get(`${this.baseUrl}/${id}`, { withCredentials: true });
   }
 
+  obtenerPalabrasPorNivel(nivel: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/por-nivel?nivel=${nivel}`, { withCredentials: true });
+  }
+  
+
   crearPalabra(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}`, data, { withCredentials: true });
   }

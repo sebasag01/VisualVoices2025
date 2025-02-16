@@ -2,19 +2,30 @@
 
 <div class="container">
   <div class="content">
-    <p class="instructions">EXPLORA LIBREMENTE LOS BOTONES. CLICA Y TE MOSTRAREMOS CÓMO SE SIGNA...</p>
     <div class="layout">
-      <div class="image-container">
+      
+      <button (click)="iniciarTutorial()">Iniciar tutorial</button>
+
+      <div class="image-container" id="avatar-element">
         <app-canvas></app-canvas>      
       </div>
 
       <app-card
+        [showWelcome]="showWelcome"         
+        [levelNumber]="nivelActual"         
+        (continueClicked)="continuar()"
+        (startOverClicked)="empezarDesdePrimera()" 
         [word]="currentWord"
         [explanation]="currentExplanation"
         (wordClick)="handleWordClick()"
         (repeatClick)="handleRepeatClick()"
         (prevClick)="prevWord()"
-        (nextClick)="nextWord()"
+        [nextLabel]="isLastWord() ? 'Avanzar Nivel' : 'Siguiente'"
+        (nextClick)="isLastWord() ? advanceLevel() : nextWord()"
+        (chooseLevelClicked)="openChooseLevel()"
+        [availableLevels]="availableLevels"
+        [showChooseLevel]="showChooseLevel"
+        (levelSelected)="onLevelSelected($event)"
       ></app-card>
     </div>
   </div>

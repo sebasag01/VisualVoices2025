@@ -16,24 +16,22 @@ import { FormsModule } from '@angular/forms';
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h2>Gestión de Categorías</h2>
-        <button class="btn btn-success" (click)="toggleModal()">Agregar Categoría</button>
+        <button class="btn btn-success" (click)="toggleModal()"><i class="fas fa-plus"></i> Agregar Categoría</button>
       </div>
       <div class="card-body">
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Nombre</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let categoria of categorias">
-              <td>{{ categoria._id }}</td>
               <td>{{ categoria.nombre }}</td>
               <td>
-                <button class="btn btn-primary btn-sm me-2" (click)="editarCategoria(categoria)">Editar</button>
-                <button class="btn btn-danger btn-sm" (click)="eliminarCategoria(categoria._id)">Eliminar</button>
+                <button class="btn btn-primary btn-sm me-2" (click)="editarCategoria(categoria)"><i class="fas fa-edit"></i> Editar</button>
+                <button class="btn btn-danger btn-sm" (click)="eliminarCategoria(categoria._id)"><i class="fas fa-trash-alt"></i> Eliminar</button>
               </td>
             </tr>
           </tbody>

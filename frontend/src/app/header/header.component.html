@@ -4,8 +4,8 @@
       <img src="assets/bombillita2.png" alt="Logo" />
     </div>
   
-    <div class="menu-buttons" *ngIf="!isMobile">
-      <button [class.active]="selectedMode === 'modo1'" (click)="selectMode('modo1')">
+    <div class="menu-buttons" *ngIf="!isMobile" id="modos-container">
+      <button id="modo-guiado-button" [class.active]="selectedMode === 'modo1'" (click)="selectMode('modo1')">
         <!-- Si está seleccionado (modo2), muestra sin <br> -->
         <ng-container *ngIf="selectedMode === 'modo1'; else notSelectedModo1">
           MODO GUIADO
@@ -16,7 +16,7 @@
         </ng-template>
       </button>
 
-      <button [class.active]="selectedMode === 'modo2'" (click)="selectMode('modo2')">
+      <button id="modo-libre-button" [class.active]="selectedMode === 'modo2'" (click)="selectMode('modo2')">
         <!-- Si está seleccionado (modo2), muestra sin <br> -->
         <ng-container *ngIf="selectedMode === 'modo2'; else notSelectedModo2">
           MODO LIBRE
@@ -27,7 +27,7 @@
         </ng-template>
       </button>
       
-      <button [class.active]="selectedMode === 'modo3'" (click)="selectMode('modo3')">
+      <button id="modo-examen-button" [class.active]="selectedMode === 'modo3'" (click)="selectMode('modo3')">
         <ng-container *ngIf="selectedMode === 'modo3'; else notSelectedModo3">
           MODO EXAMEN
         </ng-container>

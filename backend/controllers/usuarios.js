@@ -200,9 +200,79 @@ const borrarUsuario = async(req, res = response) => {
     }
 }
 
+// PATCH /api/usuarios/:id/nivel
+const actualizarNivelUsuario = async (req, res = response) => {
+    try {
+        const { id } = req.params;         // ID del usuario en la URL
+        const { newLevel } = req.body;     // Nivel nuevo en el body
+
+        const usuarioActualizado = await Usuario.findByIdAndUpdate(
+            id,
+            { currentLevel: newLevel },
+            { new: true } // para devolver el usuario ya actualizado
+        );
+
+        if (!usuarioActualizado) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Usuario no encontrado'
+            });
+        }
+
+        res.json({
+            ok: true,
+            msg: 'Nivel actualizado',
+            usuario: usuarioActualizado
+        });
+    } catch (error) {
+        console.error('Error al actualizar nivel del usuario:', error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error actualizando nivel del usuario'
+        });
+    }
+};
+
+
+
+// PATCH /api/usuarios/:id/indice
+const actualizarIndicePalabra = async (req, res = response) => {
+    try {
+      const { id } = req.params;        // ID del usuario
+      const { newIndex } = req.body;    // nuevo índice
+      const usuarioActualizado = await Usuario.findByIdAndUpdate(
+        id,
+        { currentWordIndex: newIndex },
+        { new: true }
+      );
+  
+      if (!usuarioActualizado) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Usuario no encontrado'
+        });
+      }
+  
+      res.json({
+        ok: true,
+        msg: 'Índice de palabra actualizado',
+        usuario: usuarioActualizado
+      });
+    } catch (error) {
+      console.error('Error al actualizar índice de palabra:', error);
+      res.status(500).json({
+        ok: false,
+        msg: 'Error actualizando índice de palabra'
+      });
+    }
+  };
+  
+
 module.exports = {
     obtenerUsuarios,
     crearUsuario,
     actualizarUsuario, 
     borrarUsuario,
+    actualizarNivelUsuario,
+    actualizarIndicePalabra
 };

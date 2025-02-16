@@ -43,8 +43,12 @@ export class LoginComponent {
       },
       error: (error) => {
         console.error('[ERROR] Error en el inicio de sesión:', error);
-        this.errorMessage = 'Error en el inicio de sesión. Revisa tus credenciales.';
-        this.toastr.error('Error en el inicio de sesión. Revisa tus credenciales.', 'Error');
+        if(error.status === 429) {
+          this.errorMessage= error.error.error;
+        }
+        else{
+          this.errorMessage = 'Error en el inicio de sesión. Revisa tus credenciales.';
+        }
       },
     });
   }
