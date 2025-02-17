@@ -1,12 +1,36 @@
-<app-header></app-header>
+
+<div class="logo-fixed">
+  <img src="assets/bombillita.png" alt="Logo de GraphicCare" class="logo"/>
+  <div class="logo-text">
+    <span class="visual">VISUAL</span>
+    <span class="voices">VOICES</span>
+  </div>
+</div>
 
 <div class="container">
-  <div class="content">    
-    <div class="layout">
+  
+  <div class="content">
+    <div class="layout"> 
       <div class="image-container">
         <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>      
       </div>
       <div class="button-grid">
+        <div class="icon-menu-fixed">
+          <a (click)="navigateTo('perfil')" title="Mi Perfil">
+            <i class="fa-solid fa-user"></i>
+          </a>
+          <a (click)="navigateTo('ajustes')" title="Ajustes">
+            <i class="fa-solid fa-gear"></i>
+          </a>
+          <a  title="Cerrar Sesión">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </a>
+        </div>
+        <select class="mode-selector" >
+          <option value="libre">Modo Libre</option>
+          <option value="guiado">Modo Guiado</option>
+          <option value="examen">Modo Examen</option>
+        </select>
         <div class="main-buttons">
           <!-- Botones dinámicos para las categorías -->
           <button 
@@ -31,4 +55,4 @@
   </div>
 </div>
 
-<app-footer></app-footer>
+

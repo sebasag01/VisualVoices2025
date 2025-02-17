@@ -6,6 +6,7 @@ import { CategoriasService } from '../services/categorias.service';
 import { CanvasComponent } from '../canvas/canvas.component';
 import { AnimacionService } from '../services/animacion.service'; // Importa el servicio
 import { environment } from '../../environments/environment';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,7 @@ export class HomeComponent implements OnInit {
   Math: any;
 
   constructor(
+    private router: Router,
     private categoriasService: CategoriasService,
     private animacionService: AnimacionService
   ) {}
@@ -29,6 +31,19 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.cargarCategorias(); // Cargar las categorías al inicio
   }
+ 
+
+  navigateTo(destination: string) {
+    
+    console.log(`Navigating to ${destination}`);
+    if (destination === 'admin') {
+      this.router.navigate(['/admin']); // Redirigir a la ruta de administración
+    } else if (destination === 'ajustes') {
+      this.router.navigate(['/ajustes']);}
+      else if (destination === 'perfil') {
+        this.router.navigate(['/perfil']);}
+  }
+
 
   cargarCategorias(): void {
     this.categoriasService.obtenerCategorias().subscribe({
@@ -102,8 +117,9 @@ export class HomeComponent implements OnInit {
     } else {
       console.warn('No hay animaciones asociadas a esta palabra.');
     }
+    
   }
-
+  
   /*
   cargarAnimacionesSecuenciales(animaciones: any[]): void {
     const loader = new THREE.GLTFLoader();
