@@ -18,7 +18,7 @@
     z-index: 0;
     max-width: 800px;
     max-height: 600px;
-    pointer-events: none;
+    /*pointer-events: none;*/
 
 }
 

@@ -1,16 +1,9 @@
 .card-container {
-    position: relative;
-    width: 700px;
-    height: 400px;
-    overflow: hidden;
-    background-color: #ffeb99; /* Fondo amarillo */
-    border-radius: 10px;
-    padding: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-  }
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
   
   .card {
     width: 100%;
@@ -34,38 +27,38 @@
   }
   
   .explanation {
-    font-size: 25px;
-    /* color: #9a5416; Texto naranja oscuro */
     color: black;
-    /* background-color: #ffae66; Fondo anaranjado */
-    background-color: #41b8d5;
-    border-color: #000;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.8); /* Sombra para resaltar */
-    padding: 12px;
-    border-radius: 8px;
+    font-size: 25px;
+    font-family: 'Lexend', sans-serif;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 100px;
     text-align: center;
-    width: auto;
-    font-family: "ChauPhilomene", sans-serif; 
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   
-  .word-repeat-container {
-    position: relative; /* Hacer que este contenedor sea relativo */
-    display: inline-block;
+  
+  .word-navigation-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
   }
   
   .word-button {
-    width: 150px; /* Botón más grande */
-    height: 60px;
-    font-size: 18px;
+    background-color: #41b8d5;
     color: black;
-    /* background-color: #b3b3b3; Gris */
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: "Lexend", sans-serif; 
-    border: 2px solid black;
+    font-size: 1.5rem;
     font-weight: bold;
-
+    padding: 15px 25px;
+    border-radius: 12px;
+    border: 2px solid black;
+    font-family: 'Lexend', sans-serif;
+   
+     
   }
   
   .word-button:hover {
@@ -100,11 +93,8 @@
 
   .word-navigation-container {
     display: flex;
-    align-items: center; /* Centrar verticalmente el contenido */
-    justify-content: space-between; /* Separar las flechas y el botón */
-    width: 100%; /* Tomar todo el ancho disponible */
-    padding: 0 16px; /* Espaciado interno */
-    margin-top: 16px; /* Espaciado respecto a la explicación */
+    justify-content: space-between;
+    align-items: center;
   }
   
   .prev-button,
@@ -115,9 +105,9 @@
   }
   
   .arrow-icon {
-    width: 50px; /* Tamaño de las flechas */
-    height: 50px;
-    object-fit: contain;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
   }
   
   @keyframes slide-in {

@@ -26,30 +26,41 @@
             <i class="fa-solid fa-right-from-bracket"></i>
           </a>
         </div>
-        <select class="mode-selector" >
+        <select class="mode-selector" (change)="cambiarModo($event)">
           <option value="libre">Modo Libre</option>
           <option value="guiado">Modo Guiado</option>
           <option value="examen">Modo Examen</option>
         </select>
-        <div class="main-buttons">
-          <!-- Botones dinámicos para las categorías -->
-          <button 
-            *ngFor="let categoria of categorias" 
-            class="main-button" 
-            [class.active]="categoria._id === currentCategoryId"
-            (click)="selectCategory(categoria._id)">
-            {{ categoria.nombre }}
-          </button>
+        <!-- VISTA PARA MODO LIBRE -->
+        <div *ngIf="modo === 'libre'" class="modo-libre">
+          <div class="main-buttons">
+            <button 
+              *ngFor="let categoria of categorias" 
+              class="main-button" 
+              [class.active]="categoria._id === currentCategoryId"
+              (click)="selectCategory(categoria._id)">
+              {{ categoria.nombre }}
+            </button>
+          </div>
+          <div class="grid-buttons">
+            <button 
+              *ngFor="let palabra of palabras" 
+              class="secondary-button"
+              (click)="seleccionarPalabra(palabra)">
+              {{ palabra.palabra }}
+            </button>
+          </div>
         </div>
-        <div class="grid-buttons">
-          <!-- Botones dinámicos para las palabras -->
-          <button 
-            *ngFor="let palabra of palabras" 
-            class="secondary-button"
-            (click)="seleccionarPalabra(palabra)">
-            {{ palabra.palabra  }}
-          </button>
+
+        <!-- VISTA PARA MODO GUIADO -->
+        <div *ngIf="modo === 'guiado'" class="modo-guiado">
+          
+          <app-card></app-card>
+          <div class="nuevo-div">
+            
+          </div>
         </div>
+
       </div>
     </div>
   </div>
