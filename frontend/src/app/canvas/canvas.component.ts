@@ -25,7 +25,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   private renderer!: THREE.WebGLRenderer;
   private scene!: THREE.Scene;
-  private camera!: THREE.PerspectiveCamera;
+  private camera!: THREE.OrthographicCamera;
   private controls!: OrbitControls;
   private loader: GLTFLoader = new GLTFLoader();
   private poses: THREE.Group[] = [];
@@ -84,10 +84,20 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   }
 
   private initCamera(): void {
-    const sizes = { width: window.innerWidth, height: window.innerHeight };
-    this.camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100);
-    this.camera.position.set(0, 1.5, 8.5); // Posición en X, Y, Z
-    this.camera.lookAt(0, 0, 0); // La cámara mira hacia el centro de la escena
+    const sizes = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+    const aspect = sizes.width / sizes.height;
+    const frustumSize = 20; // Tamaño del frustrum (área visible)
+    const left = -frustumSize * aspect / 2;
+    const right = frustumSize * aspect / 2;
+    const top = frustumSize / 2;
+    const bottom = -frustumSize / 2;
+    this.camera = new THREE.OrthographicCamera(left, right, top, bottom, 0.1, 100);
+    // Posicionar la cámara para que el avatar esté centrado y cercano
+    this.camera.position.set(0, 0, 20);
+    this.camera.lookAt(0, 0, 0);
     this.scene.add(this.camera);
   }
 
@@ -198,7 +208,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   private handleResize(): void {
     window.addEventListener('resize', () => {
       const sizes = { width: window.innerWidth, height: window.innerHeight };
-      this.camera.aspect = sizes.width / sizes.height;
+      //this.camera.aspect = sizes.width / sizes.height;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(sizes.width, sizes.height);
     });

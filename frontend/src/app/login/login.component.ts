@@ -39,7 +39,7 @@ export class LoginComponent {
         console.log('[DEBUG] Login exitoso, respuesta del servidor:', response);
   
         //this.toastr.success('Inicio de sesión exitoso', 'Éxito');
-        this.router.navigate(['/guiado']);
+        this.router.navigate(['/home']);
       },
       error: (error) => {
         console.error('[ERROR] Error en el inicio de sesión:', error);

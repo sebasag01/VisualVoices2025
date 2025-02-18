@@ -52,7 +52,7 @@ export class GltfService {
 
   // Obtener la primera animación disponible
   getDefaultModel(): Observable<Blob> {
-    return this.getModelByFilename('hola.gltf');
+    return this.getModelByFilename('padre_0.gltf');
   }
 
   getAllGltfFiles(): Observable<any[]> {
