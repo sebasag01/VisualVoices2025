@@ -89,7 +89,7 @@
 
 .image-container {
   flex-grow: 1;
-  width: calc(100% - 35%);
+  width: calc(100% - 5%);
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -239,3 +239,81 @@
   align-items: center;
   height: 100%;
 }
+
+
+
+/* Estilos para la cámara */
+/* Cuando la cámara está activa, queremos que el avatar sea la mitad del ancho */
+.half-width {
+  width: 50% !important;
+}
+
+/* Contenedor de la cámara */
+.camera-container {
+  width: 50%;
+  height: 100vh; /* o el alto que prefieras */
+  display: flex;
+  flex-direction: column;  /* Organiza en columna: video arriba, botón abajo */
+  align-items: center;
+  justify-content: center;
+  background-color: #fff8d4;
+}
+
+/* El video en modo espejo */
+.mirror-video {
+  width: 90%;
+  height: 80vh;       /* Aumenta la altura para que el video sea más largo */
+  object-fit: cover;  /* Se asegura de que el video se recorte y llene el área */
+  transform: scaleX(-1); /* Modo espejo */
+  border: 2px solid #000;
+  border-radius: 10px;
+}
+
+
+/* Nueva clase para un botón de desactivar webcam más pequeño */
+.small-disable-webcam-btn {
+  margin-top: 10px;         /* Espacio entre el video y el botón */
+  padding: 5px 10px;        /* Menos padding para que sea pequeño */
+  font-size: 1rem;          /* Fuente más pequeña */
+  border: none;
+  border-radius: 12px;      /* Bordes redondeados */
+  background-color: #ff4d4d;/* Color de fondo */
+  color: white;             /* Color de texto */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.small-disable-webcam-btn:hover {
+  background-color: #e60000;
+}
+
+.current-word {
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
+
+.small-webcam-btn {
+  padding: 5px 10px;              /* Menos padding para que sea pequeño */
+  font-size: 1rem;                /* Fuente un poco más pequeña */
+  font-family: "Lexend", sans-serif;
+  width: auto;
+  height: auto;
+  border: 2px solid black;
+  border-radius: 12px;            /* Bordes redondeados */
+  background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
+  color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
+  transition: background-color 0.3s ease;
+}
+
+.small-webcam-btn:hover {
+  background-color: #35a0c7;      /* Cambio de color en hover */
+}
+
+
+

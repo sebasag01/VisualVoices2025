@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, OnDestroy  } from '@angular/core';
 import { LoginComponent } from '../login/login.component';
 import { RegistroComponent } from '../registro/registro.component';
 import { CommonModule } from '@angular/common';
@@ -18,8 +18,10 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
   imports: [CommonModule, LoginComponent, RegistroComponent,CanvasComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class LandingComponent implements OnInit {
+export class LandingComponent implements OnInit, OnDestroy {
   isRegisterVisible: boolean = false;
+
+  private waveInterval: any;
 
   showRegister() {
     this.isRegisterVisible = true;
@@ -33,16 +35,40 @@ export class LandingComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarAnimacionHola();  // Cargar la animación al inicio
+
+    this.waveInterval = setInterval(() => {
+      this.cargarAnimacionHola();
+    }, 10000);
+  }
+
+  ngOnDestroy(): void {
+    // Limpiar el intervalo cuando se destruya el componente (buena práctica)
+    if (this.waveInterval) {
+      clearInterval(this.waveInterval);
+    }
   }
 
   private cargarAnimacionHola(): void {
-    const animaciones = ['hola1.gltf', 'hola2.gltf', 'hola3.gltf']; // Archivos de la animación
-    const animacionesUrls = animaciones.map(anim => `${environment.apiUrl}/gltf/animaciones/${anim}`);
+    // 1er bloque (rápido)
+    const primerBloque = ['padre_0.gltf','padre_1.gltf','padre_2.gltf'];
     
-    console.log('Cargando animación "Hola":', animacionesUrls);
+    // 2do bloque (resto)
+    const segundoBloque = Array.from({ length: 13 }, (_, i) => `padre_${i+3}.gltf`);
     
-    this.animacionService.cargarAnimaciones(animacionesUrls, true); // Cargar en el servicio
+    // Enviar todo junto (o primero enviamos solo el bloque1, luego bloque2).
+    const urlsPrimerBloque = primerBloque.map(a => `${environment.apiUrl}/gltf/animaciones/${a}`);
+    const urlsSegundoBloque = segundoBloque.map(a => `${environment.apiUrl}/gltf/animaciones/${a}`);
+  
+    // Mandar primero el bloque rápido
+    this.animacionService.cargarAnimaciones(urlsPrimerBloque, true);
+  
+    // (Opcional) un pequeño retraso para el segundo, o en paralelo
+    setTimeout(() => {
+      this.animacionService.cargarAnimaciones(urlsSegundoBloque, true);
+    }, 500);
   }
+  
+  
 }
 
 

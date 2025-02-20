@@ -103,7 +103,7 @@
   background-color: #f2c464;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   padding: 40px;
   text-align: center;
@@ -138,15 +138,15 @@
   text-align: left; /* Asegura alineación a la izquierda */
   line-height: 1; /* Ajusta el espacio entre líneas */}
 
+/* Form section (contenedor de pestañas) */
 .form-section {
   width: 100%;
   max-width: 450px;
   display: flex;
   justify-content: center;
-  margin-top: 0px; /* Aumenta este valor para moverlo más abajo */
-  margin-left: 100px; /* Aumenta este valor para moverlo más a la derecha */
+  margin-top: 0;
+  margin-left: 100px;
 }
-
 .landing-right {
   width: 50%;
   background-color: #f2c464;
@@ -167,6 +167,48 @@
 }
 
 
+/* Contenedor de ambas pestañas */
+.tabs-container {
+  display: flex;
+  background: #f9e59f;
+  border-radius: 12px 12px 0 0;
+  justify-content: space-evenly;
+  width: 450px;
+}
+
+/* Cada pestaña */
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #000000;        /* Ajusta a tu color */
+  cursor: pointer;
+  padding: 16px 0;
+  position: relative;
+  outline: none;
+  text-align: center;
+}
+
+/* Subrayado rojo cuando está activa */
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #41B8D5;
+}
+
+/* Contenedor del contenido de la pestaña */
+.tab-content {
+  background: #f9e59f;
+  border-radius: 0 0 12px 12px; 
+  width: 450px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1); 
+}
 
 /* .landing-container {
   display: flex;
