@@ -25,7 +25,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   private renderer!: THREE.WebGLRenderer;
   private scene!: THREE.Scene;
-  private camera!: THREE.OrthographicCamera;
+  private camera!: THREE.PerspectiveCamera;
   private controls!: OrbitControls;
   private loader: GLTFLoader = new GLTFLoader();
   private poses: THREE.Group[] = [];
@@ -84,22 +84,15 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   }
 
   private initCamera(): void {
-    const sizes = {
-      width: window.innerWidth,
-      height: window.innerHeight,
-    };
-    const aspect = sizes.width / sizes.height;
-    const frustumSize = 20; // Tamaño del frustrum (área visible)
-    const left = -frustumSize * aspect / 2;
-    const right = frustumSize * aspect / 2;
-    const top = frustumSize / 2;
-    const bottom = -frustumSize / 2;
-    this.camera = new THREE.OrthographicCamera(left, right, top, bottom, 0.1, 100);
-    // Posicionar la cámara para que el avatar esté centrado y cercano
-    this.camera.position.set(0, 0, 20);
+    const aspect = window.innerWidth / window.innerHeight;
+    this.camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
+    // Coloca la cámara más arriba (aumenta el valor Y) y un poco atrás en Z
+    this.camera.position.set(0, 0, 5.8);
+    // Si el avatar está centrado en (0,0,0) se mantiene mirando al centro
     this.camera.lookAt(0, 0, 0);
     this.scene.add(this.camera);
   }
+  
 
   private initRenderer(): void {
     if (!this.canvasRef) {
@@ -208,7 +201,9 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   private handleResize(): void {
     window.addEventListener('resize', () => {
       const sizes = { width: window.innerWidth, height: window.innerHeight };
-      //this.camera.aspect = sizes.width / sizes.height;
+      if (this.camera instanceof THREE.PerspectiveCamera) {
+        this.camera.aspect = sizes.width / sizes.height;
+      }
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(sizes.width, sizes.height);
     });
@@ -233,8 +228,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
               const center = box.getCenter(new THREE.Vector3());
               this.avatar.position.sub(center);
   
-              this.avatar.scale.set(1.5, 1.4, 1.5);
-              this.avatar.position.y -= -0.3; // Ajusta el valor a tu gusto
+              this.avatar.scale.set(1.5, 1.5, 1.5);
+              this.avatar.position.y -= +1.1; // Ajusta el valor a tu gusto
 
               this.scene.add(this.avatar);
               console.log('Avatar añadido a la escena');

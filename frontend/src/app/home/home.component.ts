@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -38,7 +38,9 @@ export class HomeComponent implements OnInit {
   modo: string = 'libre'; // Nuevo: Valor predeterminado
   Math: any;
 
+  @ViewChild('videoElement', { static: false }) videoElement!: ElementRef;
 
+  showWebcam = false; // Para controlar si estamos mostrando la cámara
 
 
   constructor(
@@ -319,6 +321,40 @@ export class HomeComponent implements OnInit {
     intro.start();
   }
 
+  toggleWebcam() {
+    if (!this.showWebcam) {
+      // Activar la cámara
+      this.startWebcam();
+    } else {
+      // Desactivar la cámara
+      this.stopWebcam();
+    }
+    // Cambiamos el estado
+    this.showWebcam = !this.showWebcam;
+  }
+
+  startWebcam() {
+    // Pedir acceso a la cámara
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        const video: HTMLVideoElement = this.videoElement.nativeElement;
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch((err) => {
+        console.error('Error accediendo a la cámara: ', err);
+      });
+  }
+
+  stopWebcam() {
+    const video: HTMLVideoElement = this.videoElement.nativeElement;
+    const stream = video.srcObject as MediaStream;
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
+    }
+    video.srcObject = null;
+  }
 
 
 }

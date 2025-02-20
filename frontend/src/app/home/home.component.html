@@ -11,12 +11,31 @@
   
   <div class="content">
     <div class="layout"> 
-      <div class="image-container" id="avatar-element">
-        <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>      
+      
+      <div class="image-container" id="avatar-element" [ngClass]="{'half-width': showWebcam}">
+        <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
       </div>
-      <div class="button-grid">
+      
+      <!-- Contenedor del video, se muestra solo si showWebcam === true -->
+      <div class="camera-container" *ngIf="showWebcam">
+        <video #videoElement class="mirror-video" autoplay></video>
+
+        <div *ngIf="modo === 'guiado'" class="current-word" (click)="handleWordClick()">
+          <p>{{ currentWord }}</p>
+        </div>
+        
+        <button (click)="toggleWebcam()"  class="small-disable-webcam-btn">
+          Desactivar Webcam
+        </button>
+      </div>
+
+
+      <div class="button-grid" *ngIf="!showWebcam">
         <div class="icon-menu-fixed">
           <button (click)="iniciarTutorial()">Mostrar Tutorial</button>
+          <button (click)="toggleWebcam()" class="small-webcam-btn">
+            Pruebate
+          </button>
           <a (click)="navigateTo('perfil')" title="Mi Perfil">
             <i class="fa-solid fa-user"></i>
           </a>
