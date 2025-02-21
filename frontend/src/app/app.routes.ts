@@ -16,7 +16,7 @@ import { AdminCategoriasComponent } from './admin/admin_categorias.component';
 import { AjustesComponent } from './ajustes/ajustes.component';
 import { MiperfilComponent } from './miperfil/miperfil.component';
 import { ModeSelectorComponent } from './mode-selector/mode-selector.component';
-
+import { ModoLibreComponent } from './modo-libre/modo-libre.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -35,6 +35,7 @@ export const routes: Routes = [
   { path: 'pruebas', component: PruebasComponent }, 
   { path: 'home', component: HomeComponent },
   { path: 'guiado', component: ModoGuiadoComponent },
+  { path: 'libre', component: ModoLibreComponent },
   { path: 'test-upload', component: TestUploadComponent, canActivate: [AdminRoleGuard] }, //canActivate: [AdminGuard] }, // Protege esta ruta
   { path: '**', redirectTo: 'landing' },
 ];

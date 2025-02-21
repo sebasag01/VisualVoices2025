@@ -30,8 +30,8 @@ import { CanvasComponent } from '../canvas/canvas.component';
 export class ModosComponent {
   modes = [
     { id: 'guiado', name: 'MODO GUIADO', description: 'Aprende paso a paso con un recorrido estructurado', route: '/guiado' },
-    { id: 'libre', name: 'MODO LIBRE', description: 'Explora y practica a tu ritmo según tu interés', route: '/home' },
-    { id: 'examen', name: 'MODO EXAMEN', description: 'Pon a prueba tus conocimientos y mide tu progreso', route: '/examen' }
+    { id: 'libre', name: 'MODO LIBRE', description: 'Explora y practica a tu ritmo según tu interés', route: '/libre' },
+    { id: 'examen', name: 'MODO EXAMEN', description: 'Pon a prueba tus conocimientos y mide tu progreso', route: '/home' }
   ];
 
   currentAnimationUrls: string[] = [];  // <-- Agrega esta línea para evitar el error

@@ -44,7 +44,7 @@ export class RegistroComponent {
       next: (response) => {
         console.log('Registro exitoso:', response);
         this.toastr.success('Usuario registrado con éxito', 'Éxito');
-        this.router.navigate(['/home']); // Redirigir a la página 'home'
+        this.router.navigate(['/modos']); // Redirigir a la página 'home'
       },
       error: (error) => {
         console.error('Error en el registro:', error);

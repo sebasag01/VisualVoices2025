@@ -1,49 +1,65 @@
-import { Component, OnInit, AfterViewInit  } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { CardComponent } from '../card/card.component';
-import { PalabrasService } from '../services/palabras.service'; // Importa el servicio
+import { CategoriasService } from '../services/categorias.service';
 import { CanvasComponent } from '../canvas/canvas.component';
 import { AnimacionService } from '../services/animacion.service'; // Importa el servicio
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
+import { CardComponent } from "../card/card.component";
+import { PalabrasService } from '../services/palabras.service';
 import { UsuariosService } from '../services/usuarios.service';
 import introJs from 'intro.js';
 
 @Component({
   selector: 'app-modo-guiado',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent, CardComponent,CanvasComponent],
+  imports: [CommonModule,  CardComponent,CanvasComponent],
   templateUrl: './modo-guiado.component.html',
   styleUrls: ['./modo-guiado.component.css'],
 })
 export class ModoGuiadoComponent implements OnInit {
-  words: any[] = []; // Lista dinámica de palabras
-  currentIndex = 0; // Índice actual de la palabra
-  maxWords = 3; // Limitar las palabras mostradas (opcional)
-  nivelActual = 1;
-  availableLevels = [1, 2];
-
-  userId: string = '';
-
-
-  constructor(private palabrasService: PalabrasService,private animacionService: AnimacionService, private usuariosService: UsuariosService) {}
   
-  showWelcome = true; // Al principio, mostramos la “pantalla de bienvenida”
-  showChooseLevel = false; // Indica si estamos en la pantalla de “Elige nivel”
+  // ----- PROPIEDADES DE MODO GUIADO -----
+  words: any[] = [];          // Lista dinámica de palabras
+  currentIndex = 0;           // Índice actual de la palabra
+  maxWords = 3;               // Límite de palabras a mostrar
+  nivelActual = 1;            // Nivel actual
+  availableLevels = [1, 2];   // Niveles disponibles
+  userId: string = '';        // ID del usuario en BD
+  showWelcome = true;         // Mostrar pant. bienvenida
+  showChooseLevel = false;    // Mostrar pantalla de elegir nivel
+  
+  categorias: any[] = [];
+  palabras: any[] = [];
+  currentCategoryId: string | null = null;
+  currentAnimationUrls: string[] = [];
+  modo: string = 'libre'; // Nuevo: Valor predeterminado
+  Math: any;
+
+  @ViewChild('videoElement', { static: false }) videoElement!: ElementRef;
+
+  showWebcam = false; // Para controlar si estamos mostrando la cámara
+
+
+  constructor(
+    private router: Router,
+    private categoriasService: CategoriasService,
+    private animacionService: AnimacionService,
+    private palabrasService: PalabrasService,
+    private usuariosService: UsuariosService
+  ) {}
 
   ngOnInit(): void {
-    // Al cargar el modo guiado, primero obtenemos el usuario
+    this.cargarCategorias();
     this.usuariosService.getAuthenticatedUser().subscribe({
       next: (resp) => {
         this.userId = resp.usuario.uid || resp.usuario._id;
-        // resp.usuario tienes la info
         this.nivelActual = resp.usuario.currentLevel || 1;
         this.currentIndex = resp.usuario.currentWordIndex || 0;
-
-        // Cargar las palabras de ese nivel
+        // Cargar palabras de ese nivel
         this.cargarPalabrasPorNivel(this.nivelActual);
-        
       },
       error: (err) => {
         console.error('Error obteniendo usuario autenticado:', err);
@@ -55,112 +71,70 @@ export class ModoGuiadoComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    // Aquí ya tenemos los elementos del DOM disponibles
-    // Llamamos a nuestro método que inicia el tutorial si procede
-    //this.mostrarTutorialSiEsNuevo();
+  // Nuevo: Cambiar modo según selector
+  cambiarModo(event: any): void {
+    this.modo = event.target.value;
+    console.log('Modo seleccionado:', this.modo);
   }
 
-  public iniciarTutorial(): void {
-    const intro = introJs();
-  
-    intro.setOptions({
-      steps: [
-        {
-          element: '#modos-container',
-          intro: 'En esta zona encuentras los tres modos principales.',
-          position: 'bottom'
-        },
-        {
-          element: '#modo-guiado-button',
-          intro: 'Este es el Modo Guiado, donde te acompañamos paso a paso.',
-          position: 'bottom'
-        },
-        {
-          element: '#modo-libre-button',
-          intro: 'Este es el Modo Libre, para explorar sin restricciones.',
-          position: 'bottom'
-        },
-        {
-          element: '#modo-examen-button',
-          intro: 'Este es el Modo Examen, para evaluar tus conocimientos.',
-          position: 'bottom'
-        },
-        {
-          element: '#avatar-element',
-          intro: 'Aquí tienes tu avatar 3D. ¡Interactúa con él!',
-          position: 'right'
-        },
-      ],
-      showProgress: true,
-      showBullets: false,
-      nextLabel: 'Siguiente',
-      prevLabel: 'Anterior',
-      skipLabel: 'Saltar',
-      doneLabel: 'Finalizar'
-    });
-  
-    intro.start();
-  }
-  
-  
-  
-
-  private mostrarTutorialSiEsNuevo(): void {
-    // 1. Verificar si el usuario ya hizo el tutorial (puedes revisarlo en BD, localStorage, etc.)
-    //    Supongamos que guardas en localStorage un flag “tutorialDone”:
-    const tutorialHecho = localStorage.getItem('tutorialDone');
-
-    if (!tutorialHecho) {
-      // 2. Configurar Intro.js
-      const intro = introJs();
-      intro.setOptions({
-        steps: [
-          {
-            element: '#modo-guiado-button',
-            intro: 'Este es el Modo Guiado, donde te acompañamos paso a paso.',
-            position: 'bottom'
-          },
-          {
-            element: '#modo-libre-button',
-            intro: 'Este es el Modo Libre, donde navegas libremente.',
-            position: 'bottom'
-          },
-          {
-            element: '#modo-examen-button',
-            intro: 'Este es el Modo Examen, para evaluar tus conocimientos.',
-            position: 'bottom'
-          },
-          {
-            element: '#avatar-element',
-            intro: 'Aquí ves tu avatar 3D. Interactúa con él para animaciones y más.',
-            position: 'right'
-          },
-        ],
-        showProgress: true,
-        showBullets: true,
-        // otras opciones de Intro.js...
-      });
-
-      // 3. Iniciar el tutorial
-      intro.start();
-
-      // 4. Cuando finalice, marcamos que ya se completó
-      intro.oncomplete(() => {
-        localStorage.setItem('tutorialDone', 'true');
-      });
-      // (Opcional) si quieres marcarlo también si cierran a medias
-      intro.onexit(() => {
-        localStorage.setItem('tutorialDone', 'true');
-      });
+  navigateTo(destination: string) {
+    if (destination === 'admin') {
+      this.router.navigate(['/admin']);
+    } else if (destination === 'ajustes') {
+      this.router.navigate(['/ajustes']);
+    } else if (destination === 'perfil') {
+      this.router.navigate(['/perfil']);
     }
   }
+
+  cargarCategorias(): void {
+    this.categoriasService.obtenerCategorias().subscribe({
+      next: (data) => {
+        this.categorias = data;
+        if (this.categorias.length > 0) {
+          this.selectCategory(this.categorias[0]._id);
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar las categorías:', error);
+      },
+    });
+  }
+
+  selectCategory(categoriaId: string): void {
+    this.currentCategoryId = categoriaId;
+    this.categoriasService.obtenerPalabrasPorCategoria(categoriaId).subscribe({
+      next: (data) => {
+        this.palabras = data;
+      },
+      error: (error) => {
+        console.error('Error al cargar las palabras:', error);
+      },
+    });
+  }
+
+  seleccionarPalabra(palabra: any): void {
+    if (palabra.animaciones && palabra.animaciones.length > 0) {
+      const animacionesUrls = palabra.animaciones.map(
+        (animacion: any) => `${environment.apiUrl}/gltf/animaciones/${animacion.filename}`
+      );
+
+      this.animacionService.cargarAnimaciones(animacionesUrls, true);
+    } else {
+      console.warn('No hay animaciones asociadas a esta palabra.');
+    }
+  }
+
+  // -----------------------------------------
+  // MÉTODOS QUE VIENEN DE MODO GUIADO
+  // -----------------------------------------
   
-  // Método para cargar palabras desde el servicio
+  // 1. Cargar palabras por nivel
   cargarPalabrasPorNivel(nivel: number): void {
     this.palabrasService.obtenerPalabrasPorNivel(nivel).subscribe({
       next: (data) => {
-        // Si solo quieres 3 palabras o 5 de ese nivel, puedes recortar
+        // Guardamos las palabras en `words` y, si quieres, puedes
+        // truncarlas a `this.maxWords`.
         this.words = data.slice(0, this.maxWords);
         console.log('Palabras del nivel', nivel, this.words);
       },
@@ -169,25 +143,31 @@ export class ModoGuiadoComponent implements OnInit {
       },
     });
   }
-  // Botón “Continuar” → (futuro) retomar la palabra por la que iba.
-  // De momento, simplemente cierra la pantalla de bienvenida y carga.
+
+  // 2. Continuar donde iba
   continuar(): void {
     this.showWelcome = false;
+    // Ya tenemos this.nivelActual, this.currentIndex
+    // y las palabras están cargadas en `this.words`.
+    // Si quieres forzar recarga:
     this.cargarPalabrasPorNivel(this.nivelActual);
   }
 
+  // 3. Empezar desde la primera
   empezarDesdePrimera(): void {
     this.showWelcome = false;
     this.currentIndex = 0;
+
+    // Guardar en BD
     this.usuariosService.updateUserWordIndex(this.userId, 0).subscribe({
-      next: (resp: any) => console.log('Reinicio a la primera palabra'),
+      next: () => console.log('Reinicio a la primera palabra'),
       error: (err: any) => console.error('Error reiniciando índice:', err)
     });
-  
+
     this.cargarPalabrasPorNivel(this.nivelActual);
   }
-  // Propiedad para obtener la palabra actual
-  // Propiedad para obtener la palabra actual
+
+  // 4. Getters de palabra y explicación actual
   get currentWord() {
     return this.words[this.currentIndex]?.palabra || 'Cargando...';
   }
@@ -196,29 +176,29 @@ export class ModoGuiadoComponent implements OnInit {
     return this.words[this.currentIndex]?.explicacion || 'Sin explicación disponible';
   }
 
-  // Evento para el clic del botón de palabra
+  // 5. Al hacer clic en la palabra → reproducir animación
   handleWordClick() {
     const currentWord = this.words[this.currentIndex];
-    console.log('Palabra clickeada:', currentWord); // Solo un log para depuración
-    
-    if (currentWord && currentWord.animaciones && currentWord.animaciones.length > 0) {
+    console.log('Palabra clickeada:', currentWord);
+
+    if (currentWord && currentWord.animaciones?.length > 0) {
       const animacionesUrls = currentWord.animaciones.map(
         (animacion: any) => `${environment.apiUrl}/gltf/animaciones/${animacion.filename}`
       );
-      console.log('Cargando animaciones:', animacionesUrls); // Log para depuración
-      this.animacionService.cargarAnimaciones(animacionesUrls, true); // Marcamos como manual = true
+      console.log('Cargando animaciones:', animacionesUrls);
+      this.animacionService.cargarAnimaciones(animacionesUrls, true);
     } else {
       console.warn('No hay animaciones disponibles para esta palabra');
     }
   }
 
-  // Evento para repetir la acción
+  // 6. Repetir la animación
   handleRepeatClick() {
     this.handleWordClick();
     console.log(`Repetir acción para: ${this.currentWord}`);
   }
 
-  // Cambiar a la palabra anterior
+  // 7. Navegar a la palabra anterior
   prevWord() {
     if (this.currentIndex > 0) {
       this.currentIndex--;
@@ -230,14 +210,11 @@ export class ModoGuiadoComponent implements OnInit {
       });
     }
   }
-  
 
-  // Cambiar a la siguiente palabra
+  // 8. Navegar a la siguiente palabra
   nextWord() {
     if (this.currentIndex < this.words.length - 1) {
       this.currentIndex++;
-  
-      // Actualizar en la BD
       this.usuariosService.updateUserWordIndex(this.userId, this.currentIndex).subscribe({
         next: (resp: any) => {
           console.log('Índice actualizado en BD:', resp.usuario?.currentWordIndex);
@@ -246,35 +223,33 @@ export class ModoGuiadoComponent implements OnInit {
       });
     }
   }
-  
 
+  // 9. Saber si estamos en la última palabra
   isLastWord(): boolean {
     return this.currentIndex === this.words.length - 1;
   }
 
+  // 10. Avanzar de nivel
   advanceLevel() {
     const newLevel = this.nivelActual + 1;
-  
+
     this.usuariosService.updateUserLevel(this.userId, newLevel).subscribe({
       next: (resp) => {
         console.log('Nivel actualizado en el servidor:', resp.usuario.currentLevel);
-  
-        // 1. Actualizamos nuestro `nivelActual`
         this.nivelActual = resp.usuario.currentLevel;
-  
-        // 2. Resetear el índice a 0
+
+        // Reiniciamos índice a 0
         this.currentIndex = 0;
         this.usuariosService.updateUserWordIndex(this.userId, 0).subscribe({
           next: () => console.log('Índice reseteado a 0'),
           error: (err) => console.error('Error reseteando índice:', err)
         });
-  
-        // 3. Configurar la "pantalla de bienvenida" para que muestre "Bienvenido al nivel X"
+
+        // Mostramos pantalla de bienvenida, para que el usuario elija
         this.showWelcome = true;
-        this.showChooseLevel = false; // Por si estaba abierto el selector de nivel
-  
-        // 4. (Opcional) cargar las palabras ya para tenerlas en `this.words`,
-        // pero el usuario no las ve hasta que pulse "Continuar"
+        this.showChooseLevel = false;
+
+        // Cargar las nuevas palabras del nuevo nivel
         this.cargarPalabrasPorNivel(this.nivelActual);
       },
       error: (err) => {
@@ -282,44 +257,103 @@ export class ModoGuiadoComponent implements OnInit {
       }
     });
   }
-  
-  
 
+  // 11. Elegir nivel manualmente
   openChooseLevel(): void {
-    // El usuario ha pulsado el botón "Elegir nivel"
     this.showChooseLevel = true;
   }
-  
-  // Cuando el usuario hace click en un nivel
+
   onLevelSelected(level: number) {
-    // 1. Actualizamos nivelActual
-    this.nivelActual = level;
+    // Actualiza en BD
     this.usuariosService.updateUserLevel(this.userId, level).subscribe({
       next: (resp) => {
         console.log('Nivel actualizado en el servidor:', resp.usuario.currentLevel);
-  
-        // 1. Actualizamos nuestro `nivelActual`
         this.nivelActual = resp.usuario.currentLevel;
       }
     });
-    // 2. Ponemos currentIndex = 0 (o el que quieras) y actualizamos en BD
+
+    // Reinicia índice
     this.currentIndex = 0;
-
     this.usuariosService.updateUserWordIndex(this.userId, 0).subscribe({
-      next: (resp: any) => {
-        console.log('Reinicio a la primera palabra');
-      },
-      error: (err: any) => {
-        console.error('Error reiniciando índice:', err);
-      }
-    });  
+      next: () => console.log('Reinicio a la primera palabra'),
+      error: (err) => console.error('Error reiniciando índice:', err)
+    });
 
-    // 3. Cargamos las palabras
+    // Cargar palabras
     this.cargarPalabrasPorNivel(this.nivelActual);
-  
-    // 4. Cerramos la bienvenida y la vista de elegir nivel
+
+    // Cerrar bienvenidas
     this.showWelcome = false;
     this.showChooseLevel = false;
+  }
+
+  iniciarTutorial() {
+    const intro = introJs();
+    intro.setOptions({
+      steps: [
+        {
+          // Resalta el selector de modo
+          element: '#mode-selector',
+          intro: 'Aquí puedes elegir el modo: Libre, Guiado o Examen.',
+          position: 'right'
+        },
+        {
+          element: '#modo-libre-container',
+          intro: 'En Modo Libre verás categorías y palabras para animar el avatar.',
+          position: 'top'
+        },
+        {
+          // Resalta la zona del avatar
+          element: '#avatar-element',
+          intro: 'Este es tu avatar 3D. ¡Puedes interactuar con él! Con la rueda del raton puedes hacer zoom, con el click izquierdo rotarlo y con el derecho moverlo',
+          position: 'left'
+        }
+        
+      ],
+      showProgress: true,
+      showBullets: false,
+      nextLabel: 'Siguiente',
+      prevLabel: 'Anterior',
+      skipLabel: 'Saltar',
+      doneLabel: 'Finalizar'
+    });
+
+    intro.start();
+  }
+
+  toggleWebcam() {
+    if (!this.showWebcam) {
+      // Activar la cámara
+      this.startWebcam();
+    } else {
+      // Desactivar la cámara
+      this.stopWebcam();
+    }
+    // Cambiamos el estado
+    this.showWebcam = !this.showWebcam;
+  }
+
+  startWebcam() {
+    // Pedir acceso a la cámara
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        const video: HTMLVideoElement = this.videoElement.nativeElement;
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch((err) => {
+        console.error('Error accediendo a la cámara: ', err);
+      });
+  }
+
+  stopWebcam() {
+    const video: HTMLVideoElement = this.videoElement.nativeElement;
+    const stream = video.srcObject as MediaStream;
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
+    }
+    video.srcObject = null;
   }
 
 }

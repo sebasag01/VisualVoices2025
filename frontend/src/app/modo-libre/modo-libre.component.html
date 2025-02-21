@@ -1,0 +1,112 @@
+<div class="logo-fixed">
+    <img src="assets/bombillita.png" alt="Logo de VisualVoices" class="logo"/>
+    <div class="logo-text">
+      <span class="visual">VISUAL</span>
+      <span class="voices">VOICES</span>
+    </div>
+</div>
+
+<div class="container">
+  <div class="content">
+    <div class="layout">
+
+      <!-- Avatar a la izquierda, como antes -->
+      <div class="image-container" id="avatar-element">
+        <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
+      </div>
+      
+
+      <!-- Panel derecho con la lista o sublista -->
+      <div class="right-panel">
+
+        <!-- Encabezado / menú derecho -->
+        <div class="icon-menu-fixed">
+          <button (click)="iniciarTutorial()">Mostrar Tutorial</button>
+          <button (click)="toggleWebcam()" class="small-webcam-btn">Pruébate</button>
+          <a (click)="navigateTo('perfil')" title="Mi Perfil">
+            <i class="fa-solid fa-user"></i>
+          </a>
+          <a (click)="navigateTo('ajustes')" title="Ajustes">
+            <i class="fa-solid fa-gear"></i>
+          </a>
+          <a title="Cerrar Sesión">
+            <i class="fa-solid fa-right-from_bracket"></i>
+          </a>
+        </div>
+
+        <!-- Barra de búsqueda si la mantienes -->
+        <div class="search-bar" id="search-container">
+          <input type="text" placeholder="Busca cualquier palabra o categoría" id="search-input" />
+          <button id="search-btn" title="Buscar">
+            <span class="lupa"></span>
+          </button>
+        </div>
+
+        <!-- Dropdown multiselección -->
+        <div class="multi-select-dropdown" *ngIf="!selectedCategory" [class.open]="isOpen" (click)="toggleDropdown($event)">
+          <!-- Botón de apertura -->
+          <button type="button" class="dropdown-button">
+            Filtrar Categorías
+            <span class="arrow" [class.rotate]="isOpen">&#9662;</span>
+          </button>
+
+          <!-- Contenido desplegable -->
+          <div class="dropdown-content" (click)="$event.stopPropagation()">
+            <!-- Para cada categoría, un checkbox -->
+            <label class="dropdown-item" *ngFor="let cat of categorias">
+              <input 
+                type="checkbox" 
+                [value]="cat._id" 
+                (change)="onCheckboxChange($event, cat)" 
+                [checked]="selectedCategoryIds.includes(cat._id)"
+              />
+              {{ cat.nombre }}
+            </label>
+          </div>
+        </div>
+
+        <!-- LISTA DE CATEGORÍAS (vista 1) - Usa filteredCategories en lugar de categorias -->
+        <div class="category-list" *ngIf="!selectedCategory">
+          <div
+            class="category-item"
+            *ngFor="let cat of filteredCategories"
+            (click)="onCategoryClick(cat)"
+          >
+            <div class="cat-info">
+              <div class="cat-title">{{ cat.nombre }}</div>
+              <div class="cat-subtitle">
+                <!-- Las primeras 2-3 palabras (o las que quieras) -->
+                {{ getPrimerasPalabras(cat) }}
+              </div>
+            </div>
+            <div class="cat-arrow">
+              <i class="fa-solid fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- LISTA DE PALABRAS (vista 2) -->
+        <div class="word-list" *ngIf="selectedCategory">
+          <!-- Botón para volver a la lista de categorías -->
+          <div class="back-button" (click)="volverAListaCategorias()">
+            <i class="fa-solid fa-arrow-left"></i> 
+            <span>Volver</span>
+          </div>
+
+          <h3>{{ selectedCategory.nombre }}</h3>
+
+          <div
+            class="word-item"
+            *ngFor="let palabra of palabrasDeCategoriaSeleccionada"
+            (click)="seleccionarPalabra(palabra)"
+          >
+            <!-- Nombre de la palabra -->
+            <div class="word-title">{{ palabra.palabra }}</div>
+          </div>
+        </div>
+
+      </div><!-- fin right-panel -->
+
+    </div><!-- fin layout -->
+  </div><!-- fin content -->
+</div><!-- fin container -->
