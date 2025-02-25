@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { CardComponent } from "../card/card.component";
 import { PalabrasService } from '../services/palabras.service';
 import { UsuariosService } from '../services/usuarios.service';
+import { StatsService } from '../services/stats.service';
+
 import introJs from 'intro.js';
 
 @Component({
@@ -31,6 +33,9 @@ export class HomeComponent implements OnInit {
   showWelcome = true;         // Mostrar pant. bienvenida
   showChooseLevel = false;    // Mostrar pantalla de elegir nivel
   
+  //Estadisticas
+  currentStatsId: string | null = null;
+
   categorias: any[] = [];
   palabras: any[] = [];
   currentCategoryId: string | null = null;
@@ -48,7 +53,9 @@ export class HomeComponent implements OnInit {
     private categoriasService: CategoriasService,
     private animacionService: AnimacionService,
     private palabrasService: PalabrasService,
-    private usuariosService: UsuariosService
+    private usuariosService: UsuariosService,
+    private statsService: StatsService
+
   ) {}
 
   ngOnInit(): void {
@@ -147,10 +154,26 @@ export class HomeComponent implements OnInit {
   // 2. Continuar donde iba
   continuar(): void {
     this.showWelcome = false;
-    // Ya tenemos this.nivelActual, this.currentIndex
-    // y las palabras están cargadas en `this.words`.
-    // Si quieres forzar recarga:
+    // Cargar palabras del nivel
     this.cargarPalabrasPorNivel(this.nivelActual);
+
+    // Iniciar stats para este nivel
+    // Primero, si ya teníamos un statsId abierto, lo cerramos
+    if (this.currentStatsId) {
+      this.statsService.endLevel(this.currentStatsId).subscribe({
+        next: () => console.log('Stats anterior cerrado'),
+        error: (err) => console.error('Error cerrando stats anterior', err),
+      });
+    }
+
+    // Ahora iniciamos la sesión para este nivel
+    this.statsService.startLevel(this.userId, this.nivelActual).subscribe({
+      next: (resp) => {
+        this.currentStatsId = resp.statsId;
+        console.log('Stats iniciado, ID:', this.currentStatsId);
+      },
+      error: (err) => console.error('Error iniciando stats:', err)
+    });
   }
 
   // 3. Empezar desde la primera
@@ -232,8 +255,19 @@ export class HomeComponent implements OnInit {
   // 10. Avanzar de nivel
   advanceLevel() {
     const newLevel = this.nivelActual + 1;
-
-    this.usuariosService.updateUserLevel(this.userId, newLevel).subscribe({
+    
+      // 1) Cerrar la sesión de nivel actual
+      if (this.currentStatsId) {
+        this.statsService.endLevel(this.currentStatsId).subscribe({
+          next: (resp) => console.log('Sesión de nivel cerrada. Duración:', resp.durationMs),
+          error: (err) => console.error('Error al cerrar sesión de nivel:', err)
+        });
+        // Limpias la variable
+        this.currentStatsId = null;
+      }
+    
+      // 2) Actualizar nivel en la BD de usuarios
+      this.usuariosService.updateUserLevel(this.userId, newLevel).subscribe({
       next: (resp) => {
         console.log('Nivel actualizado en el servidor:', resp.usuario.currentLevel);
         this.nivelActual = resp.usuario.currentLevel;
@@ -249,8 +283,17 @@ export class HomeComponent implements OnInit {
         this.showWelcome = true;
         this.showChooseLevel = false;
 
-        // Cargar las nuevas palabras del nuevo nivel
+        // Cargar las nuevas palabras ...
         this.cargarPalabrasPorNivel(this.nivelActual);
+
+        // 3) Iniciar una nueva sesión de stats para el nuevo nivel (opcional si quieres rastrear)
+        this.statsService.startLevel(this.userId, this.nivelActual).subscribe({
+        next: (resp2) => {
+          this.currentStatsId = resp2.statsId;
+          console.log('Nueva sesión para el nivel actual:', this.currentStatsId);
+        },
+          error: (err) => console.error('Error iniciando nueva sesión de stats:', err)
+        });
       },
       error: (err) => {
         console.error('Error al actualizar nivel:', err);

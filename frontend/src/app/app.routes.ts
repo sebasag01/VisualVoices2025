@@ -13,6 +13,8 @@ import { AdminRoleGuard } from './guards/admin-role.guard';
 import { AdminUsuariosComponent } from './admin/admin_usuarios.component';
 import { AdminPalabrasComponent } from './admin/admin_palabras.component';
 import { AdminCategoriasComponent } from './admin/admin_categorias.component';
+import { AdminEstadisticasComponent } from './admin/admin_estadisticas.component'; // Importarlo
+
 import { AjustesComponent } from './ajustes/ajustes.component';
 import { MiperfilComponent } from './miperfil/miperfil.component';
 import { ModeSelectorComponent } from './mode-selector/mode-selector.component';
@@ -30,7 +32,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'usuarios', pathMatch: 'full' },
       { path: 'usuarios', component: AdminUsuariosComponent },
       { path: 'palabras', component: AdminPalabrasComponent },
-      { path: 'categorias', component: AdminCategoriasComponent }
+      { path: 'categorias', component: AdminCategoriasComponent },
+      { path: 'estadisticas', component: AdminEstadisticasComponent }
     ] 
   },
   { path: 'pruebas', component: PruebasComponent }, 
