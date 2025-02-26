@@ -63,6 +63,15 @@ export class UsuariosService {
   updateUserWordIndex(userId: string, newIndex: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${userId}/indice`, { newIndex }, { withCredentials: true });
   }
+
+  explorarPalabraLibre(userId: string, wordId: string): Observable<any> {
+    return this.http.patch(
+      `${this.apiUrl}/${userId}/explore-word/${wordId}`,
+      {},
+      { withCredentials: true }
+    );
+  }
+
   
 
 }

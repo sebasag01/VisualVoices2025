@@ -11,6 +11,7 @@ import { CardComponent } from "../card/card.component";
 import { PalabrasService } from '../services/palabras.service';
 import { UsuariosService } from '../services/usuarios.service';
 import { StatsService } from '../services/stats.service';
+import { ExploredWordsService } from '../services/explored_word.service'; 
 
 import introJs from 'intro.js';
 
@@ -54,7 +55,9 @@ export class HomeComponent implements OnInit {
     private animacionService: AnimacionService,
     private palabrasService: PalabrasService,
     private usuariosService: UsuariosService,
-    private statsService: StatsService
+    private statsService: StatsService,
+    private exploredWordsService: ExploredWordsService,
+
 
   ) {}
 
@@ -83,6 +86,7 @@ export class HomeComponent implements OnInit {
     this.modo = event.target.value;
     console.log('Modo seleccionado:', this.modo);
   }
+ 
 
   navigateTo(destination: string) {
     if (destination === 'admin') {
@@ -120,6 +124,8 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  
+
   seleccionarPalabra(palabra: any): void {
     if (palabra.animaciones && palabra.animaciones.length > 0) {
       const animacionesUrls = palabra.animaciones.map(
@@ -130,6 +136,19 @@ export class HomeComponent implements OnInit {
     } else {
       console.warn('No hay animaciones asociadas a esta palabra.');
     }
+
+    this.usuariosService.explorarPalabraLibre(this.userId, palabra._id).subscribe({
+      next: (resp) => {
+        console.log('Palabra explorada. Lleva ', resp.totalExploradas, ' en total');
+
+        // 3) Actualizar BehaviorSubject
+        //   Con el número que te da el backend (totalExploradas):
+        this.exploredWordsService.setExploredCount(resp.totalExploradas);
+      },
+      error: (err) => {
+        console.error('Error al marcar como explorada:', err);
+      }
+    });
   }
 
   // -----------------------------------------
@@ -328,6 +347,17 @@ export class HomeComponent implements OnInit {
     // Cerrar bienvenidas
     this.showWelcome = false;
     this.showChooseLevel = false;
+  }
+
+   //Obtener porcentaje de progeso
+   get progressPercent(): number {
+    if (!this.words || this.words.length === 0) return 0;
+  
+    // (currentIndex + 1) para que la primera palabra cuente como 1/3 en lugar de 0/3
+    const progreso = ((this.currentIndex + 1) / this.words.length) * 100;
+  
+    // Redondea si quieres
+    return Math.floor(progreso);
   }
 
   iniciarTutorial() {
