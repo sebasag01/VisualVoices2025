@@ -34,6 +34,10 @@ const UsuarioSchema = Schema({
         type: Number,
         default: 0
     },
+    exploredFreeWords: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Palabra',
+      }],
 
 }, { collection: 'usuarios' });
 

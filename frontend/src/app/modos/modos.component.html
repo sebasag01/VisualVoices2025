@@ -28,6 +28,27 @@
         <h2><img [src]="mode.icon" alt="Icono" />{{ mode.name }}</h2>
         <!-- <img [src]="mode.icon" alt="Icono" /> -->
         <p>{{ mode.description }}</p>
+        <!-- Sólo muestra este bloque si es el MODO GUIADO -->
+        <div *ngIf="mode.id === 'guiado'">
+          <span>Progreso actual: {{ progressPercent }}%</span>
+          <br />
+          <span>Lección actual: {{ userLevel }}</span>
+          <br />
+          <!-- Y sólo si nextLevel no es null, se muestra -->
+          <span *ngIf="nextLevel; else noHayNivel">
+            Próxima lección: {{ nextLevel }}
+          </span>
+          
+          <ng-template #noHayNivel>
+            <span>No hay más lecciones disponibles</span>
+          </ng-template>        
+        </div>
+
+        <div *ngIf="mode.id === 'libre'">
+          <!-- Estadística: X de N palabras exploradas -->
+          <p>Has explorado {{ exploredCount }} / {{ totalWords }} palabras en modo libre</p>
+        </div>
+
       </div>
 
       <div class="mode-stats">

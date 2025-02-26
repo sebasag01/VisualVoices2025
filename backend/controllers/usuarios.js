@@ -266,6 +266,48 @@ const actualizarIndicePalabra = async (req, res = response) => {
       });
     }
   };
+
+  const explorarPalabraLibre = async (req, res = response) => {
+    try {
+      const { id, wordId } = req.params; // id del usuario, wordId de la palabra
+      // 1) Buscar al usuario
+      const usuario = await Usuario.findById(id);
+  
+      if (!usuario) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Usuario no encontrado'
+        });
+      }
+  
+      // 2) Verificamos si la palabra ya está en su array
+      const estaYaExplorada = usuario.exploredFreeWords.some(
+        word => word.toString() === wordId
+      );
+  
+      // 3) Si NO está, la añadimos
+      if (!estaYaExplorada) {
+        usuario.exploredFreeWords.push(wordId);
+        await usuario.save();
+      }
+  
+      // 4) Devolvemos el usuario o, si quieres, solo la longitud
+      return res.json({
+        ok: true,
+        msg: 'Palabra marcada como explorada (modo libre)',
+        totalExploradas: usuario.exploredFreeWords.length,
+        usuario
+      });
+  
+    } catch (error) {
+      console.error('Error al explorar palabra:', error);
+      res.status(500).json({
+        ok: false,
+        msg: 'Error interno'
+      });
+    }
+  };
+  
   
 
 module.exports = {
@@ -274,5 +316,6 @@ module.exports = {
     actualizarUsuario, 
     borrarUsuario,
     actualizarNivelUsuario,
-    actualizarIndicePalabra
+    actualizarIndicePalabra,
+    explorarPalabraLibre
 };

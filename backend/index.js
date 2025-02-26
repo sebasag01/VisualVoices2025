@@ -61,7 +61,7 @@ app.use('/api/login', loginRoute);
 app.use('/api/categorias', categoriasRoutes);
 app.use('/api/palabras', palabrasRoutes);
 app.use('/api/gltf', gltfRoutes);
-//app.use('/api/stats', require('./routes/stats'));
+app.use('/api/stats', require('./routes/stats'));
 
 // Abrir la aplicacíon en el puerto 3000
 app.listen(process.env.PORT, () => {
