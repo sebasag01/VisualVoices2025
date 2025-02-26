@@ -16,6 +16,15 @@ import { HeaderComponent } from '../header/header.component';
   imports: [CommonModule, CanvasComponent, HeaderComponent],
 })
 export class ModosComponent {
+
+  navigateTo(destination: string) {
+    if (destination === 'admin') {
+      this.router.navigate(['/admin']);
+    } else if (destination === 'perfil') {
+      this.router.navigate(['/perfil']);
+    }
+  }
+
   modes = [
     {
       id: 'guiado',

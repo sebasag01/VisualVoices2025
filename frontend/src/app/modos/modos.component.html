@@ -54,11 +54,11 @@
       <div class="mode-stats">
         <div class="stat-box">
           <ng-container *ngIf="mode.id === 'guiado'; else defaultStat1">
-            <p>Progreso: {{ progresoAprende }}%</p>
+            <p>Progreso:</p>
             <div class="progress-bar">
               <div
                 class="progress-fill"
-                [style.width.%]="progresoAprende"
+                [style.width.%]=""
               ></div>
               <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 75%"></div>
@@ -70,14 +70,14 @@
 
         <div class="stat-box">
           <ng-container *ngIf="mode.id === 'guiado'; else defaultStat2">
-            <p>Lección actual: {{ leccionActual }}</p>
+            <p>Lección actual:</p>
           </ng-container>
           <ng-template #defaultStat2>Lol</ng-template>
         </div>
 
         <div class="stat-box">
           <ng-container *ngIf="mode.id === 'guiado'; else defaultStat3">
-            <p>Última palabra: {{ ultimaPalabra }}</p>
+            <p>Última palabra: </p>
           </ng-container>
           <ng-template #defaultStat3>Lol</ng-template>
         </div>
