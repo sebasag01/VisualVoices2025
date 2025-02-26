@@ -1,5 +1,33 @@
-/* Importar la fuente personalizada desde la carpeta public */
-@font-face {
+/* header.component.css */
+.header {
+  position: fixed;       /* Se mantiene en la parte superior */
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px 20px;     /* Espacio alrededor */
+  background: transparent; /* O el color que prefieras */
+  display: flex;
+  align-items: center;
+  z-index: 1000;         /* Asegura que esté por encima de otros elementos */
+  border: none;  /* Asegura que no haya borde */
+  box-shadow: none; /* Evita cualquier sombra */
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 200px;         /* Aumenta este valor para un logo más grande */
+  height: auto;
+  cursor: pointer;
+}
+
+
+
+
+/* @font-face {
   font-family: "ChauPhilomene";
   src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
   font-weight: normal;
@@ -13,9 +41,6 @@
   font-style: normal;
 }
 
-/* ---------------------------------------------------------------------------
-                               HEADER
---------------------------------------------------------------------------- */
 .header {
   display: flex;
   align-items: center;
@@ -56,4 +81,4 @@
   margin: 0;
   color: #000;
   white-space: nowrap;
-}
+} */

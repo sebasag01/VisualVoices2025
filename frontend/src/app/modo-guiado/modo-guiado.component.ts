@@ -15,7 +15,7 @@ import introJs from 'intro.js';
 @Component({
   selector: 'app-modo-guiado',
   standalone: true,
-  imports: [CommonModule,  CardComponent,CanvasComponent],
+  imports: [CommonModule,  CardComponent,CanvasComponent, HeaderComponent],
   templateUrl: './modo-guiado.component.html',
   styleUrls: ['./modo-guiado.component.css'],
 })

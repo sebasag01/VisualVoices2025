@@ -8,11 +8,12 @@ import { Router } from '@angular/router';
 import { PalabrasService } from '../services/palabras.service';
 import { UsuariosService } from '../services/usuarios.service';
 import introJs from 'intro.js';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-modo-libre',
   standalone: true,
-  imports: [CommonModule, CanvasComponent],
+  imports: [CommonModule, CanvasComponent, HeaderComponent],
   templateUrl: './modo-libre.component.html',
   styleUrls: ['./modo-libre.component.css']
 })

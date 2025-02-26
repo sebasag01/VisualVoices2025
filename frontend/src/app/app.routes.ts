@@ -15,7 +15,6 @@ import { AdminPalabrasComponent } from './admin/admin_palabras.component';
 import { AdminCategoriasComponent } from './admin/admin_categorias.component';
 import { AjustesComponent } from './ajustes/ajustes.component';
 import { MiperfilComponent } from './miperfil/miperfil.component';
-import { ModeSelectorComponent } from './mode-selector/mode-selector.component';
 import { ModoLibreComponent } from './modo-libre/modo-libre.component';
 
 export const routes: Routes = [

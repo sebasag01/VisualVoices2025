@@ -1,25 +1,66 @@
+<app-header></app-header>
+
 <div class="mode-selector-container">
 
-    <div class="logo">
-      <img src="assets/bombillita2.png" alt="Logo">
-    </div>
-
-    <div class="avatar-container">
-      <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>      
-    </div>
-
+  <div class="icon-menu-fixed">
   
-    <div class="modes-container">
-      <div 
-        class="mode-card"
-        *ngFor="let mode of modes"
-        (click)="navigateToMode(mode.route)">
-        <h2>{{ mode.name }}</h2>
+  <a (click)="navigateTo('perfil')" title="Mi Perfil">
+    <i class="fa-solid fa-user"></i>
+  </a>
+  <a  title="Cerrar Sesión">
+    <i class="fa-solid fa-right-from-bracket"></i>
+  </a>
+</div>
+
+  <div class="avatar-container">
+    <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
+  </div>
+
+  <div class="modes-container">
+    <div
+      class="mode-card"
+      *ngFor="let mode of modes"
+      (click)="navigateTo(mode.route)"
+    >
+      <div class="top-border"></div>
+
+      <div class="mode-title">
+        <h2><img [src]="mode.icon" alt="Icono" />{{ mode.name }}</h2>
+        <!-- <img [src]="mode.icon" alt="Icono" /> -->
         <p>{{ mode.description }}</p>
       </div>
-    </div>
-  
-    <div class="settings-icon">
-      <img src="assets/usu.png" alt="Ajustes">
+
+      <div class="mode-stats">
+        <div class="stat-box">
+          <ng-container *ngIf="mode.id === 'guiado'; else defaultStat1">
+            <p>Progreso: {{ progresoAprende }}%</p>
+            <div class="progress-bar">
+              <div
+                class="progress-fill"
+                [style.width.%]="progresoAprende"
+              ></div>
+              <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 75%"></div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #defaultStat1>Lol</ng-template>
+        </div>
+
+        <div class="stat-box">
+          <ng-container *ngIf="mode.id === 'guiado'; else defaultStat2">
+            <p>Lección actual: {{ leccionActual }}</p>
+          </ng-container>
+          <ng-template #defaultStat2>Lol</ng-template>
+        </div>
+
+        <div class="stat-box">
+          <ng-container *ngIf="mode.id === 'guiado'; else defaultStat3">
+            <p>Última palabra: {{ ultimaPalabra }}</p>
+          </ng-container>
+          <ng-template #defaultStat3>Lol</ng-template>
+        </div>
+      </div>
     </div>
   </div>
+

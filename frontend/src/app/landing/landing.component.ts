@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { CanvasComponent } from '../canvas/canvas.component';
 import { AnimacionService } from '../services/animacion.service';
 import { environment } from '../../environments/environment';
+import { HeaderComponent } from '../header/header.component';
 
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
@@ -15,7 +16,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
    templateUrl: './landing.component.html',
    styleUrls: ['./landing.component.css'],
    encapsulation: ViewEncapsulation.None,  // Desactiva el encapsulamiento
-  imports: [CommonModule, LoginComponent, RegistroComponent,CanvasComponent],
+  imports: [CommonModule, LoginComponent, RegistroComponent,CanvasComponent, HeaderComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LandingComponent implements OnInit, OnDestroy {
