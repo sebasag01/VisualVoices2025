@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -44,11 +43,6 @@ export class HomeComponent implements OnInit {
   currentAnimationUrls: string[] = [];
   modo: string = 'libre'; // Nuevo: Valor predeterminado
   Math: any;
-
-  @ViewChild('videoElement', { static: false }) videoElement!: ElementRef;
-
-  showWebcam = false; // Para controlar si estamos mostrando la cámara
-
 
   @ViewChild('videoElement', { static: false }) videoElement!: ElementRef;
 
