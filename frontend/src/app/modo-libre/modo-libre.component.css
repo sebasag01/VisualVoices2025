@@ -294,6 +294,8 @@
     background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
     color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
     transition: background-color 0.3s ease;
+    z-index: 999;
+
   }
   
   .small-webcam-btn:hover {
@@ -301,6 +303,43 @@
   }
   
   
+  .tutorial-btn {
+    padding: 5px 10px;              /* Menos padding para que sea pequeño */
+    font-size: 1rem;                /* Fuente un poco más pequeña */
+    font-family: "Lexend", sans-serif;
+    width: auto;
+    height: auto;
+    border: 2px solid black;
+    border-radius: 12px;            /* Bordes redondeados */
+    background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
+    color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
+    transition: background-color 0.3s ease;
+    z-index: 999;
+
+  }
+  
+  .tutorial-btn:hover {
+    background-color: #35a0c7;      /* Cambio de color en hover */
+  }
+
+  .back-to-modes-button {
+    padding: 5px 10px;              /* Menos padding para que sea pequeño */
+    font-size: 1rem;                /* Fuente un poco más pequeña */
+    font-family: "Lexend", sans-serif;
+    width: auto;
+    height: auto;
+    border: 2px solid black;
+    border-radius: 12px;            /* Bordes redondeados */
+    background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
+    color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
+    transition: background-color 0.3s ease;
+    z-index: 999;
+
+  }
+  
+  .back-to-modes-button:hover {
+    background-color: #35a0c7;      /* Cambio de color en hover */
+  }
   
   /* search-bar.css */
 
@@ -511,5 +550,30 @@
   .dropdown-item input {
     margin-right: 8px;
     cursor: pointer;
+  }
+
+
+  .image-container.libre-half-width {
+    width: 65% !important;
+  }
+  
+  /* Para que la cámara ocupe el 35% del ancho (zona derecha) y tenga fondo amarillo */
+  .camera-container.libre-full-right {
+    width: 35% !important;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Puedes ajustar el tamaño del video si lo deseas */
+  .camera-container.libre-full-right .mirror-video {
+    width: 99%;    
+    height: 90vh;
+    object-fit: cover;
+    transform: scaleX(-1);
+    border: 2px solid #000;
+    border-radius: 10px;
   }
   

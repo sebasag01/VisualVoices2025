@@ -6,7 +6,7 @@ import { UsuariosService } from '../services/usuarios.service';
 import { PalabrasService } from '../services/palabras.service';
 import { ExploredWordsService } from '../services/explored_word.service';import { BookOpen, Compass, Target } from 'lucide-react';
 import { HeaderComponent } from '../header/header.component';
-
+import { StatsService } from '../services/stats.service';
 
 @Component({
   standalone: true,
@@ -50,11 +50,13 @@ export class ModosComponent {
   ];
 
   currentAnimationUrls: string[] = []; // <-- Agrega esta línea para evitar el error
+  currentStatsId: string | null = null; // Asegúrate de almacenar el ID de la sesión
 
   constructor(private router: Router,
     private usuariosService: UsuariosService,
     private palabrasService: PalabrasService,
-    private exploredWordsService: ExploredWordsService) {};
+    private exploredWordsService: ExploredWordsService,
+    private statsService: StatsService) {};
 
 
   // MODO GUIADO
@@ -66,46 +68,73 @@ export class ModosComponent {
   // MODO LIBRE
   totalWords = 0;       // total global de palabras (o si prefieres, total de una categoría)
   exploredCount = 0;    // cuántas ha explorado el usuario
+  mostExploredCategoryName: string | null = null;
+  mostExploredCategoryCount: number | null = null;
+  tiempoLibreMs: number = 0;
+
+  private refreshInterval: any;
+
 
   //angel
 
   ngOnInit(): void {
-    // Primero carga el usuario para obtener el valor inicial
+    // 1) Obtener el usuario
     this.usuariosService.getAuthenticatedUser().subscribe({
       next: (resp) => {
         const user = resp.usuario;
-        
+
         // --- GUIADO ---
         this.userLevel = user.currentLevel || 1;
         this.progressPercent = Math.floor(
           ((user.currentWordIndex + 1) / this.maxWords) * 100
         );
-        
-        // ... resto del código para el nivel ...
-        
+
         // --- LIBRE ---
-        // IMPORTANTE: Primero establece el contador desde los datos del usuario
         const initialExploredCount = user.exploredFreeWords ? user.exploredFreeWords.length : 0;
-        console.log("Inicializando exploredCount con valor:", initialExploredCount);
+        console.log('Inicializando exploredCount con valor:', initialExploredCount);
         this.exploredWordsService.setExploredCount(initialExploredCount);
-        
-        // Luego suscríbete a cambios futuros
+
+        // Suscribirse a cambios en exploredCount
         this.exploredWordsService.exploredCount$.subscribe((count) => {
           this.exploredCount = count;
-          console.log("Modos - exploredCount actualizado a", count);
+          console.log('Modos - exploredCount actualizado a', count);
         });
+
+        // Obtener la categoría más explorada
+        this.usuariosService.getCategoriaMasExplorada(user.uid).subscribe({
+          next: (respCat) => {
+            if (respCat.ok && respCat.categoriaMasExplorada) {
+              this.mostExploredCategoryName = respCat.categoriaMasExplorada.nombre;
+              this.mostExploredCategoryCount = respCat.categoriaMasExplorada.count;
+              console.log(
+                'Categoría más explorada:',
+                this.mostExploredCategoryName,
+                'con',
+                this.mostExploredCategoryCount,
+                'palabras'
+              );
+            } else {
+              console.log('Ninguna categoría explorada aún');
+            }
+          },
+          error: (err) => {
+            console.error('Error obteniendo la categoría más explorada:', err);
+          }
+        });
+
+        // Iniciar la actualización periódica del tiempo total en modo libre
+        this.startRefreshTiempoLibre(user.uid);
       },
       error: (err) => {
         console.error('Error obteniendo usuario:', err);
-        
-        // Suscripción de respaldo en caso de error
+        // En caso de error, nos suscribimos a exploredCount como respaldo
         this.exploredWordsService.exploredCount$.subscribe((count) => {
           this.exploredCount = count;
-          console.log("Modos - exploredCount actualizado a", count);
+          console.log('Modos - exploredCount actualizado a', count);
         });
       }
     });
-    
+
     // 2) Cargar el total de palabras
     this.palabrasService.obtenerPalabras().subscribe({
       next: (allPalabras) => {
@@ -117,8 +146,45 @@ export class ModosComponent {
     });
   }
 
+  // Método para refrescar el tiempo total en modo libre
+  startRefreshTiempoLibre(userId: string): void {
+    // Hacemos una primera llamada
+    this.refreshTiempoLibre(userId);
+    // Y luego configuramos un intervalo para refrescar cada minuto (60000 ms)
+    this.refreshInterval = setInterval(() => {
+      console.log('Refrescando tiempo total en modo libre...');
+      this.refreshTiempoLibre(userId);
+    }, 10000);
+  }
+
+  refreshTiempoLibre(userId: string): void {
+    this.statsService.getTiempoTotalLibre(userId).subscribe({
+      next: (resp) => {
+        if (resp.ok) {
+          this.tiempoLibreMs = resp.totalDurationMs;
+          console.log('Actualización - Tiempo total Modo Libre (ms):', this.tiempoLibreMs);
+        } else {
+          console.log('Respuesta ok false en getTiempoTotalLibre:', resp.msg);
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener tiempo total libre:', err);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.currentStatsId) {
+      this.statsService.endMode(this.currentStatsId).subscribe({
+        next: (resp) => {
+          console.log('Sesión de modo libre cerrada. Duración (ms):', resp.durationMs);
+        },
+        error: (err) => console.error('Error al cerrar la sesión de modo libre:', err)
+      });
+    }
+  }
+
   navigateToMode(route: string) {
     this.router.navigate([route]);
   }
 }
-

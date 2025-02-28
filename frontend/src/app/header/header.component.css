@@ -8,7 +8,6 @@
   background: transparent; /* O el color que prefieras */
   display: flex;
   align-items: center;
-  z-index: 1000;         /* Asegura que esté por encima de otros elementos */
   border: none;  /* Asegura que no haya borde */
   box-shadow: none; /* Evita cualquier sombra */
 }

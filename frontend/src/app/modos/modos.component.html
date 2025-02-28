@@ -47,6 +47,17 @@
         <div *ngIf="mode.id === 'libre'">
           <!-- Estadística: X de N palabras exploradas -->
           <p>Has explorado {{ exploredCount }} / {{ totalWords }} palabras en modo libre</p>
+
+          <div *ngIf="mostExploredCategoryName; else noCat">
+            <p>Tu categoría más explorada: {{ mostExploredCategoryName }} ({{ mostExploredCategoryCount }} palabras)</p>
+          </div>
+          <ng-template #noCat>
+            <p>No hay categoría más explorada</p>
+          </ng-template>
+          <p>Has practicado un total de {{ (tiempoLibreMs / 60000) | number:'1.0-0' }} minutos en Modo Libre</p>
+          <button (click)="navigateToMode('libre')" class="explore-button">
+            Entrar a Modo Libre
+          </button>
         </div>
 
       </div>

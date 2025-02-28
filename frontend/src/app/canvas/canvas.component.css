@@ -18,8 +18,6 @@
     z-index: 0;
     max-width: 1000px;   /* Aumenta este valor para que el canvas sea más ancho */
     max-height: 800px;
-    /*pointer-events: none;*/
-
 }
 
 .reset-btn {

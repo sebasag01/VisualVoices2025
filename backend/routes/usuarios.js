@@ -3,7 +3,7 @@ Ruta base: /api/usuarios
 */
 
 const { Router } = require('express');
-const { obtenerUsuarios, crearUsuario, actualizarUsuario, borrarUsuario, actualizarNivelUsuario, actualizarIndicePalabra, explorarPalabraLibre } = require('../controllers/usuarios');
+const { obtenerUsuarios, crearUsuario, actualizarUsuario, borrarUsuario, actualizarNivelUsuario, actualizarIndicePalabra, explorarPalabraLibre, categoriaMasExplorada } = require('../controllers/usuarios');
 const { check } = require('express-validator');
 const {validarCampos} = require('../middleware/validar-campos');
 const {validarJWT} = require('../middleware/validar-jwt');
@@ -50,6 +50,9 @@ router.patch('/:id/explore-word/:wordId', [
     validarJWT,
   ], explorarPalabraLibre);
   
+
+router.get('/:id/categoria-mas-explorada', validarJWT, categoriaMasExplorada);
+
   
 
 
