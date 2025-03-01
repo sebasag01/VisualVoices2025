@@ -36,13 +36,13 @@
               Volver a Modos
             </button>
           
-          <a (click)="navigateTo('perfil')" title="Mi Perfil">
+          <a (click)="navigateTo('perfil')" title="Mi Perfil" class="user-icon">
             <i class="fa-solid fa-user"></i>
           </a>
           <a (click)="navigateTo('ajustes')" title="Ajustes">
             <i class="fa-solid fa-gear"></i>
           </a>
-          <a title="Cerrar Sesión">
+          <a (click)="logout()" title="Cerrar Sesión" class="logout-icon">
             <i class="fa-solid fa-right-from-bracket"></i>
           </a>
         </div>

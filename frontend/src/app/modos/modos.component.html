@@ -28,69 +28,88 @@
         <h2><img [src]="mode.icon" alt="Icono" />{{ mode.name }}</h2>
         <!-- <img [src]="mode.icon" alt="Icono" /> -->
         <p>{{ mode.description }}</p>
-        <!-- Sólo muestra este bloque si es el MODO GUIADO -->
-        <div *ngIf="mode.id === 'guiado'">
-          <span>Progreso actual: {{ progressPercent }}%</span>
-          <br />
-          <span>Lección actual: {{ userLevel }}</span>
-          <br />
-          <!-- Y sólo si nextLevel no es null, se muestra -->
-          <span *ngIf="nextLevel; else noHayNivel">
-            Próxima lección: {{ nextLevel }}
-          </span>
-          
-          <ng-template #noHayNivel>
-            <span>No hay más lecciones disponibles</span>
-          </ng-template>        
-        </div>
-
-        <div *ngIf="mode.id === 'libre'">
-          <!-- Estadística: X de N palabras exploradas -->
-          <p>Has explorado {{ exploredCount }} / {{ totalWords }} palabras en modo libre</p>
-
-          <div *ngIf="mostExploredCategoryName; else noCat">
-            <p>Tu categoría más explorada: {{ mostExploredCategoryName }} ({{ mostExploredCategoryCount }} palabras)</p>
-          </div>
-          <ng-template #noCat>
-            <p>No hay categoría más explorada</p>
-          </ng-template>
-          <p>Has practicado un total de {{ (tiempoLibreMs / 60000) | number:'1.0-0' }} minutos en Modo Libre</p>
-          <button (click)="navigateToMode('libre')" class="explore-button">
-            Entrar a Modo Libre
-          </button>
-        </div>
-
       </div>
 
       <div class="mode-stats">
+        <!-- STAT BOX 1 -->
         <div class="stat-box">
-          <ng-container *ngIf="mode.id === 'guiado'; else defaultStat1">
-            <p>Progreso:</p>
+          <!-- Si es GUIADO, muestras algo. Si NO es GUIADO, pasas a freeStat1 -->
+          <ng-container *ngIf="mode.id === 'guiado'; else freeStat1">
+            <p>Progreso: {{ progressPercent }}%</p>
             <div class="progress-bar">
               <div
                 class="progress-fill"
-                [style.width.%]=""
+                [style.width.%]="progressPercent"
               ></div>
-              <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 75%"></div>
-              </div>
             </div>
           </ng-container>
-          <ng-template #defaultStat1>Lol</ng-template>
+          <ng-template #freeStat1>
+            <!-- Aquí, sólo si es LIBRE, mostramos estadística 1 -->
+            <ng-container *ngIf="mode.id === 'libre'; else defaultStat1">
+              <!-- Ejemplo: Palabras exploradas -->
+              <p>Has explorado {{ exploredCount }} / {{ totalWords }} palabras en modo libre</p>
+            </ng-container>
+          </ng-template>
+      
+          <!-- Si no es guiado ni libre, default: -->
+          <ng-template #defaultStat1>
+            <p>Lol</p>
+          </ng-template>
         </div>
-
+      
+        <!-- STAT BOX 2 -->
         <div class="stat-box">
-          <ng-container *ngIf="mode.id === 'guiado'; else defaultStat2">
-            <p>Lección actual:</p>
+          <ng-container *ngIf="mode.id === 'guiado'; else freeStat2">
+            <p>Lección actual: {{ userLevel }}</p>
           </ng-container>
-          <ng-template #defaultStat2>Lol</ng-template>
+      
+          <ng-template #freeStat2>
+            <ng-container *ngIf="mode.id === 'libre'; else defaultStat2">
+              <!-- Ejemplo: Categoría más explorada -->
+              <div *ngIf="mostExploredCategoryName; else noCat">
+                <p>Tu categoría más explorada: {{ mostExploredCategoryName }} ({{ mostExploredCategoryCount }} palabras)</p>
+              </div>
+              <ng-template #noCat>
+                <p>No hay categoría más explorada</p>
+              </ng-template>
+            </ng-container>
+          </ng-template>
+      
+          <ng-template #defaultStat2>
+            <p>Lol</p>
+          </ng-template>
         </div>
-
+      
+        <!-- STAT BOX 3 -->
         <div class="stat-box">
-          <ng-container *ngIf="mode.id === 'guiado'; else defaultStat3">
-            <p>Última palabra: </p>
+          <ng-container *ngIf="mode.id === 'guiado'; else freeStat3">
+            <!-- Próxima lección guiado (ejemplo) -->
+            <span *ngIf="nextLevel; else noHayNivel">
+              Próxima lección: {{ nextLevel }}
+            </span>
+            <ng-template #noHayNivel>
+              <span>No hay más lecciones disponibles</span>
+            </ng-template>
           </ng-container>
-          <ng-template #defaultStat3>Lol</ng-template>
+      
+          <ng-template #freeStat3>
+            <ng-container *ngIf="mode.id === 'libre'; else defaultStat3">
+              <!-- Aquí pones lo que quieras del modo libre -->
+              <p>Has practicado un total de {{ (tiempoLibreMs / 60000) | number:'1.0-0' }} minutos en Modo Libre</p>
+              
+              <button (click)="navigateToMode('libre')" class="explore-button">
+                Entrar a Modo Libre
+              </button>
+      
+              <div *ngIf="categoriaSugerida">
+                <p>Sugerencia: Explora la categoría <strong>{{ categoriaSugerida.nombre }}</strong></p>
+              </div>
+            </ng-container>
+          </ng-template>
+      
+          <ng-template #defaultStat3>
+            <p>Lol</p>
+          </ng-template>
         </div>
       </div>
     </div>

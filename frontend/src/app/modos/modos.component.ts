@@ -7,6 +7,7 @@ import { PalabrasService } from '../services/palabras.service';
 import { ExploredWordsService } from '../services/explored_word.service';import { BookOpen, Compass, Target } from 'lucide-react';
 import { HeaderComponent } from '../header/header.component';
 import { StatsService } from '../services/stats.service';
+import { CategoriasService } from '../services/categorias.service';
 
 @Component({
   standalone: true,
@@ -51,12 +52,14 @@ export class ModosComponent {
 
   currentAnimationUrls: string[] = []; // <-- Agrega esta línea para evitar el error
   currentStatsId: string | null = null; // Asegúrate de almacenar el ID de la sesión
+  categoriaSugerida: any = null;
 
   constructor(private router: Router,
     private usuariosService: UsuariosService,
     private palabrasService: PalabrasService,
     private exploredWordsService: ExploredWordsService,
-    private statsService: StatsService) {};
+    private statsService: StatsService,
+    private categoriasService: CategoriasService) {};
 
 
   // MODO GUIADO
@@ -142,6 +145,21 @@ export class ModosComponent {
       },
       error: (err) => {
         console.error('Error obteniendo total de palabras:', err);
+      }
+    });
+    this.categoriasService.obtenerCategorias().subscribe({
+      next: (data) => {
+        // Guardamos todas las categorías
+        const categorias = data;
+        // Si hay al menos una categoría, elegimos una al azar
+        if (categorias.length > 0) {
+          const randomIndex = Math.floor(Math.random() * categorias.length);
+          this.categoriaSugerida = categorias[randomIndex];
+          console.log('Categoría sugerida:', this.categoriaSugerida.nombre);
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener categorías para sugerencia:', err);
       }
     });
   }

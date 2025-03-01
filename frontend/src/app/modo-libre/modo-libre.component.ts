@@ -314,4 +314,21 @@ export class ModoLibreComponent implements OnInit, OnDestroy  {
     }
     video.srcObject = null;
   }
+  //cerrar sesion
+  logout(): void {
+    console.log('[DEBUG] Cerrando sesión desde Modo Libre...');
+    this.usuariosService.logout().subscribe({
+      next: (response) => {
+        console.log('[DEBUG] Respuesta del logout:', response);
+        // Aquí puedes limpiar datos locales si lo necesitas
+        // Por ejemplo, this.usuario = null; si lo tuvieras
+        this.router.navigate(['/landing']);
+      },
+      error: (error) => {
+        console.error('[ERROR] Error al cerrar sesión:', error);
+        alert('Error al cerrar sesión.');
+      },
+    });
+  }
+
 }

@@ -576,4 +576,10 @@
     border: 2px solid #000;
     border-radius: 10px;
   }
+  .user-icon{
+    z-index: 999;
+  }
+  .logout-icon{
+    z-index: 999;
+  }
   
