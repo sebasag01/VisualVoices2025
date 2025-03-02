@@ -627,3 +627,16 @@
   transform: translate(-50%, 50%);
   opacity: 1;
 }
+
+.user-icon{
+  z-index: 999;
+}
+
+.ajustes-icon{
+  z-index: 999;
+}
+
+.logout-icon{
+  z-index: 999;
+}
+

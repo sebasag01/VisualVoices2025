@@ -21,6 +21,23 @@
     border-width: 0 !important;
     border-color: transparent !important;
   }
+
+  .tutorial-btn {
+    padding: 5px 10px;              /* Menos padding para que sea pequeño */
+    font-size: 1rem;                /* Fuente un poco más pequeña */
+    font-family: "Lexend", sans-serif;
+    width: auto;
+    height: auto;
+    border: 2px solid black;
+    border-radius: 12px;            /* Bordes redondeados */
+    background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
+    color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
+    transition: background-color 0.3s ease;
+  }
+  
+  .tutorial-btn:hover {
+    background-color: #35a0c7;      /* Cambio de color en hover */
+  }
   
   .card-leaving {
     animation: slide-out 0.3s ease-in-out forwards; /* Animación de salida */
