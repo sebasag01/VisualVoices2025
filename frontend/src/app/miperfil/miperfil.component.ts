@@ -4,6 +4,8 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UsuariosService } from '../services/usuarios.service';
+
 
 interface UserData {
   username: string;
@@ -21,7 +23,10 @@ interface UserData {
   styleUrls: ['./miperfil.component.css']
 })
 export class MiperfilComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router,
+    private usuariosService: UsuariosService,
+
+  ) {}
 
   closePanel(): void {
     console.log('Cerrando panel de ajustes');
@@ -73,5 +78,21 @@ export class MiperfilComponent {
     } else if (destination === 'perfil') {
       this.router.navigate(['/perfil']);
     }
+  }
+
+  logout(): void {
+    console.log('[DEBUG] Cerrando sesión desde Modo Libre...');
+    this.usuariosService.logout().subscribe({
+      next: (response) => {
+        console.log('[DEBUG] Respuesta del logout:', response);
+        // Aquí puedes limpiar datos locales si lo necesitas
+        // Por ejemplo, this.usuario = null; si lo tuvieras
+        this.router.navigate(['/landing']);
+      },
+      error: (error) => {
+        console.error('[ERROR] Error al cerrar sesión:', error);
+        alert('Error al cerrar sesión.');
+      },
+    });
   }
 }

@@ -423,5 +423,5 @@ module.exports = {
     explorarPalabraLibre,
     categoriaMasExplorada,
     obtenerPalabrasAprendidasPorNivel,
-    obtenerPalabraPorIndice
+    
 };

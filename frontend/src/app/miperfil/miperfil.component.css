@@ -213,3 +213,7 @@
 .setting-item button:hover {
   background-color: #3498db;
 }
+
+.logout-icon{
+  z-index: 999;
+}

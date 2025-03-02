@@ -41,42 +41,31 @@ const MODES = [
   imports: [CommonModule, CanvasComponent, HeaderComponent],
 })
 export class ModosComponent implements OnInit, OnDestroy {
-
   modes = MODES;
-
   currentAnimationUrls: string[] = [];
-  currentStatsId: string | null = null;
-  categoriaSugerida: any = null;
+
+  // Modo GUIADO
   isNewUserInGuidedMode = true;
   animatedProgress = 0;
-  wordsLearnedInLevel = 0;
-  isNewUserInFreeMode = false;
-
-  //ESTADO DEL USUARIO EN MODO GUIADO
   progressPercent = 0;
   maxWords = 3;
   userLevel = 1;
   nextLevel: number | null = null;
-  totalWordsInLevel = 1;
-  lastWordLearned: string = 'Adéntrate aprendiendo nuevas palabras';
+  lastWordLearned: string = 'Adántrate aprendiendo nuevas palabras';
 
-  // MODO LIBRE
+  // Modo LIBRE
   totalWords = 0;
   exploredCount = 0;
+  animatedProgressColor = 'custom-purple';
+  timeInvested: string = '0 mins';
+  favoriteCategory: string = 'Categoría por determinar';
+
+  // Propiedades adicionales para LIBRE
   mostExploredCategoryName: string | null = null;
   mostExploredCategoryCount: number | null = null;
   tiempoLibreMs: number = 0;
-  animatedProgressColor = 'custom-purple';
-
-  // Estadísticas para Modo Guiado
-  guidedStats = {
-    progress: 0,
-    wordsLearned: 0,
-    level: 1,
-    totalWordsInLevel: 0,
-    nextLevel: 2,
-    lastWordLearned: 'Adéntrate aprendiendo nuevas palabras',
-  };
+  categoriaSugerida: any = null;
+  currentStatsId: string | null = null;
 
   private refreshInterval: any;
 
@@ -90,63 +79,76 @@ export class ModosComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Obtener datos del usuario
     this.usuariosService.getAuthenticatedUser().subscribe({
       next: (resp) => {
         const user = resp.usuario;
 
-        // --- GUIADO ---
-        this.userLevel = user.currentLevel || 1;
-        this.guidedStats.progress = Math.floor(((user.currentWordIndex + 1) / this.maxWords) * 100);
-        this.guidedStats.wordsLearned = user.currentWordIndex + 1;
-        this.guidedStats.level = user.nivel || 1;
-        this.guidedStats.lastWordLearned = user.lastWordLearned || 'Error';
-        this.guidedStats.totalWordsInLevel = this.maxWords;
-
-        // --- LIBRE ---
-        const initialExploredCount = user.exploredFreeWords ? user.exploredFreeWords.length : 0;
-        this.exploredWordsService.setExploredCount(initialExploredCount);
-
-        // Verifica si el usuario es nuevo en modo guiado
-        this.isNewUserInGuidedMode = user.currentWordIndex === undefined || user.currentWordIndex < 0;
+        // --- Modo GUIADO ---
+        this.isNewUserInGuidedMode =
+          user.currentWordIndex === undefined || user.currentWordIndex < 0;
         if (this.isNewUserInGuidedMode) {
           this.animateProgress();
         } else {
-          this.progressPercent = Math.floor(((user.currentWordIndex + 1) / this.maxWords) * 100);
+          this.progressPercent = Math.floor(
+            ((user.currentWordIndex + 1) / this.maxWords) * 100
+          );
         }
-
-        this.userLevel = user.nivel || 1;
+        // Usar user.nivel o user.currentLevel (o 1 por defecto)
+        this.userLevel = user.nivel || user.currentLevel || 1;
+        this.nextLevel = user.nextLevel || null;
         this.lastWordLearned = user.lastWordLearned || 'Error';
 
-        // Suscribirse a cambios en exploredCount
+        // Calcular tiempo invertido (por ejemplo, para guiado)
+        this.timeInvested = this.calculateTimeSpent(user.startTime);
+
+        // --- Modo LIBRE ---
+        const initialExploredCount = user.exploredFreeWords
+          ? user.exploredFreeWords.length
+          : 0;
+        this.exploredWordsService.setExploredCount(initialExploredCount);
         this.exploredWordsService.exploredCount$.subscribe((count) => {
           this.exploredCount = count;
+          console.log('Modos - exploredCount actualizado a', count);
         });
 
         // Obtener la categoría más explorada
         this.usuariosService.getCategoriaMasExplorada(user.uid).subscribe({
           next: (respCat) => {
             if (respCat.ok && respCat.categoriaMasExplorada) {
-              this.mostExploredCategoryName = respCat.categoriaMasExplorada.nombre;
-              this.mostExploredCategoryCount = respCat.categoriaMasExplorada.count;
+              this.mostExploredCategoryName =
+                respCat.categoriaMasExplorada.nombre;
+              this.mostExploredCategoryCount =
+                respCat.categoriaMasExplorada.count;
+              console.log(
+                'Categoría más explorada:',
+                this.mostExploredCategoryName,
+                'con',
+                this.mostExploredCategoryCount,
+                'palabras'
+              );
             } else {
               console.log('Ninguna categoría explorada aún');
             }
           },
           error: (err) => {
             console.error('Error obteniendo la categoría más explorada:', err);
-          }
+          },
         });
 
+        // Iniciar la actualización periódica del tiempo total en modo libre
         this.startRefreshTiempoLibre(user.uid);
       },
       error: (err) => {
         console.error('Error obteniendo usuario:', err);
         this.exploredWordsService.exploredCount$.subscribe((count) => {
           this.exploredCount = count;
+          console.log('Modos - exploredCount actualizado a', count);
         });
       },
     });
 
+    // Cargar el total de palabras
     this.palabrasService.obtenerPalabras().subscribe({
       next: (allPalabras) => {
         this.totalWords = allPalabras.length;
@@ -156,49 +158,19 @@ export class ModosComponent implements OnInit, OnDestroy {
       },
     });
 
+    // Obtener categoría sugerida para el modo libre
     this.categoriasService.obtenerCategorias().subscribe({
       next: (data) => {
-        const categorias = data;
-        if (categorias.length > 0) {
-          const randomIndex = Math.floor(Math.random() * categorias.length);
-          this.categoriaSugerida = categorias[randomIndex];
+        if (data.length > 0) {
+          const randomIndex = Math.floor(Math.random() * data.length);
+          this.categoriaSugerida = data[randomIndex];
+          console.log('Categoría sugerida:', this.categoriaSugerida.nombre);
         }
       },
       error: (err) => {
         console.error('Error al obtener categorías para sugerencia:', err);
-      }
-    });
-  }
-
-  startRefreshTiempoLibre(userId: string): void {
-    this.refreshTiempoLibre(userId);
-    this.refreshInterval = setInterval(() => {
-      this.refreshTiempoLibre(userId);
-    }, 10000);
-  }
-
-  refreshTiempoLibre(userId: string): void {
-    this.statsService.getTiempoTotalLibre(userId).subscribe({
-      next: (resp) => {
-        if (resp.ok) {
-          this.tiempoLibreMs = resp.totalDurationMs;
-        }
       },
-      error: (err) => {
-        console.error('Error al obtener tiempo total libre:', err);
-      }
     });
-  }
-
-  ngOnDestroy(): void {
-    if (this.currentStatsId) {
-      this.statsService.endMode(this.currentStatsId).subscribe({
-        next: (resp) => {
-          console.log('Sesión de modo libre cerrada. Duración (ms):', resp.durationMs);
-        },
-        error: (err) => console.error('Error al cerrar la sesión de modo libre:', err)
-      });
-    }
   }
 
   getProgressColor(progress: number): string {
@@ -221,19 +193,49 @@ export class ModosComponent implements OnInit, OnDestroy {
       { percent: 33, color: 'bg-danger' },
       { percent: 0, color: 'bg-transparent' },
     ];
-
     let index = 0;
-
     const updateProgress = () => {
       this.animatedProgress = stages[index].percent;
       this.animatedProgressColor = stages[index].color;
-
       index = (index + 1) % stages.length;
-
       setTimeout(updateProgress, 1000);
     };
-
     updateProgress();
+  }
+
+  calculateTimeSpent(startTime: number): string {
+    if (!startTime) return '0 mins';
+    const currentTime = Date.now();
+    const diffInMillis = currentTime - startTime;
+    const diffInMinutes = Math.floor(diffInMillis / 60000);
+    return `${diffInMinutes} mins`;
+  }
+
+  startRefreshTiempoLibre(userId: string): void {
+    this.refreshTiempoLibre(userId);
+    this.refreshInterval = setInterval(() => {
+      console.log('Refrescando tiempo total en modo libre...');
+      this.refreshTiempoLibre(userId);
+    }, 60000);
+  }
+
+  refreshTiempoLibre(userId: string): void {
+    this.statsService.getTiempoTotalLibre(userId).subscribe({
+      next: (resp) => {
+        if (resp.ok) {
+          this.tiempoLibreMs = resp.totalDurationMs;
+          console.log(
+            'Actualización - Tiempo total Modo Libre (ms):',
+            this.tiempoLibreMs
+          );
+        } else {
+          console.log('Respuesta ok false en getTiempoTotalLibre:', resp.msg);
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener tiempo total libre:', err);
+      },
+    });
   }
 
   navigateToMode(route: string) {
@@ -248,11 +250,37 @@ export class ModosComponent implements OnInit, OnDestroy {
     }
   }
 
-  calculateTimeSpent(startTime: number): string {
-    if (!startTime) return '0 mins';
-    const currentTime = Date.now();
-    const diffInMillis = currentTime - startTime;
-    const diffInMinutes = Math.floor(diffInMillis / 60000);
-    return `${diffInMinutes} mins`;
+  ngOnDestroy(): void {
+    if (this.currentStatsId) {
+      this.statsService.endMode(this.currentStatsId).subscribe({
+        next: (resp) => {
+          console.log(
+            'Sesión de modo libre cerrada. Duración (ms):',
+            resp.durationMs
+          );
+        },
+        error: (err) =>
+          console.error('Error al cerrar la sesión de modo libre:', err),
+      });
+    }
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
+  }
+
+  logout(): void {
+    console.log('[DEBUG] Cerrando sesión desde Modo Libre...');
+    this.usuariosService.logout().subscribe({
+      next: (response) => {
+        console.log('[DEBUG] Respuesta del logout:', response);
+        // Aquí puedes limpiar datos locales si lo necesitas
+        // Por ejemplo, this.usuario = null; si lo tuvieras
+        this.router.navigate(['/landing']);
+      },
+      error: (error) => {
+        console.error('[ERROR] Error al cerrar sesión:', error);
+        alert('Error al cerrar sesión.');
+      },
+    });
   }
 }

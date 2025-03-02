@@ -12,7 +12,7 @@ const {
   actualizarIndicePalabra,
   explorarPalabraLibre, categoriaMasExplorada,
   obtenerPalabrasAprendidasPorNivel,
-  obtenerPalabraPorIndice,
+
 } = require("../controllers/usuarios");
 const { check } = require("express-validator");
 const { validarCampos } = require("../middleware/validar-campos");
@@ -25,7 +25,7 @@ router.get("/", obtenerUsuarios);
 
 router.get('/:id/palabras-aprendidas/:nivel', obtenerPalabrasAprendidasPorNivel);
 
-router.get("/:id/ultima-palabra", [validarJWT], obtenerPalabraPorIndice);
+router.get("/:id/ultima-palabra", [validarJWT]);
 
 
 
