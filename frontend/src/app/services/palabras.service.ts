@@ -22,6 +22,11 @@ export class PalabrasService {
   obtenerPalabrasPorNivel(nivel: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/por-nivel?nivel=${nivel}`, { withCredentials: true });
   }
+
+  obtenerPalabraPorIndice(indice: number) {
+    return this.http.get<{ texto: string }>(`/api/palabras/${indice}`);
+  }
+  
   
 
   crearPalabra(data: any): Observable<any> {
@@ -39,4 +44,9 @@ export class PalabrasService {
   asociarCategoria(id: string, categoria: string): Observable<any> {
     return this.http.patch(`${this.baseUrl}/${id}/categoria`, { categoria }, { withCredentials: true });
   }
+
+  obtenerTotalNiveles(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/nivel/total`);
+  }
+  
 }

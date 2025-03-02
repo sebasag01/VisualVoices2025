@@ -72,6 +72,11 @@ export class UsuariosService {
     );
   }
 
+  obtenerPalabrasAprendidasPorNivel(id: string, nivel: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}/palabras-aprendidas/${nivel}`, { withCredentials: true });
+  }
+  
+
   
 
 }

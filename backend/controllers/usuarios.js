@@ -5,6 +5,7 @@ const { response } = require('express');
 const validator = require('validator');
 const { generarJWT } = require('../helpers/jwt');
 
+
 const obtenerUsuarios = async(req, res) => {
 
     // Recibimos el desde
@@ -169,6 +170,36 @@ const actualizarUsuario = async(req, res = response) => {
     
 }
 
+const obtenerPalabrasAprendidasPorNivel = async (req, res = response) => {
+    try {
+      const { id, nivel } = req.params; // ID de usuario y nivel desde la URL
+      const usuario = await Usuario.findById(id).populate('exploredFreeWords');
+  
+      if (!usuario) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Usuario no encontrado',
+        });
+      }
+  
+      const palabrasAprendidas = usuario.exploredFreeWords.filter(
+        (word) => word.nivel === parseInt(nivel)
+      );
+  
+      res.json({
+        ok: true,
+        palabrasAprendidas: palabrasAprendidas.length,
+      });
+    } catch (error) {
+      console.error('Error obteniendo palabras aprendidas:', error);
+      res.status(500).json({
+        ok: false,
+        msg: 'Error obteniendo palabras aprendidas por nivel',
+      });
+    }
+  };
+  
+
 const borrarUsuario = async(req, res = response) => {
     
     const uid = req.params.id;
@@ -307,6 +338,29 @@ const actualizarIndicePalabra = async (req, res = response) => {
       });
     }
   };
+
+  const Palabra = require("../models/palabras"); // Asegúrate de importar el modelo de Palabra
+
+const obtenerPalabraPorIndice = async (req, res) => {
+  try {
+    const usuario = await Usuario.findById(req.params.id).populate("exploredFreeWords");
+    if (!usuario) {
+      return res.status(404).json({ msg: "Usuario no encontrado" });
+    }
+
+    const palabras = await Palabra.find({ nivel: usuario.currentLevel }).sort({ _id: 1 });
+    const palabra = palabras[usuario.currentWordIndex];
+
+    if (!palabra) {
+      return res.status(404).json({ msg: "No se encontró la palabra" });
+    }
+
+    res.json({ texto: palabra.texto });
+  } catch (error) {
+    res.status(500).json({ msg: "Error en el servidor" });
+  }
+};
+
   
   
 
@@ -317,5 +371,7 @@ module.exports = {
     borrarUsuario,
     actualizarNivelUsuario,
     actualizarIndicePalabra,
-    explorarPalabraLibre
+    explorarPalabraLibre,
+    obtenerPalabrasAprendidasPorNivel,
+    obtenerPalabraPorIndice
 };

@@ -1,16 +1,14 @@
 <app-header></app-header>
 
 <div class="mode-selector-container">
-
   <div class="icon-menu-fixed">
-  
-  <a (click)="navigateTo('perfil')" title="Mi Perfil">
-    <i class="fa-solid fa-user"></i>
-  </a>
-  <a  title="Cerrar Sesión">
-    <i class="fa-solid fa-right-from-bracket"></i>
-  </a>
-</div>
+    <a (click)="navigateTo('perfil')" title="Mi Perfil">
+      <i class="fa-solid fa-user"></i>
+    </a>
+    <a title="Cerrar Sesión">
+      <i class="fa-solid fa-right-from-bracket"></i>
+    </a>
+  </div>
 
   <div class="avatar-container">
     <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
@@ -20,68 +18,85 @@
     <div
       class="mode-card"
       *ngFor="let mode of modes"
-      (click)="navigateTo(mode.route)"
+      (click)="navigateToMode(mode.route)"
     >
       <div class="top-border"></div>
 
       <div class="mode-title">
         <h2><img [src]="mode.icon" alt="Icono" />{{ mode.name }}</h2>
-        <!-- <img [src]="mode.icon" alt="Icono" /> -->
         <p>{{ mode.description }}</p>
-        <!-- Sólo muestra este bloque si es el MODO GUIADO -->
-        <div *ngIf="mode.id === 'guiado'">
-          <span>Progreso actual: {{ progressPercent }}%</span>
-          <br />
-          <span>Lección actual: {{ userLevel }}</span>
-          <br />
-          <!-- Y sólo si nextLevel no es null, se muestra -->
-          <span *ngIf="nextLevel; else noHayNivel">
-            Próxima lección: {{ nextLevel }}
-          </span>
-          
-          <ng-template #noHayNivel>
-            <span>No hay más lecciones disponibles</span>
-          </ng-template>        
-        </div>
-
-        <div *ngIf="mode.id === 'libre'">
-          <!-- Estadística: X de N palabras exploradas -->
-          <p>Has explorado {{ exploredCount }} / {{ totalWords }} palabras en modo libre</p>
-        </div>
-
       </div>
 
-      <div class="mode-stats">
-        <div class="stat-box">
-          <ng-container *ngIf="mode.id === 'guiado'; else defaultStat1">
-            <p>Progreso:</p>
-            <div class="progress-bar">
-              <div
-                class="progress-fill"
-                [style.width.%]=""
-              ></div>
-              <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 75%"></div>
+      <!-- Sección de estadísticas -->
+      <div
+        class="mode-stats"
+        [ngClass]="{ 'center-content': isNewUserInGuidedMode }"
+      >
+        <ng-container [ngSwitch]="mode.id">
+          <!-- 📌 Modo Guiado -->
+          <ng-container *ngSwitchCase="'guiado'">
+            <div *ngIf="isNewUserInGuidedMode; else guidedStats">
+              <div class="stat-box empty-guide">
+                <p>¡Empieza ahora y descubre nuevas palabras!</p>
+                <div class="progressTwo">
+                  <div
+                    class="progress-bar progress-bar-striped progress-bar-animated"
+                    [ngClass]="animatedProgressColor"
+                    [style.width.%]="animatedProgress"
+                  >
+                    <span class="progress-text">{{ animatedProgress }}%</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </ng-container>
-          <ng-template #defaultStat1>Lol</ng-template>
-        </div>
 
-        <div class="stat-box">
-          <ng-container *ngIf="mode.id === 'guiado'; else defaultStat2">
-            <p>Lección actual:</p>
-          </ng-container>
-          <ng-template #defaultStat2>Lol</ng-template>
-        </div>
+            <ng-template #guidedStats>
+              <div class="stat-box level-box">
+                <p>Estás en el nivel</p>
+                <div class="level-circle">{{ userLevel }}</div>
+              </div>
 
-        <div class="stat-box">
-          <ng-container *ngIf="mode.id === 'guiado'; else defaultStat3">
-            <p>Última palabra: </p>
+              <div class="stat-box">
+                <p>Progreso</p>
+                <div class="progress">
+                  <div
+                    class="progress-bar progress-bar-striped progress-bar-animated"
+                    [ngClass]="getProgressColor(progressPercent)"
+                    [style.width.%]="progressPercent"
+                  >
+                    <span class="progress-text">{{ progressPercent }}%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Última palabra aprendida -->
+              <div class="stat-box">
+                <p>{{ lastWordLearned }}</p>
+              </div>
+            </ng-template>
           </ng-container>
-          <ng-template #defaultStat3>Lol</ng-template>
-        </div>
+
+          <!-- 📌 Modo Libre -->
+          <ng-container *ngSwitchCase="'libre'">
+            
+
+            <ng-template #freeStats>
+              <div class="stat-box">
+                <p>
+                  Has explorado {{ exploredCount }} / {{ totalWords }} palabras
+                </p>
+              </div>
+            </ng-template>
+          </ng-container>
+
+          <!-- 📌 Modo Examen -->
+          <ng-container *ngSwitchCase="'examen'">
+            <div class="stat-box">
+              <p>Disponible próximamente...</p>
+            </div>
+          </ng-container>
+        </ng-container>
       </div>
     </div>
   </div>
-
+</div>
