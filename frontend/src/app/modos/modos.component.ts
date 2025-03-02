@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CanvasComponent } from '../canvas/canvas.component';
 import { UsuariosService } from '../services/usuarios.service';
 import { PalabrasService } from '../services/palabras.service';
-import { ExploredWordsService } from '../services/explored_word.service';import { BookOpen, Compass, Target } from 'lucide-react';
+import { ExploredWordsService } from '../services/explored_word.service';
 import { HeaderComponent } from '../header/header.component';
 
 

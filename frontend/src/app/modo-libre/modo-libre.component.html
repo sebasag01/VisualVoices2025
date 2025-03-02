@@ -24,8 +24,8 @@
 
         <!-- Encabezado / menú derecho -->
         <div class="icon-menu-fixed">
-          <button (click)="iniciarTutorial()">Mostrar Tutorial</button>
-          <button (click)="toggleWebcam()" class="small-webcam-btn">Pruébate</button>
+          <!--<button (click)="iniciarTutorial()">Mostrar Tutorial</button>
+          <button (click)="toggleWebcam()" class="small-webcam-btn">Pruébate</button>-->
           <a (click)="navigateTo('perfil')" title="Mi Perfil">
             <i class="fa-solid fa-user"></i>
           </a>
@@ -68,25 +68,21 @@
           </div>
         </div>
 
-        <!-- LISTA DE CATEGORÍAS (vista 1) - Usa filteredCategories en lugar de categorias -->
-        <div class="category-list" *ngIf="!selectedCategory">
-          <div
-            class="category-item"
-            *ngFor="let cat of filteredCategories"
-            (click)="onCategoryClick(cat)"
-          >
-            <div class="cat-info">
-              <div class="cat-title">{{ cat.nombre }}</div>
-              <div class="cat-subtitle">
-                <!-- Las primeras 2-3 palabras (o las que quieras) -->
-                {{ getPrimerasPalabras(cat) }}
-              </div>
-            </div>
-            <div class="cat-arrow">
-              <i class="fa-solid fa-chevron-right"></i>
-            </div>
-          </div>
-        </div>
+        <!-- LISTA DE CATEGORÍAS (vista 1) con estilo de Cards -->
+<div class="category-grid" *ngIf="!selectedCategory">
+  <div class="card" *ngFor="let cat of filteredCategories" (click)="onCategoryClick(cat)">
+    <div class="card-details">
+      <!-- Título de la categoría -->
+      <p class="text-title">{{ cat.nombre }}</p>
+      <!-- Pequeño texto de ejemplo: primeras palabras -->
+      <p class="text-body">{{ getPrimerasPalabras(cat) }}</p>
+    </div>
+    <!-- Botón dentro de la card -->
+    <button class="card-button">
+      Más info
+    </button>
+  </div>
+</div>
 
         <!-- LISTA DE PALABRAS (vista 2) -->
         <div class="word-list" *ngIf="selectedCategory">
