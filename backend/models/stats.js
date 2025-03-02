@@ -7,20 +7,24 @@ const StatsSchema = new Schema({
     ref: 'Usuario',
     required: true,
   },
-  level: {
-    type: Number,
+  mode: {
+    type: String,
+    enum: ['guiado', 'libre', 'examen'],
     required: true,
   },
-  // Momento en que el usuario entra a un nivel
+  level: {
+    type: Number,
+    required: function() {
+      return this.mode !== 'libre'; // Si el modo es 'libre', level no es requerido.
+    },
+  },
   startTime: {
     type: Date,
     default: Date.now,
   },
-  // Momento en que el usuario sale / avanza de nivel
   endTime: {
     type: Date,
   },
-  // Duración total en este nivel (puedes calcularla cuando ends la sesión, o en la consulta)
   durationMs: {
     type: Number,
     default: 0,

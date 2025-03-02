@@ -71,6 +71,10 @@ export class UsuariosService {
       { withCredentials: true }
     );
   }
+  //obtenemos la categoria mas explorada por el usuario
+  getCategoriaMasExplorada(userId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${userId}/categoria-mas-explorada`, { withCredentials: true });
+  }
 
   obtenerPalabrasAprendidasPorNivel(id: string, nivel: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}/palabras-aprendidas/${nivel}`, { withCredentials: true });

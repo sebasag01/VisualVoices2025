@@ -2,14 +2,16 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { CategoriasService } from '../services/categorias.service';
 import { CanvasComponent } from '../canvas/canvas.component';
-import { AnimacionService } from '../services/animacion.service'; // Importa el servicio
-import { environment } from '../../environments/environment';
+import { CardComponent } from '../card/card.component';
+
 import { Router } from '@angular/router';
-import { CardComponent } from "../card/card.component";
+import { AnimacionService } from '../services/animacion.service';
+import { CategoriasService } from '../services/categorias.service';
 import { PalabrasService } from '../services/palabras.service';
 import { UsuariosService } from '../services/usuarios.service';
+
+import { environment } from '../../environments/environment';
 import { StatsService } from '../services/stats.service';
 import { ExploredWordsService } from '../services/explored_word.service'; 
 
@@ -18,41 +20,42 @@ import introJs from 'intro.js';
 @Component({
   selector: 'app-modo-guiado',
   standalone: true,
-  imports: [CommonModule,  CardComponent,CanvasComponent, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, FooterComponent, CanvasComponent, CardComponent],
   templateUrl: './modo-guiado.component.html',
   styleUrls: ['./modo-guiado.component.css'],
 })
 export class ModoGuiadoComponent implements OnInit {
-  
-  // ----- PROPIEDADES DE MODO GUIADO -----
-  words: any[] = [];          // Lista dinámica de palabras
-  currentIndex = 0;           // Índice actual de la palabra
-  maxWords = 3;               // Límite de palabras a mostrar
-  nivelActual = 1;            // Nivel actual
-  availableLevels = [1, 2];   // Niveles disponibles
-  userId: string = '';        // ID del usuario en BD
-  showWelcome = true;         // Mostrar pant. bienvenida
-  showChooseLevel = false;    // Mostrar pantalla de elegir nivel
-  
-  currentStatsId: string | null = null;
 
+  // Propiedades específicas del modo guiado
+  words: any[] = [];
+  currentIndex = 0;
+  maxWords = 3;
+  nivelActual = 1;
+  availableLevels = [1, 2];
 
+  // Usuario, estadisticas, etc.
+  userId: string = '';
+  currentStatsId: string | null = null;  // ID para stats
+
+  // Control de pantallas
+  showWelcome = true;
+  showChooseLevel = false;
+
+  // Variables generales (opcionalmente se pueden quitar si no las usas aquí)
   categorias: any[] = [];
   palabras: any[] = [];
   currentCategoryId: string | null = null;
   currentAnimationUrls: string[] = [];
-  modo: string = 'libre'; // Nuevo: Valor predeterminado
-  Math: any;
+  modo: string = 'guiado';
 
+  // Cámara
   @ViewChild('videoElement', { static: false }) videoElement!: ElementRef;
-
-  showWebcam = false; // Para controlar si estamos mostrando la cámara
-
+  showWebcam = false;
 
   constructor(
     private router: Router,
-    private categoriasService: CategoriasService,
     private animacionService: AnimacionService,
+    private categoriasService: CategoriasService,
     private palabrasService: PalabrasService,
     private usuariosService: UsuariosService,
     private statsService: StatsService,
@@ -62,26 +65,30 @@ export class ModoGuiadoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // 1) Cargar categoría si lo necesitas en guiado (no siempre es necesario)
     this.cargarCategorias();
+
+    // 2) Obtener usuario, nivelActual e índice actual
     this.usuariosService.getAuthenticatedUser().subscribe({
       next: (resp) => {
-        this.userId = resp.usuario.uid || resp.usuario._id;
-        this.nivelActual = resp.usuario.currentLevel || 1;
+        this.userId       = resp.usuario.uid || resp.usuario._id;
+        this.nivelActual  = resp.usuario.currentLevel || 1;
         this.currentIndex = resp.usuario.currentWordIndex || 0;
-        // Cargar palabras de ese nivel
+
+        // Cargar las palabras de este nivel
         this.cargarPalabrasPorNivel(this.nivelActual);
       },
       error: (err) => {
         console.error('Error obteniendo usuario autenticado:', err);
-        // fallback: nivel 1
-        this.nivelActual = 1;
+        // Fallback si no hay usuario
+        this.nivelActual  = 1;
         this.currentIndex = 0;
         this.cargarPalabrasPorNivel(1);
       },
     });
   }
 
-  // Nuevo: Cambiar modo según selector
+  // -- Métodos de navegación / modo (si quieres un combo para cambiar modo)
   cambiarModo(event: any): void {
     this.modo = event.target.value;
     console.log('Modo seleccionado:', this.modo);
@@ -97,6 +104,11 @@ export class ModoGuiadoComponent implements OnInit {
     }
   }
 
+  // -----------------------------------------
+  // Métodos específicos de Modo Guiado
+  // -----------------------------------------
+
+  // (Opcional) Cargar categorías si en tu modo guiado también las usas
   cargarCategorias(): void {
     this.categoriasService.obtenerCategorias().subscribe({
       next: (data) => {
@@ -139,12 +151,11 @@ export class ModoGuiadoComponent implements OnInit {
   // MÉTODOS QUE VIENEN DE MODO GUIADO
   // -----------------------------------------
   
+
   // 1. Cargar palabras por nivel
   cargarPalabrasPorNivel(nivel: number): void {
     this.palabrasService.obtenerPalabrasPorNivel(nivel).subscribe({
       next: (data) => {
-        // Guardamos las palabras en `words` y, si quieres, puedes
-        // truncarlas a `this.maxWords`.
         this.words = data.slice(0, this.maxWords);
         console.log('Palabras del nivel', nivel, this.words);
       },
@@ -157,19 +168,20 @@ export class ModoGuiadoComponent implements OnInit {
   // 2. Continuar donde iba
   continuar(): void {
     this.showWelcome = false;
-    // Cargar palabras del nivel
+
+    // Si quieres recargar las palabras para garantizar que no falten cambios
     this.cargarPalabrasPorNivel(this.nivelActual);
 
-    // Iniciar stats para este nivel
-    // Primero, si ya teníamos un statsId abierto, lo cerramos
+    // Cerrar stats anterior si existía
     if (this.currentStatsId) {
       this.statsService.endLevel(this.currentStatsId).subscribe({
         next: () => console.log('Stats anterior cerrado'),
         error: (err) => console.error('Error cerrando stats anterior', err),
       });
+      this.currentStatsId = null;
     }
 
-    // Ahora iniciamos la sesión para este nivel
+    // Iniciar nueva sesión de stats para este nivel
     this.statsService.startLevel(this.userId, this.nivelActual).subscribe({
       next: (resp) => {
         this.currentStatsId = resp.statsId;
@@ -184,7 +196,7 @@ export class ModoGuiadoComponent implements OnInit {
     this.showWelcome = false;
     this.currentIndex = 0;
 
-    // Guardar en BD
+    // Guardar el índice en BD
     this.usuariosService.updateUserWordIndex(this.userId, 0).subscribe({
       next: () => console.log('Reinicio a la primera palabra'),
       error: (err: any) => console.error('Error reiniciando índice:', err)
@@ -258,36 +270,47 @@ export class ModoGuiadoComponent implements OnInit {
   // 10. Avanzar de nivel
   advanceLevel() {
     const newLevel = this.nivelActual + 1;
-    
-      // 1) Cerrar la sesión de nivel actual
-      if (this.currentStatsId) {
-        this.statsService.endLevel(this.currentStatsId).subscribe({
-          next: (resp) => console.log('Sesión de nivel cerrada. Duración:', resp.durationMs),
-          error: (err) => console.error('Error al cerrar sesión de nivel:', err)
-        });
-        // Limpias la variable
-        this.currentStatsId = null;
-      }
-    
-      // 2) Actualizar nivel en la BD de usuarios
-      this.usuariosService.updateUserLevel(this.userId, newLevel).subscribe({
+
+    // Cerrar sesión de stats del nivel actual si está activa
+    if (this.currentStatsId) {
+      this.statsService.endLevel(this.currentStatsId).subscribe({
+        next: (resp) => {
+          console.log('Sesión de nivel cerrada. Duración:', resp.durationMs);
+        },
+        error: (err) => console.error('Error al cerrar sesión de nivel:', err)
+      });
+      this.currentStatsId = null;
+    }
+
+    // Actualizar nivel en BD
+    this.usuariosService.updateUserLevel(this.userId, newLevel).subscribe({
       next: (resp) => {
         console.log('Nivel actualizado en el servidor:', resp.usuario.currentLevel);
         this.nivelActual = resp.usuario.currentLevel;
 
-        // Reiniciamos índice a 0
+        // Resetear índice a 0
         this.currentIndex = 0;
         this.usuariosService.updateUserWordIndex(this.userId, 0).subscribe({
           next: () => console.log('Índice reseteado a 0'),
           error: (err) => console.error('Error reseteando índice:', err)
         });
 
-        // Mostramos pantalla de bienvenida, para que el usuario elija
+        // Mostramos pantalla de bienvenida para que elija qué hacer
         this.showWelcome = true;
         this.showChooseLevel = false;
 
+        // Cargamos las palabras del nuevo nivel
         // Cargar las nuevas palabras ...
         this.cargarPalabrasPorNivel(this.nivelActual);
+
+        // Iniciar nueva sesión de stats para el nuevo nivel (opcional)
+        this.statsService.startLevel(this.userId, this.nivelActual).subscribe({
+          next: (resp2) => {
+            this.currentStatsId = resp2.statsId;
+            console.log('Nueva sesión para el nivel actual:', this.currentStatsId);
+          },
+          error: (err) => console.error('Error iniciando nueva sesión de stats:', err)
+        });
 
         // 3) Iniciar una nueva sesión de stats para el nuevo nivel (opcional si quieres rastrear)
         this.statsService.startLevel(this.userId, this.nivelActual).subscribe({
@@ -310,25 +333,26 @@ export class ModoGuiadoComponent implements OnInit {
   }
 
   onLevelSelected(level: number) {
-    // Actualiza en BD
+    // Actualizar nivel en BD
     this.usuariosService.updateUserLevel(this.userId, level).subscribe({
       next: (resp) => {
         console.log('Nivel actualizado en el servidor:', resp.usuario.currentLevel);
         this.nivelActual = resp.usuario.currentLevel;
-      }
+      },
+      error: (err) => console.error('Error actualizando nivel:', err)
     });
 
-    // Reinicia índice
+    // Reiniciar índice
     this.currentIndex = 0;
     this.usuariosService.updateUserWordIndex(this.userId, 0).subscribe({
       next: () => console.log('Reinicio a la primera palabra'),
       error: (err) => console.error('Error reiniciando índice:', err)
     });
 
-    // Cargar palabras
+    // Cargar palabras del nuevo nivel
     this.cargarPalabrasPorNivel(this.nivelActual);
 
-    // Cerrar bienvenidas
+    // Cerrar welcome
     this.showWelcome = false;
     this.showChooseLevel = false;
   }
@@ -344,28 +368,34 @@ export class ModoGuiadoComponent implements OnInit {
     return Math.floor(progreso);
   }
 
+   //Obtener porcentaje de progeso
+   get progressPercent(): number {
+    if (!this.words || this.words.length === 0) return 0;
+  
+    // (currentIndex + 1) para que la primera palabra cuente como 1/3 en lugar de 0/3
+    const progreso = ((this.currentIndex + 1) / this.words.length) * 100;
+  
+    // Redondea si quieres
+    return Math.floor(progreso);
+  }
+
+  // Getter opcional para el porcentaje de avance
+  get progressPercent(): number {
+    if (!this.words || this.words.length === 0) return 0;
+    const progreso = ((this.currentIndex + 1) / this.words.length) * 100;
+    return Math.floor(progreso);
+  }
+
+  // Tutorial
   iniciarTutorial() {
     const intro = introJs();
     intro.setOptions({
       steps: [
         {
-          // Resalta el selector de modo
-          element: '#mode-selector',
-          intro: 'Aquí puedes elegir el modo: Libre, Guiado o Examen.',
-          position: 'right'
-        },
-        {
-          element: '#modo-libre-container',
-          intro: 'En Modo Libre verás categorías y palabras para animar el avatar.',
-          position: 'top'
-        },
-        {
-          // Resalta la zona del avatar
           element: '#avatar-element',
-          intro: 'Este es tu avatar 3D. ¡Puedes interactuar con él! Con la rueda del raton puedes hacer zoom, con el click izquierdo rotarlo y con el derecho moverlo',
+          intro: 'Este es tu avatar 3D. ¡Puedes interactuar con él!',
           position: 'left'
         }
-        
       ],
       showProgress: true,
       showBullets: false,
@@ -374,24 +404,34 @@ export class ModoGuiadoComponent implements OnInit {
       skipLabel: 'Saltar',
       doneLabel: 'Finalizar'
     });
-
+  
     intro.start();
   }
+  
 
+  // ----------------------
+  // Control de cámara
+  // ----------------------
   toggleWebcam() {
-    if (!this.showWebcam) {
-      // Activar la cámara
-      this.startWebcam();
-    } else {
-      // Desactivar la cámara
-      this.stopWebcam();
-    }
-    // Cambiamos el estado
     this.showWebcam = !this.showWebcam;
+    
+    // Esperar a que Angular actualice la vista antes de manipular el DOM
+    setTimeout(() => {
+      if (this.showWebcam) {
+        this.startWebcam();
+      } else {
+        this.stopWebcam();
+      }
+    }, 0);
   }
-
+  
   startWebcam() {
-    // Pedir acceso a la cámara
+    // Verificar que el elemento existe
+    if (!this.videoElement) {
+      console.error('Elemento de video no encontrado');
+      return;
+    }
+    
     navigator.mediaDevices.getUserMedia({ video: true })
       .then((stream) => {
         const video: HTMLVideoElement = this.videoElement.nativeElement;
@@ -400,10 +440,16 @@ export class ModoGuiadoComponent implements OnInit {
       })
       .catch((err) => {
         console.error('Error accediendo a la cámara: ', err);
+        this.showWebcam = false; // Revertir estado si hay error
       });
   }
-
+  
   stopWebcam() {
+    // Verificar que el elemento existe
+    if (!this.videoElement || !this.videoElement.nativeElement) {
+      return;
+    }
+    
     const video: HTMLVideoElement = this.videoElement.nativeElement;
     const stream = video.srcObject as MediaStream;
     if (stream) {
@@ -411,6 +457,22 @@ export class ModoGuiadoComponent implements OnInit {
       tracks.forEach(track => track.stop());
     }
     video.srcObject = null;
+  }
+  //cerrar sesion
+  logout(): void {
+    console.log('[DEBUG] Cerrando sesión desde Modo Libre...');
+    this.usuariosService.logout().subscribe({
+      next: (response) => {
+        console.log('[DEBUG] Respuesta del logout:', response);
+        // Aquí puedes limpiar datos locales si lo necesitas
+        // Por ejemplo, this.usuario = null; si lo tuvieras
+        this.router.navigate(['/landing']);
+      },
+      error: (error) => {
+        console.error('[ERROR] Error al cerrar sesión:', error);
+        alert('Error al cerrar sesión.');
+      },
+    });
   }
 
 }

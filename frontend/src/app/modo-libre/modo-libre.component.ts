@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CanvasComponent } from '../canvas/canvas.component';
 import { CategoriasService } from '../services/categorias.service';
@@ -7,8 +8,10 @@ import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { PalabrasService } from '../services/palabras.service';
 import { UsuariosService } from '../services/usuarios.service';
+import { ExploredWordsService } from '../services/explored_word.service'; // Importante
 import introJs from 'intro.js';
 import { HeaderComponent } from '../header/header.component';
+import { StatsService } from '../services/stats.service';
 
 @Component({
   selector: 'app-modo-libre',
@@ -17,15 +20,17 @@ import { HeaderComponent } from '../header/header.component';
   templateUrl: './modo-libre.component.html',
   styleUrls: ['./modo-libre.component.css']
 })
-export class ModoLibreComponent implements OnInit {
+export class ModoLibreComponent implements OnInit, OnDestroy  {
   categorias: any[] = [];
-  selectedCategory: any = null;    // Cuando sea != null, mostramos la lista de palabras
+  selectedCategory: any = null; // para saber si estamos en la vista de "palabras"
   palabrasDeCategoriaSeleccionada: any[] = [];
+
   currentAnimationUrls: string[] = [];
 
   // Para mostrar un pequeño resumen de las palabras en la vista de categorías
   numeroPalabrasResumen = 2; // o 3, ajusta a tu gusto
 
+  // Para controlar la cámara
   @ViewChild('videoElement', { static: false }) videoElement!: ElementRef;
   showWebcam = false;
 
@@ -35,18 +40,76 @@ export class ModoLibreComponent implements OnInit {
   // Array con los IDs de las categorías seleccionadas
   selectedCategoryIds: string[] = [];
 
+  // ID del usuario (para explorarPalabraLibre)
+  userId: string = '';
+
+  currentStatsId: string | null = null; // Asegúrate de almacenar el ID de la sesión
+
+
   constructor(
     private router: Router,
     private categoriasService: CategoriasService,
     private animacionService: AnimacionService,
     private palabrasService: PalabrasService,
-    private usuariosService: UsuariosService
+    private usuariosService: UsuariosService,
+    private exploredWordsService: ExploredWordsService, // Inyectamos para registrar exploraciones
+    private statsService: StatsService
   ) {}
 
   ngOnInit(): void {
+    // 1) Cargar categorías
     this.cargarCategorias();
+
+    // 2) Obtener userId
+    this.usuariosService.getAuthenticatedUser().subscribe({
+      next: (resp) => {
+        const user = resp.usuario;
+        // Por ejemplo, iniciar la sesión en modo libre:
+        this.statsService.startMode(user.uid, 'libre').subscribe({
+          next: (resp) => {
+            this.currentStatsId = resp.statsId;
+            console.log('Sesión de modo libre iniciada, statsId:', this.currentStatsId);
+          },
+          error: (err) => console.error('Error al iniciar sesión en modo libre:', err)
+        });
+      },
+      error: (err) => console.error('Error obteniendo usuario autenticado:', err)
+    });
+
     // Cerrar el dropdown si haces clic fuera
     document.addEventListener('click', this.handleClickOutside.bind(this));
+  }
+
+  volverAModos(): void {
+    console.log('Volviendo a modos...');
+    if (this.currentStatsId) {
+      this.statsService.endMode(this.currentStatsId).subscribe({
+        next: (resp) => {
+          console.log('Sesión de modo libre cerrada. Duración (ms):', resp.durationMs);
+          // Navegar a la vista de modos tras cerrar la sesión
+          this.router.navigate(['/modos']);
+        },
+        error: (err) => {
+          console.error('Error al cerrar la sesión de modo libre:', err);
+          // Aun en caso de error, intenta navegar a modos
+          this.router.navigate(['/modos']);
+        }
+      });
+    } else {
+      // Si no hay sesión abierta, navega directamente
+      this.router.navigate(['/modos']);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.currentStatsId) {
+      this.statsService.endMode(this.currentStatsId).subscribe({
+        next: (resp) => {
+          console.log('Sesión de modo libre cerrada. Duración:', resp.durationMs);
+        },
+        error: (err) => console.error('Error al cerrar la sesión de modo libre:', err)
+      });
+    }
   }
 
   cargarCategorias(): void {
@@ -121,9 +184,10 @@ export class ModoLibreComponent implements OnInit {
   }
 
   /**
-   * Cuando clicas en una palabra, reproduces la animación en el avatar
+   * Cuando clicas en una palabra, reproduces la animación y registras exploración
    */
   seleccionarPalabra(palabra: any): void {
+    // 1) Reproducir animación
     if (palabra.animaciones && palabra.animaciones.length > 0) {
       const animacionesUrls = palabra.animaciones.map(
         (animacion: any) => `${environment.apiUrl}/gltf/animaciones/${animacion.filename}`
@@ -132,22 +196,18 @@ export class ModoLibreComponent implements OnInit {
     } else {
       console.warn('No hay animaciones asociadas a esta palabra.');
     }
-  }
 
-  navigateTo(destination: string) {
-    if (destination === 'admin') {
-      this.router.navigate(['/admin']);
-    } else if (destination === 'ajustes') {
-      this.router.navigate(['/ajustes']);
-    } else if (destination === 'perfil') {
-      this.router.navigate(['/perfil']);
-    }
-  }
-
-  // Mostrar/ocultar el dropdown
-  toggleDropdown(event: MouseEvent): void {
-    event.stopPropagation(); // Evitamos que el click se propague y se cierre
-    this.isOpen = !this.isOpen;
+    // 2) Registrar exploración en BD (modo libre)
+    this.usuariosService.explorarPalabraLibre(this.userId, palabra._id).subscribe({
+      next: (resp) => {
+        console.log('Palabra explorada. Lleva ', resp.totalExploradas, ' en total');
+        // Actualizar BehaviorSubject con el total explorado
+        this.exploredWordsService.setExploredCount(resp.totalExploradas);
+      },
+      error: (err) => {
+        console.error('Error al marcar como explorada:', err);
+      }
+    });
   }
 
   // Maneja el click en el checkbox
@@ -164,9 +224,7 @@ export class ModoLibreComponent implements OnInit {
         id => id !== cat._id
       );
     }
-
     console.log('Seleccionados:', this.selectedCategoryIds);
-    // El get filteredCategories() se recalculará solo.
   }
 
   // Si hacemos clic fuera del dropdown, se cierra
@@ -176,12 +234,29 @@ export class ModoLibreComponent implements OnInit {
     }
   }
 
+  // Mostrar/ocultar el dropdown
+  toggleDropdown(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isOpen = !this.isOpen;
+  }
+
+  // Navegación
+  navigateTo(destination: string) {
+    if (destination === 'admin') {
+      this.router.navigate(['/admin']);
+    } else if (destination === 'ajustes') {
+      this.router.navigate(['/ajustes']);
+    } else if (destination === 'perfil') {
+      this.router.navigate(['/perfil']);
+    }
+  }
+
+  // Introducción (tutorial)
   iniciarTutorial() {
     const intro = introJs();
     intro.setOptions({
       steps: [
         {
-          // Resalta el selector de modo
           element: '#mode-selector',
           intro: 'Aquí puedes elegir el modo: Libre, Guiado o Examen.',
           position: 'right'
@@ -192,7 +267,6 @@ export class ModoLibreComponent implements OnInit {
           position: 'top'
         },
         {
-          // Resalta la zona del avatar
           element: '#avatar-element',
           intro: 'Este es tu avatar 3D. ¡Puedes interactuar con él!',
           position: 'left'
@@ -209,12 +283,11 @@ export class ModoLibreComponent implements OnInit {
     intro.start();
   }
 
+  // Control de webcam
   toggleWebcam() {
     if (!this.showWebcam) {
-      // Activar la cámara
       this.startWebcam();
     } else {
-      // Desactivar la cámara
       this.stopWebcam();
     }
     this.showWebcam = !this.showWebcam;
@@ -241,4 +314,21 @@ export class ModoLibreComponent implements OnInit {
     }
     video.srcObject = null;
   }
+  //cerrar sesion
+  logout(): void {
+    console.log('[DEBUG] Cerrando sesión desde Modo Libre...');
+    this.usuariosService.logout().subscribe({
+      next: (response) => {
+        console.log('[DEBUG] Respuesta del logout:', response);
+        // Aquí puedes limpiar datos locales si lo necesitas
+        // Por ejemplo, this.usuario = null; si lo tuvieras
+        this.router.navigate(['/landing']);
+      },
+      error: (error) => {
+        console.error('[ERROR] Error al cerrar sesión:', error);
+        alert('Error al cerrar sesión.');
+      },
+    });
+  }
+
 }

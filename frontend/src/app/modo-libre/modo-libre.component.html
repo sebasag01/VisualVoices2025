@@ -12,32 +12,42 @@
 <div class="container">
   <div class="content">
     <div class="layout">
-
-      <!-- Avatar a la izquierda, como antes -->
-      <div class="image-container" id="avatar-element">
+      <!-- Contenedor del avatar a la izquierda -->
+      <div class="image-container" id="avatar-element" [ngClass]="{'libre-half-width': showWebcam}">
         <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
       </div>
       
+      <!-- Contenedor de la cámara, se muestra solo cuando showWebcam es true -->
+      <div class="camera-container libre-full-right" *ngIf="showWebcam">
+        <video #videoElement class="mirror-video" autoplay></video>
+        <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
+          Desactivar Webcam
+        </button>
+      </div>
 
-      <!-- Panel derecho con la lista o sublista -->
-      <div class="right-panel">
-
-        <!-- Encabezado / menú derecho -->
+      <!-- Panel derecho (contenido original) se muestra solo cuando la cámara está desactivada -->
+      <div class="right-panel" *ngIf="!showWebcam">
+        <!-- Aquí va tu contenido habitual del panel derecho -->
         <div class="icon-menu-fixed">
-          <button (click)="iniciarTutorial()">Mostrar Tutorial</button>
+          <button (click)="iniciarTutorial()" class="tutorial-btn">Mostrar Tutorial</button>
           <button (click)="toggleWebcam()" class="small-webcam-btn">Pruébate</button>
-          <a (click)="navigateTo('perfil')" title="Mi Perfil">
+          
+            <button (click)="volverAModos()" class="back-to-modes-button">
+              Volver a Modos
+            </button>
+          
+          <a (click)="navigateTo('perfil')" title="Mi Perfil" class="user-icon">
             <i class="fa-solid fa-user"></i>
           </a>
           <a (click)="navigateTo('ajustes')" title="Ajustes">
             <i class="fa-solid fa-gear"></i>
           </a>
-          <a title="Cerrar Sesión">
-            <i class="fa-solid fa-right-from_bracket"></i>
+          <a (click)="logout()" title="Cerrar Sesión" class="logout-icon">
+            <i class="fa-solid fa-right-from-bracket"></i>
           </a>
         </div>
 
-        <!-- Barra de búsqueda si la mantienes -->
+        <!-- Resto del contenido del panel derecho (barra de búsqueda, dropdown, categorías, etc.) -->
         <div class="search-bar" id="search-container">
           <input type="text" placeholder="Busca cualquier palabra o categoría" id="search-input" />
           <button id="search-btn" title="Buscar">

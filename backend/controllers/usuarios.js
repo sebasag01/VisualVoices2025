@@ -339,28 +339,77 @@ const actualizarIndicePalabra = async (req, res = response) => {
     }
   };
 
-  const Palabra = require("../models/palabras"); // Asegúrate de importar el modelo de Palabra
 
-const obtenerPalabraPorIndice = async (req, res) => {
-  try {
-    const usuario = await Usuario.findById(req.params.id).populate("exploredFreeWords");
-    if (!usuario) {
-      return res.status(404).json({ msg: "Usuario no encontrado" });
+  const categoriaMasExplorada = async (req, res = response) => {
+    try {
+      const { id } = req.params; // ID del usuario
+      // 1) Buscar al usuario y popular las palabras de exploredFreeWords y sus categorías
+      const usuario = await Usuario.findById(id)
+        .populate({
+          path: 'exploredFreeWords',
+          populate: { path: 'categoria', select: 'nombre ' }, 
+        });
+  
+      if (!usuario) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Usuario no encontrado',
+        });
+      }
+  
+      // 2) Contar cuántas veces aparece cada categoría
+      // Creamos un diccionario: categoryId -> conteo
+      const conteoCategorias = {};
+      usuario.exploredFreeWords.forEach((palabra) => {
+        if (!palabra.categoria) return; // si la palabra no tiene categoría
+        const catId = String(palabra.categoria._id);
+  
+        if (!conteoCategorias[catId]) {
+          conteoCategorias[catId] = {
+            categoriaId: catId,
+            nombre: palabra.categoria.nombre,
+            count: 0,
+          };
+        }
+        conteoCategorias[catId].count += 1;
+      });
+  
+      // 3) Hallar la categoría con mayor conteo
+      let masExplorada = null;
+      for (let catId in conteoCategorias) {
+        if (!masExplorada || conteoCategorias[catId].count > masExplorada.count) {
+          masExplorada = conteoCategorias[catId];
+        }
+      }
+  
+      // Si el usuario no tiene palabras exploradas o no hay categorías
+      if (!masExplorada) {
+        return res.json({
+          ok: true,
+          categoriaMasExplorada: null,
+          msg: 'Ninguna categoría explorada aún'
+        });
+      }
+  
+      // 4) Devolver la información de la categoría con más conteo
+      res.json({
+        ok: true,
+        categoriaMasExplorada: {
+          categoriaId: masExplorada.categoriaId,
+          nombre: masExplorada.nombre,
+          count: masExplorada.count
+        }
+      });
+  
+    } catch (error) {
+      console.error('Error obteniendo categoría más explorada:', error);
+      res.status(500).json({
+        ok: false,
+        msg: 'Error interno al obtener la categoría más explorada'
+      });
     }
-
-    const palabras = await Palabra.find({ nivel: usuario.currentLevel }).sort({ _id: 1 });
-    const palabra = palabras[usuario.currentWordIndex];
-
-    if (!palabra) {
-      return res.status(404).json({ msg: "No se encontró la palabra" });
-    }
-
-    res.json({ texto: palabra.texto });
-  } catch (error) {
-    res.status(500).json({ msg: "Error en el servidor" });
-  }
-};
-
+  };
+  
   
   
 
@@ -372,6 +421,7 @@ module.exports = {
     actualizarNivelUsuario,
     actualizarIndicePalabra,
     explorarPalabraLibre,
+    categoriaMasExplorada,
     obtenerPalabrasAprendidasPorNivel,
     obtenerPalabraPorIndice
 };

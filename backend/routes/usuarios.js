@@ -10,7 +10,7 @@ const {
   borrarUsuario,
   actualizarNivelUsuario,
   actualizarIndicePalabra,
-  explorarPalabraLibre,
+  explorarPalabraLibre, categoriaMasExplorada,
   obtenerPalabrasAprendidasPorNivel,
   obtenerPalabraPorIndice,
 } = require("../controllers/usuarios");
@@ -76,6 +76,11 @@ router.patch("/:id/nivel", [validarJWT], actualizarNivelUsuario);
 
 router.patch("/:id/indice", [validarJWT], actualizarIndicePalabra);
 
-router.patch("/:id/explore-word/:wordId", [validarJWT], explorarPalabraLibre);
+router.patch('/:id/explore-word/:wordId', [
+    validarJWT,
+  ], explorarPalabraLibre);
+  
+  
+
 
 module.exports = router;

@@ -26,7 +26,7 @@
 
       <div class="button-grid" *ngIf="!showWebcam">
         <div class="icon-menu-fixed">
-          <button (click)="iniciarTutorial()">Mostrar Tutorial</button>
+          <button (click)="iniciarTutorial()" class="tutorial-btn">Mostrar Tutorial</button>
           <button (click)="toggleWebcam()" class="small-webcam-btn">
             Pruebate
           </button>
@@ -36,7 +36,7 @@
           <a (click)="navigateTo('ajustes')" title="Ajustes">
             <i class="fa-solid fa-gear"></i>
           </a>
-          <a  title="Cerrar Sesión">
+          <a (click)="logout()" title="Cerrar Sesión">
             <i class="fa-solid fa-right-from-bracket"></i>
           </a>
         </div>
