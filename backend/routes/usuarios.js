@@ -81,6 +81,7 @@ router.patch('/:id/explore-word/:wordId', [
   ], explorarPalabraLibre);
   
   
-
+router.get('/:id/categoria-mas-explorada', validarJWT, categoriaMasExplorada);
 
 module.exports = router;
+

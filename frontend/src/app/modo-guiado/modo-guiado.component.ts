@@ -357,27 +357,8 @@ export class ModoGuiadoComponent implements OnInit {
     this.showChooseLevel = false;
   }
 
-   //Obtener porcentaje de progeso
-   get progressPercent(): number {
-    if (!this.words || this.words.length === 0) return 0;
   
-    // (currentIndex + 1) para que la primera palabra cuente como 1/3 en lugar de 0/3
-    const progreso = ((this.currentIndex + 1) / this.words.length) * 100;
-  
-    // Redondea si quieres
-    return Math.floor(progreso);
-  }
 
-   //Obtener porcentaje de progeso
-   get progressPercent(): number {
-    if (!this.words || this.words.length === 0) return 0;
-  
-    // (currentIndex + 1) para que la primera palabra cuente como 1/3 en lugar de 0/3
-    const progreso = ((this.currentIndex + 1) / this.words.length) * 100;
-  
-    // Redondea si quieres
-    return Math.floor(progreso);
-  }
 
   // Getter opcional para el porcentaje de avance
   get progressPercent(): number {
