@@ -47,11 +47,6 @@ export class HomeComponent implements OnInit {
 
 
 
-  @ViewChild('videoElement', { static: false }) videoElement!: ElementRef;
-
-  showWebcam = false; // Para controlar si estamos mostrando la cámara
-
-
   constructor(
     private router: Router,
     private categoriasService: CategoriasService,
