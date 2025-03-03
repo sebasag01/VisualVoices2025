@@ -48,7 +48,7 @@ export class ModosComponent implements OnInit, OnDestroy {
   isNewUserInGuidedMode = true;
   animatedProgress = 0;
   progressPercent = 0;
-  maxWords = 3;
+  maxWords = 4;
   userLevel = 1;
   nextLevel: number | null = null;
   lastWordLearned: string = 'Adántrate aprendiendo nuevas palabras';

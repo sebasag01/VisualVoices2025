@@ -29,9 +29,9 @@ export class ModoGuiadoComponent implements OnInit {
   // Propiedades específicas del modo guiado
   words: any[] = [];
   currentIndex = 0;
-  maxWords = 3;
+  maxWords = 4;
   nivelActual = 1;
-  availableLevels = [1, 2];
+  availableLevels = [1, 2, 3];
 
   // Usuario, estadisticas, etc.
   userId: string = '';
@@ -456,4 +456,8 @@ export class ModoGuiadoComponent implements OnInit {
     });
   }
 
-}
+
+  volverAModos(): void {
+      this.router.navigate(['/modos']);
+    }
+  }

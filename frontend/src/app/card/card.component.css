@@ -5,147 +5,162 @@
   width: 100%;
 }
   
-  .card {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    background-color: transparent;
-    box-shadow: none;
-    animation: slide-in 0.3s ease-in-out; /* Animación de entrada por defecto */
-    --cui-card-border-width: 0;
-    --cui-card-border-color: transparent;
-    border: none !important;
-    border-width: 0 !important;
-    border-color: transparent !important;
-  }
+.card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Cambiado de space-around a flex-start para tener más control */
+  background-color: transparent;
+  box-shadow: none;
+  animation: slide-in 0.3s ease-in-out; /* Animación de entrada por defecto */
+  --cui-card-border-width: 0;
+  --cui-card-border-color: transparent;
+  border: none !important;
+  border-width: 0 !important;
+  border-color: transparent !important;
+  padding-top: 20px; /* Añadido padding para control del espaciado superior */
+}
 
-  .tutorial-btn {
-    padding: 5px 10px;              /* Menos padding para que sea pequeño */
-    font-size: 1rem;                /* Fuente un poco más pequeña */
-    font-family: "Lexend", sans-serif;
-    width: auto;
-    height: auto;
-    border: 2px solid black;
-    border-radius: 12px;            /* Bordes redondeados */
-    background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
-    color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
-    transition: background-color 0.3s ease;
-  }
-  
-  .tutorial-btn:hover {
-    background-color: #35a0c7;      /* Cambio de color en hover */
-  }
-  
-  .card-leaving {
-    animation: slide-out 0.3s ease-in-out forwards; /* Animación de salida */
-  }
-  
-  .explanation {
-    color: black;
-    font-size: 25px;
-    font-family: 'Lexend', sans-serif;
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 100px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  
-  .word-navigation-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .word-button {
-    background-color: #41b8d5;
-    color: black;
-    font-size: 1.5rem;
-    font-weight: bold;
-    padding: 15px 25px;
-    border-radius: 12px;
-    border: 2px solid black;
-    font-family: 'Lexend', sans-serif;
-   
-     
-  }
-  
-  .word-button:hover {
-    background-color: #a1a1a1; /* Gris oscuro al pasar el ratón */
-    transform: translateY(-2px);
+.tutorial-btn {
+  padding: 5px 10px;              /* Menos padding para que sea pequeño */
+  font-size: 1rem;                /* Fuente un poco más pequeña */
+  font-family: "Lexend", sans-serif;
+  width: auto;
+  height: auto;
+  border: 2px solid black;
+  border-radius: 12px;            /* Bordes redondeados */
+  background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
+  color: rgb(0, 0, 0);            /* Texto negro para buen contraste */
+  transition: background-color 0.3s ease;
+}
 
-  }
-  
-  .repeat-button {
-    position: absolute; /* Posicionar fuera del botón PALABRA */
-    bottom: -10px; /* Fuera del borde inferior */
-    right: -35px; /* Fuera del borde derecho */
-    width: 40px;
-    height: 40px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .icon {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-  }
-  
-  .navigation {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0 16px;
-  }
+.tutorial-btn:hover {
+  background-color: #35a0c7;      /* Cambio de color en hover */
+}
 
-  .word-navigation-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.card-leaving {
+  animation: slide-out 0.3s ease-in-out forwards; /* Animación de salida */
+}
+
+/* Posicionando el botón de palabra MUCHO más arriba */
+.word-button-container {
+  margin-top: 10px;               /* Mínimo espacio desde el borde superior */
+  position: relative;             /* Para posicionar relativamente */
+  margin-bottom: 80px;            /* Mayor espacio abajo para separar de la explicación */
+  width: 100%;                    /* Ancho completo */
+  display: flex;                  /* Usar flexbox */
+  justify-content: center;        /* Centrar horizontalmente */
+  align-items: flex-start;        /* Alinear al inicio */
+}
+
+.explanation {
+  color: black;
+  font-size: 25px;
+  font-family: 'Lexend', sans-serif;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 40px;               /* Espacio adicional desde el botón */
+  margin-bottom: 80px;            /* Espacio antes de los botones de navegación */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;                   /* Permite que crezca para llenar el espacio */
+}
+
+.word-navigation-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.word-button {
+  background: none;      /* Quita el fondo */
+  border: none;          /* Quita el borde */
+  padding: 0;            /* Quita el padding */
+  font-size: 3rem;       /* Aumenta el tamaño de la fuente */
+  font-weight: bold;
+  cursor: pointer;       /* Conserva el cursor pointer al pasar el ratón */
+  font-family: 'Lexend', sans-serif;
+}
+
+/* Opcional: eliminar o ajustar el efecto hover */
+.word-button:hover {
+  background: none;
+  transform: none;
+}
+
+
+.repeat-button {
+  position: absolute; /* Posicionar fuera del botón PALABRA */
+  bottom: -10px; /* Fuera del borde inferior */
+  right: -35px; /* Fuera del borde derecho */
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 16px;
+}
+
+/* Agregando separación entre las flechas de navegación */
+.navigation-arrows {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: auto;      /* Empuja las flechas hasta el final del espacio disponible */
+  padding-bottom: 30px;  /* Espacio al fondo */
+}
+
+.prev-button,
+.next-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin: 0 20px;  /* Agregando margen a los lados de cada botón para separarlos */
+}
+
+.arrow-icon {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
   }
-  
-  .prev-button,
-  .next-button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
-  
-  .arrow-icon {
-    width: 60px;
-    height: 60px;
-    cursor: pointer;
+}
+
+@keyframes slide-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
   }
-  
-  @keyframes slide-in {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
   }
-  
-  @keyframes slide-out {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(-100%);
-      opacity: 0;
-    }
-  }
-  
+}

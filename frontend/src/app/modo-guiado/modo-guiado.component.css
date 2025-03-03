@@ -307,6 +307,25 @@
   background-color: #35a0c7;      /* Cambio de color en hover */
 }
 
+.back-to-modes-button {
+  padding: 5px 10px;              /* Menos padding para que sea pequeño */
+  font-size: 1rem;                /* Fuente un poco más pequeña */
+  font-family: "Lexend", sans-serif;
+  width: auto;
+  height: auto;
+  border: 2px solid black;
+  border-radius: 12px;            /* Bordes redondeados */
+  background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
+  color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
+  transition: background-color 0.3s ease;
+  z-index: 999;
+
+}
+
+.back-to-modes-button:hover {
+  background-color: #35a0c7;      /* Cambio de color en hover */
+}
+
 .current-word {
   margin-top: 10px;
   background-color: rgba(255, 255, 255, 0.8);

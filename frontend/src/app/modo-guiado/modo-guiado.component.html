@@ -26,10 +26,15 @@
 
       <div class="button-grid" *ngIf="!showWebcam">
         <div class="icon-menu-fixed">
-          <button (click)="iniciarTutorial()" class="tutorial-btn">Mostrar Tutorial</button>
+          <!-- <button (click)="iniciarTutorial()" class="tutorial-btn">Mostrar Tutorial</button> -->
           <button (click)="toggleWebcam()" class="small-webcam-btn">
             Pruebate
           </button>
+
+          <button (click)="volverAModos()" class="back-to-modes-button">
+            Volver a Modos
+          </button>
+
           <a (click)="navigateTo('perfil')" title="Mi Perfil">
             <i class="fa-solid fa-user"></i>
           </a>
