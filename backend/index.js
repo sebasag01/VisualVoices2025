@@ -1,4 +1,5 @@
 // Importación de módulos
+require('dotenv').config(); // Esto carga el archivo .env
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
