@@ -5,6 +5,7 @@ const { response } = require('express');
 const validator = require('validator');
 const { generarJWT } = require('../helpers/jwt');
 
+
 const obtenerUsuarios = async(req, res) => {
 
     // Recibimos el desde
@@ -169,6 +170,36 @@ const actualizarUsuario = async(req, res = response) => {
     
 }
 
+const obtenerPalabrasAprendidasPorNivel = async (req, res = response) => {
+    try {
+      const { id, nivel } = req.params; // ID de usuario y nivel desde la URL
+      const usuario = await Usuario.findById(id).populate('exploredFreeWords');
+  
+      if (!usuario) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Usuario no encontrado',
+        });
+      }
+  
+      const palabrasAprendidas = usuario.exploredFreeWords.filter(
+        (word) => word.nivel === parseInt(nivel)
+      );
+  
+      res.json({
+        ok: true,
+        palabrasAprendidas: palabrasAprendidas.length,
+      });
+    } catch (error) {
+      console.error('Error obteniendo palabras aprendidas:', error);
+      res.status(500).json({
+        ok: false,
+        msg: 'Error obteniendo palabras aprendidas por nivel',
+      });
+    }
+  };
+  
+
 const borrarUsuario = async(req, res = response) => {
     
     const uid = req.params.id;
@@ -200,9 +231,197 @@ const borrarUsuario = async(req, res = response) => {
     }
 }
 
+// PATCH /api/usuarios/:id/nivel
+const actualizarNivelUsuario = async (req, res = response) => {
+    try {
+        const { id } = req.params;         // ID del usuario en la URL
+        const { newLevel } = req.body;     // Nivel nuevo en el body
+
+        const usuarioActualizado = await Usuario.findByIdAndUpdate(
+            id,
+            { currentLevel: newLevel },
+            { new: true } // para devolver el usuario ya actualizado
+        );
+
+        if (!usuarioActualizado) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Usuario no encontrado'
+            });
+        }
+
+        res.json({
+            ok: true,
+            msg: 'Nivel actualizado',
+            usuario: usuarioActualizado
+        });
+    } catch (error) {
+        console.error('Error al actualizar nivel del usuario:', error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error actualizando nivel del usuario'
+        });
+    }
+};
+
+
+
+// PATCH /api/usuarios/:id/indice
+const actualizarIndicePalabra = async (req, res = response) => {
+    try {
+      const { id } = req.params;        // ID del usuario
+      const { newIndex } = req.body;    // nuevo índice
+      const usuarioActualizado = await Usuario.findByIdAndUpdate(
+        id,
+        { currentWordIndex: newIndex },
+        { new: true }
+      );
+  
+      if (!usuarioActualizado) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Usuario no encontrado'
+        });
+      }
+  
+      res.json({
+        ok: true,
+        msg: 'Índice de palabra actualizado',
+        usuario: usuarioActualizado
+      });
+    } catch (error) {
+      console.error('Error al actualizar índice de palabra:', error);
+      res.status(500).json({
+        ok: false,
+        msg: 'Error actualizando índice de palabra'
+      });
+    }
+  };
+
+  const explorarPalabraLibre = async (req, res = response) => {
+    try {
+      const { id, wordId } = req.params; // id del usuario, wordId de la palabra
+      // 1) Buscar al usuario
+      const usuario = await Usuario.findById(id);
+  
+      if (!usuario) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Usuario no encontrado'
+        });
+      }
+  
+      // 2) Verificamos si la palabra ya está en su array
+      const estaYaExplorada = usuario.exploredFreeWords.some(
+        word => word.toString() === wordId
+      );
+  
+      // 3) Si NO está, la añadimos
+      if (!estaYaExplorada) {
+        usuario.exploredFreeWords.push(wordId);
+        await usuario.save();
+      }
+  
+      // 4) Devolvemos el usuario o, si quieres, solo la longitud
+      return res.json({
+        ok: true,
+        msg: 'Palabra marcada como explorada (modo libre)',
+        totalExploradas: usuario.exploredFreeWords.length,
+        usuario
+      });
+  
+    } catch (error) {
+      console.error('Error al explorar palabra:', error);
+      res.status(500).json({
+        ok: false,
+        msg: 'Error interno'
+      });
+    }
+  };
+
+
+  const categoriaMasExplorada = async (req, res = response) => {
+    try {
+      const { id } = req.params; // ID del usuario
+      // 1) Buscar al usuario y popular las palabras de exploredFreeWords y sus categorías
+      const usuario = await Usuario.findById(id)
+        .populate({
+          path: 'exploredFreeWords',
+          populate: { path: 'categoria', select: 'nombre ' }, 
+        });
+  
+      if (!usuario) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Usuario no encontrado',
+        });
+      }
+  
+      // 2) Contar cuántas veces aparece cada categoría
+      // Creamos un diccionario: categoryId -> conteo
+      const conteoCategorias = {};
+      usuario.exploredFreeWords.forEach((palabra) => {
+        if (!palabra.categoria) return; // si la palabra no tiene categoría
+        const catId = String(palabra.categoria._id);
+  
+        if (!conteoCategorias[catId]) {
+          conteoCategorias[catId] = {
+            categoriaId: catId,
+            nombre: palabra.categoria.nombre,
+            count: 0,
+          };
+        }
+        conteoCategorias[catId].count += 1;
+      });
+  
+      // 3) Hallar la categoría con mayor conteo
+      let masExplorada = null;
+      for (let catId in conteoCategorias) {
+        if (!masExplorada || conteoCategorias[catId].count > masExplorada.count) {
+          masExplorada = conteoCategorias[catId];
+        }
+      }
+  
+      // Si el usuario no tiene palabras exploradas o no hay categorías
+      if (!masExplorada) {
+        return res.json({
+          ok: true,
+          categoriaMasExplorada: null,
+          msg: 'Ninguna categoría explorada aún'
+        });
+      }
+  
+      // 4) Devolver la información de la categoría con más conteo
+      res.json({
+        ok: true,
+        categoriaMasExplorada: {
+          categoriaId: masExplorada.categoriaId,
+          nombre: masExplorada.nombre,
+          count: masExplorada.count
+        }
+      });
+  
+    } catch (error) {
+      console.error('Error obteniendo categoría más explorada:', error);
+      res.status(500).json({
+        ok: false,
+        msg: 'Error interno al obtener la categoría más explorada'
+      });
+    }
+  };
+  
+  
+  
+
 module.exports = {
     obtenerUsuarios,
     crearUsuario,
     actualizarUsuario, 
     borrarUsuario,
+    actualizarNivelUsuario,
+    actualizarIndicePalabra,
+    explorarPalabraLibre,
+    categoriaMasExplorada,
+    obtenerPalabrasAprendidasPorNivel,
+    
 };

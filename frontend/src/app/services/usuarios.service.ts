@@ -56,4 +56,31 @@ export class UsuariosService {
   getAuthenticatedUser(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/login/usuario`, { withCredentials: true });
   }
+
+  updateUserLevel(userId: string, newLevel: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${userId}/nivel`, { newLevel },{ withCredentials: true });
+  }
+  updateUserWordIndex(userId: string, newIndex: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${userId}/indice`, { newIndex }, { withCredentials: true });
+  }
+
+  explorarPalabraLibre(userId: string, wordId: string): Observable<any> {
+    return this.http.patch(
+      `${this.apiUrl}/${userId}/explore-word/${wordId}`,
+      {},
+      { withCredentials: true }
+    );
+  }
+  //obtenemos la categoria mas explorada por el usuario
+  getCategoriaMasExplorada(userId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${userId}/categoria-mas-explorada`, { withCredentials: true });
+  }
+
+  obtenerPalabrasAprendidasPorNivel(id: string, nivel: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}/palabras-aprendidas/${nivel}`, { withCredentials: true });
+  }
+  
+
+  
+
 }

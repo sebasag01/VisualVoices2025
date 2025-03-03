@@ -37,17 +37,9 @@
   border-bottom: none !important;
 }
 
-.logo-container {
-  display: flex;
-  align-items: center; 
-  justify-content: flex-start; 
-  position: relative; 
-  left: -50px; 
-  top: 0; 
-}
 
 .logo {
-  width: 150px; 
+  width: 80px; 
   height: auto;
   cursor: pointer;
 } 
@@ -61,7 +53,7 @@
 --------------------------------------------------------------------------- */
 
 /* Contenedor de los botones */
-.buttons {
+/* .buttons {
   display: flex;
   align-items: center;
   gap: 15px; 
@@ -96,7 +88,209 @@
 .btn.login:hover {
   transform: scale(1.1);
   background-color: #2aafcf;
-} 
+}  */
+
+.landing-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  flex-direction: row-reverse; /* Invierte el orden de los elementos */
+
+}
+
+.landing-left {
+  width: 50%;
+  background-color: #f2c464;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-top-left {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px; /* Ajusta la separación entre la bombilla y el texto */
+
+}
+
+.logo-container {
+  width: 100px;
+  height: auto;
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column; /* Pone "Visual" arriba y "Voices" abajo */
+  text-align: left; /* Asegura alineación a la izquierda */
+  line-height: 1; /* Ajusta el espacio entre líneas */}
+
+/* Form section (contenedor de pestañas) */
+.form-section {
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+  margin-left: 100px;
+}
+.landing-right {
+  width: 50%;
+  background-color: #f2c464;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Lo mueve hacia abajo */
+  align-items: flex-end; /* Lo mueve hacia la derecha */
+  padding-right: 50px; /* Ajusta la distancia hacia la derecha */
+  padding-top: 50px; /* Ajusta la distancia hacia abajo */
+}
+
+.canvas-section {
+  width: 100%;
+  max-width: 400px; /* Ajusta el tamaño del avatar si es necesario */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Contenedor de ambas pestañas */
+.tabs-container {
+  display: flex;
+  background: #f9e59f;
+  border-radius: 12px 12px 0 0;
+  justify-content: space-evenly;
+  width: 450px;
+}
+
+/* Cada pestaña */
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #000000;        /* Ajusta a tu color */
+  cursor: pointer;
+  padding: 16px 0;
+  position: relative;
+  outline: none;
+  text-align: center;
+}
+
+/* Subrayado rojo cuando está activa */
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #41B8D5;
+}
+
+/* Contenedor del contenido de la pestaña */
+.tab-content {
+  background: #f9e59f;
+  border-radius: 0 0 12px 12px; 
+  width: 450px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1); 
+}
+
+/* .landing-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+
+.landing-left {
+  width: 50%;
+  background-color: #f2c464;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  align-items: flex-start; 
+  padding: 40px;
+  text-align: left;
+  position: relative;
+}
+
+.header-left {
+  display: flex;
+  align-items: center; 
+  gap: 15px; 
+  margin-bottom: 20px;
+} */
+
+/* .logo-container  {
+  width: 200px; 
+  height: auto;
+  text-align: center;
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+} */
+
+.main-title {
+  font-family: "Chauphilomene", sans-serif;
+  font-size: 2.5rem;
+  /* font-weight: bold; */
+  color: black;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: "Lexend", sans-serif;
+  font-size: 1.5rem;
+  color: black;
+  margin: 0;
+}
+
+
+/* .landing-right {
+  width: 50%;
+  background-color: #f2c464; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-section {
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  justify-content: center;
+} */
+
+/* .canvas-section {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  justify-content: center;
+} */
+
+.landing .canvas {
+  background-color: lightblue;
+}
+
 
 
 /* ---------------------------------------------------------------------------
@@ -129,7 +323,7 @@
   font-family: "Lexend", sans-serif;
   font-size: 2rem;
   color: black;
-  font-weight: bold; /* Esto pone el texto en negrita */
+  font-weight: bold; 
 
 }
 
@@ -229,6 +423,34 @@ app-login, app-registro {
                             FIN DEL CONTENEDOR DE LOGIN/REGISTRO
 --------------------------------------------------------------------------- */
 
+/* ---------------------------------------------------------------------------
+                            PARA EL SCROLLBAR
+--------------------------------------------------------------------------- */
+
+@supports (scrollbar-width: thin) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #444 #fff8d4;
+  }
+}
+
+/* Para navegadores basados en WebKit como Chrome y Edge */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #444; 
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #fff8d4; 
+}
+
+/* ---------------------------------------------------------------------------
+                            FIN DEL SCROLLBAR
+--------------------------------------------------------------------------- */
 html,
 body {
   height: 100%;
@@ -282,6 +504,16 @@ body {
 
 
 }
+
+/* .logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.logo img {
+  height: 80px;
+} */
 
 .graphic {
   flex: 1; 
@@ -356,20 +588,26 @@ body {
 --------------------------------------------------------------------------- */
 
 
-/* 
+
+
 .footer {
-  background-color: #f2c464; 
+  background-color: #f7d07b ; 
   color: black;
   text-align: center;
   padding: 20px;
   width: 100%;
   position: relative;
-  font-family: "ChauPhilomene" !important;
-  margin: 0;
+  font-family: "Lexend" !important;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between; 
   align-items: center; 
+  border-top: none; /* Elimina cualquier borde superior */
+  box-shadow: none; /* Elimina cualquier sombra */
 }
+
+
+
 
 .footer-left, .footer-center, .footer-right {
   display: flex;
@@ -379,8 +617,7 @@ body {
 .footer-left a, .footer-center a, .footer-right a {
   color: black; 
   text-decoration: none; 
-  margin: 0 10px; 
-}
+  margin: 0 10px; }
 
 .footer-left a:hover, .footer-center a:hover, .footer-right a:hover {
   text-decoration: underline; 
@@ -392,82 +629,27 @@ body {
 
 .footer-right i {
   font-size: 24px; 
-  margin-left: 10px; 
-}
-
-.button-link {
-  background-color: black; 
-  color: white; 
-  padding: 10px 20px; 
-  border-radius: 5px; 
-  font-weight: bold; 
-  text-transform: uppercase; 
-  display: inline-block; 
-}
-.button-link:hover {
-  background-color: #333; 
-  text-decoration: none; 
-} */
-
-
-
-.footer {
-  background-color: #f2c464; 
-  color: black;
-  text-align: center;
-  padding: 20px;
-  width: 100%;
-  position: relative;
-  font-family: "Lexend" !important;
-  margin: 0;
-  display: flex;
-  justify-content: space-between; /* Alinea los elementos a izquierda, centro y derecha */
-  align-items: center; /* Alinea los items verticalmente */
-}
-
-.footer-left, .footer-center, .footer-right {
-  display: flex;
-  align-items: center; /* Asegura que el texto y los iconos estén alineados correctamente */
-}
-
-.footer-left a, .footer-center a, .footer-right a {
-  color: black; /* Color de los enlaces */
-  text-decoration: none; /* Elimina el subrayado */
-  margin: 0 10px; /* Espaciado entre los enlaces */
-}
-
-.footer-left a:hover, .footer-center a:hover, .footer-right a:hover {
-  text-decoration: underline; /* Subrayado al pasar el mouse */
-}
-
-.footer-center p {
-  margin: 0; /* Elimina márgenes adicionales */
-}
-
-.footer-right i {
-  font-size: 24px; /* Tamaño del icono de Instagram */
-  margin-left: 2px; /* Espacio entre el icono y el texto */
+  margin-left: 2px; 
   left: -60px;
   display: flex;
   align-items: center;
   position: relative;
 }
 
-/* Estilo específico para el enlace "Graphicare" */
 .footer-center .button-link {
-  background-color: black; /* Fondo negro para el botón */
-  color: white !important; /* Texto blanco */
-  padding: 10px 20px; /* Espaciado dentro del "botón" */
-  border-radius: 20px; /* Bordes redondeados */
-  font-weight: bold; /* Texto en negrita */
-  text-transform: uppercase; /* Texto en mayúsculas */
-  display: inline-block; /* Asegura que se comporte como un botón */
-  text-decoration: none !important; /* Elimina el subrayado */
+  background-color: black; 
+  color: white !important;
+  padding: 10px 20px; 
+  border-radius: 20px; 
+  font-weight: bold; 
+  text-transform: uppercase;
+  display: inline-block; 
+  text-decoration: none !important; 
 }
 
 .footer-center .button-link:hover {
-  background-color: #333 !important; /* Color de fondo al pasar el mouse */
-  text-decoration: none !important; /* Elimina el subrayado al pasar el mouse */
+  background-color: #333 !important; 
+  text-decoration: none !important; 
 }
 
 

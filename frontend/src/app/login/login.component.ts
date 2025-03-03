@@ -39,12 +39,16 @@ export class LoginComponent {
         console.log('[DEBUG] Login exitoso, respuesta del servidor:', response);
   
         //this.toastr.success('Inicio de sesión exitoso', 'Éxito');
-        this.router.navigate(['/guiado']);
+        this.router.navigate(['/modos']);
       },
       error: (error) => {
         console.error('[ERROR] Error en el inicio de sesión:', error);
-        this.errorMessage = 'Error en el inicio de sesión. Revisa tus credenciales.';
-        this.toastr.error('Error en el inicio de sesión. Revisa tus credenciales.', 'Error');
+        if(error.status === 429) {
+          this.errorMessage= error.error.error;
+        }
+        else{
+          this.errorMessage = 'Error en el inicio de sesión. Revisa tus credenciales.';
+        }
       },
     });
   }

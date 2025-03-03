@@ -1,4 +1,21 @@
-<app-header></app-header>
+<div class="logo-fixed">
+  <img src="assets/bombillita.png" alt="Logo de GraphicCare" class="logo"/>
+  <div class="logo-text">
+    <span class="visual">VISUAL</span>
+    <span class="voices">VOICES</span>
+  </div>
+</div>
+<div class="icon-menu-fixed">
+  <a (click)="navigateTo('perfil')" title="Mi Perfil">
+    <i class="fa-solid fa-user"></i>
+  </a>
+  <a (click)="navigateTo('ajustes')" title="Ajustes">
+    <i class="fa-solid fa-gear"></i>
+  </a>
+  <a  title="Cerrar Sesión">
+    <i class="fa-solid fa-right-from-bracket"></i>
+  </a>
+</div>
 
 <div class="settings-panel">
   <div class="cuadrofondo">

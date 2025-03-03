@@ -46,10 +46,26 @@
 <body>
   <app-root></app-root>
   <df-messenger
-      intent="WELCOME"
-      chat-title="MANOlo"
-      agent-id="2faf7558-0b47-4132-8b38-a0f11b4e1ac2"
-      language-code="es">
-    </df-messenger>
+    chat-title="MANOlo"
+    agent-id="2faf7558-0b47-4132-8b38-a0f11b4e1ac2"
+    language-code="es"
+    allow-feedback="false"
+    chat-icon="">
+</df-messenger>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const messenger = document.querySelector('df-messenger');
+    if (messenger) {
+      messenger.removeAttribute('open-chat-message'); // Bloqueo de mensajes automáticos
+      messenger.addEventListener('df-event-response', (event) => {
+        if (event.detail?.message === 'WELCOME') {
+          event.stopPropagation(); // Bloquea respuesta automática de bienvenida
+        }
+      });
+    }
+  });
+</script>
+    
 </body>
 </html>

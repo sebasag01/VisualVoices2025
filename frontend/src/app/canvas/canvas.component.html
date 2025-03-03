@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div class="canvas-container">
-        <canvas #webglCanvas class="webgl"></canvas>
-    </div>
-</body>
-</html>
-
-
+<div class="canvas-container">
+    <canvas #webglCanvas class="webgl"></canvas>
+    <button *ngIf="showResetButton" class="reset-btn" (click)="resetView()">Centrar Avatar</button>
+  </div>
+  

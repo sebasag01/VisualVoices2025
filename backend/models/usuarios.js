@@ -26,6 +26,19 @@ const UsuarioSchema = Schema({
         required: true,
         default: 'ROL_USUARIO'
     },
+    currentLevel: {
+        type: Number,
+        default: 1
+    },
+    currentWordIndex: {
+        type: Number,
+        default: 0
+    },
+    exploredFreeWords: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Palabra',
+      }],
+
 }, { collection: 'usuarios' });
 
 UsuarioSchema.method('toJSON', function() {

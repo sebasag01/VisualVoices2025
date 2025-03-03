@@ -1,6 +1,6 @@
 <form class="login-form" (ngSubmit)="loginUser()">
-  <h2 class="registro-title">VISUAL VOICES</h2>
-  <p>¡Hola de nuevo!</p>
+  <h2 class="registro-title">¡Hola de nuevo!</h2>
+  <!-- <p>¡Hola de nuevo!</p> -->
   <input
     type="email"
     placeholder="Correo electrónico"
@@ -41,19 +41,14 @@
     <a href="#" class="forgot-password">¿Olvidaste la contraseña?</a>
   </div>
 
-  <button type="submit" class="btn">Entrar</button>
+  <button type="submit" class="btn">Iniciar Sesión</button>
 
   <!-- <a href="#" class="forgot-password">¿Has olvidado la contraseña?</a>  -->
   <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
 
 </form>
 
-<div class="register-box">
-  <p class="register">
-    ¿No tienes cuenta?
-    <a href="javascript:void(0);" (click)="toggleRegister.emit()">   Regístrate</a>
-  </p>
-</div>
+
 
 <!--<div class="divider">
       <span class="divider-text">O</span>

@@ -15,20 +15,36 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./registro.component.css'],
 })
 export class RegistroComponent {
-  user = { email: '', password: '', nombre: '', apellidos: '' };
+  user = { email: '', password: '', repeatPassword: '', nombre: '', apellidos: '' };
   passwordFieldType: string = 'password'; // Controla si el campo es 'password' o 'text'
+  passwordMismatch: boolean = false; // Variable para indicar que las contraseñas no coinciden
+  showPasswordHint: boolean = false; // Controla la visibilidad del hint
+
   @Output() toggleLogin = new EventEmitter<void>();  
 
 
   constructor(private usuariosService: UsuariosService, private router: Router,private toastr: ToastrService) {}
+ 
+  checkPasswordMatch(): void {
+    this.passwordMismatch = (this.user.password !== this.user.repeatPassword);
+  }
 
   registerUser() {
+
+    // Validar que las contraseñas coincidan antes de enviar
+    if (this.user.password !== this.user.repeatPassword) {
+      this.passwordMismatch = true;
+      return; // No continuar con el registro
+    } else {
+      this.passwordMismatch = false;
+    }
+
     console.log('Datos enviados:', this.user); // Log para verificar los datos
     this.usuariosService.register(this.user).subscribe({
       next: (response) => {
         console.log('Registro exitoso:', response);
         this.toastr.success('Usuario registrado con éxito', 'Éxito');
-        this.router.navigate(['/guiado']); // Redirigir a la página 'home'
+        this.router.navigate(['/modos']); // Redirigir a la página 'home'
       },
       error: (error) => {
         console.error('Error en el registro:', error);
@@ -40,4 +56,13 @@ export class RegistroComponent {
   togglePasswordVisibility(): void {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
+
+  isPasswordValid(): boolean {
+    const pwd = this.user.password;
+    // Requisitos: 8-12 caracteres, al menos una mayúscula, una minúscula, un dígito y un carácter especial
+    const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,12}$/;
+    return regex.test(pwd);
+  }
+
+
 }

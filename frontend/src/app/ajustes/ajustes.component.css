@@ -4,6 +4,68 @@
     font-weight: normal;
     font-style: normal;
   }
+  /* Importar la fuente personalizada desde la carpeta public */
+@font-face {
+  font-family: "ChauPhilomene";
+  src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+.logo-fixed {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  text-align: left;
+  z-index: 100;
+}
+.logo {
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
+}
+.logo-text {
+  font-family: "ChauPhilomene", sans-serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.visual {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.voices {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 2px;
+}
+
+/*MENÚ DERECHO*/
+.icon-menu-fixed {
+  display: flex;
+  justify-content: flex-end; /* Alinea a la derecha */
+  gap: 20px;
+  font-size: 30px;
+  padding: 20px;
+  
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f5f5d6;
+}
+
+.icon-menu-fixed a {
+  color: black;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+.icon-menu-fixed a:hover {
+  transform: scale(1.1);
+}
 .settings-panel {
     
     width: 100%;

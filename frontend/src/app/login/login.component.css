@@ -61,7 +61,7 @@
     max-width: 400px;
     padding: 30px;
     text-align: center;
-    background-color: #f9e59f; /* Fondo amarillo suave */
+    background-color: #f2c464; /* Fondo amarillo suave */
     border-radius: 15px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombras */
     margin-left: 20px; /* Añadido margen a la izquierda */
@@ -77,13 +77,13 @@
     padding: 40px;
     background-color: #f9e59f;
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
   }
   
   .registro-title {
     font-family: "ChauPhilomene", sans-serif; 
     font-size: 45px;
-    font-weight: bold;
+    font-weight: bold; 
     text-align: center;
     margin-bottom: 15px;
     color: #000;

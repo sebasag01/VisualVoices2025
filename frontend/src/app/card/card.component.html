@@ -4,42 +4,53 @@
     [class.card-leaving]="isLeaving"
     (animationend)="onAnimationEnd()"
   >
-    <!-- Explicación dinámica -->
-    <div class="explanation">{{ explanation || 'Explicación guiada para cada botón' }}</div>
 
-     <!-- Palabra dinámica y navegación agrupadas -->
-     <div class="word-navigation-container">
-      <button class="prev-button" (click)="prevCard()">
-        <img src="assets/left-arrow.png" alt="Anterior" class="arrow-icon">
-      </button>
+    <ng-container *ngIf="showWelcome && !showChooseLevel; else secondStep">
+      <h2>¡Bienvenido al nivel {{ levelNumber }}!</h2>
+      <p>Puedes continuar donde lo dejaste, o empezar desde la primera palabra.</p>
+      <div> 
+        <button (click)="continueClicked.emit()" class="tutorial-btn">Continuar donde iba</button>
+        <button (click)="startOverClicked.emit()" class="tutorial-btn">Empezar desde el principio</button>
+        <button (click)="chooseLevelClicked.emit()" class="tutorial-btn">Elegir nivel</button>
+      </div>
+    </ng-container>
       
-      <div class="word-repeat-container">
-        <button class="word-button" (click)="onWordButtonClick()">
+    <ng-template #secondStep>
+      <ng-container *ngIf="showWelcome && showChooseLevel; else normalContent">
+        <p>Selecciona un nivel:</p>
+        <div *ngFor="let lvl of availableLevels">
+          <button (click)="onLevelSelect(lvl)">Nivel {{ lvl }}</button>
+        </div>
+      </ng-container>
+    </ng-template>
+
+    <ng-template #normalContent>
+      <!-- Contenedor para el botón con la palabra, que se mostrará mucho más arriba -->
+      <div class="word-button-container">
+        <span class="word-button" (click)="onWordButtonClick()">
           {{ word || 'Cargando...' }}
+        </span>
+      </div>
+    
+      <!-- Explicación dinámica -->
+      <div class="explanation">
+        {{ explanation || 'Explicación guiada para cada botón' }}
+      </div>
+    
+      <!-- Contenedor para las flechas de navegación, que se mantendrán abajo con separación -->
+      <div class="navigation-arrows">
+        <button class="prev-button" (click)="prevCard()">
+          <img src="assets/left-arrow.png" alt="Anterior" class="arrow-icon">
+        </button>
+        <button class="next-button" (click)="nextCard()">
+          <ng-container *ngIf="nextLabel === 'Siguiente'; else avanzarNivel">
+            <img src="assets/right-arrow.png" alt="Siguiente" class="arrow-icon">
+          </ng-container>
+          <ng-template #avanzarNivel>
+            {{ nextLabel }}
+          </ng-template>
         </button>
       </div>
-      
-      <button class="next-button" (click)="nextCard()">
-        <img src="assets/right-arrow.png" alt="Siguiente" class="arrow-icon">
-      </button>
-    </div>
+    </ng-template>
   </div>
 </div>
-    
-    <!-- Palabra dinámica
-    <div class="word-repeat-container">
-      <button class="word-button" (click)="onWordButtonClick()">
-        {{ word || 'Cargando...' }}
-      </button>
-    </div>
-    
-    <div class="navigation">
-      <button class="prev-button" (click)="prevCard()">
-        <img src="assets/left-arrow.png" alt="Anterior" class="arrow-icon">
-      </button>
-      <button class="next-button" (click)="nextCard()">
-        <img src="assets/right-arrow.png" alt="Siguiente" class="arrow-icon">
-      </button>
-    </div>
-  </div>
-</div> -->

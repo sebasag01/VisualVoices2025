@@ -1,0 +1,122 @@
+<app-header></app-header>
+
+<div class="mode-selector-container">
+  <div class="icon-menu-fixed">
+    <a (click)="navigateTo('perfil')" title="Mi Perfil">
+      <i class="fa-solid fa-user"></i>
+    </a>
+    <a (click)="logout()" title="Cerrar Sesión">
+      <i class="fa-solid fa-right-from-bracket"></i>
+    </a>
+  </div>
+
+  <div class="avatar-container">
+    <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
+  </div>
+
+  <div class="modes-container">
+    <div class="mode-card" *ngFor="let mode of modes" (click)="navigateToMode(mode.route)">
+      <div class="top-border"></div>
+
+      <div class="mode-title">
+        <h2>
+          <img [src]="mode.icon" alt="Icono" />{{ mode.name }}
+        </h2>
+        <p>{{ mode.description }}</p>
+      </div>
+
+      <div class="mode-stats">
+        <ng-container [ngSwitch]="mode.id">
+          <!-- Modo GUIADO -->
+          <ng-container *ngSwitchCase="'guiado'">
+            <div *ngIf="isNewUserInGuidedMode; else guiadoStats">
+              <div class="stat-box empty-guide">
+                <p>¡Empieza ahora y descubre nuevas palabras!</p>
+                <div class="progressTwo">
+                  <div
+                    class="progress-bar progress-bar-striped progress-bar-animated"
+                    [ngClass]="animatedProgressColor"
+                    [style.width.%]="animatedProgress"
+                  >
+                    <span class="progress-text">{{ animatedProgress }}%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-template #guiadoStats>
+              <!-- Caja 2: Nivel / Lección actual -->
+              <div class="stat-box level-box">
+                <p>Estás en el nivel</p>
+                <div class="level-circle">{{ userLevel }}</div>
+              </div>
+              <!-- Caja 1: Progreso -->
+              <div class="stat-box">
+                <p>Progreso</p>
+                <div class="progress">
+                  <div
+                    class="progress-bar progress-bar-striped progress-bar-animated"
+                    [ngClass]="getProgressColor(progressPercent)"
+                    [style.width.%]="progressPercent"
+                  >
+                    <span class="progress-text">{{ progressPercent }}%</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Caja 3: Próxima lección o última palabra -->
+              <div class="stat-box">
+                <p *ngIf="nextLevel; else lastWord">
+                  Próxima lección: {{ nextLevel }}
+                </p>
+                <ng-template #lastWord>
+                  <!-- <p>Última palabra: {{ lastWordLearned }}</p> -->
+                  <p>Continúa aprendiendo!</p>
+
+                </ng-template>
+              </div>
+            </ng-template>
+          </ng-container>
+
+          <!-- Modo LIBRE -->
+          <ng-container *ngSwitchCase="'libre'">
+            <!-- Caja 1: Palabras exploradas -->
+            <div class="stat-box">
+              <p>Has explorado {{ exploredCount }} / {{ totalWords }} palabras</p>
+            </div>
+            <!-- Caja 2: Categoría más explorada -->
+            <div class="stat-box">
+              <ng-container *ngIf="mostExploredCategoryName; else noCategory">
+                <p>
+                  Tu categoría más explorada:
+                  {{ mostExploredCategoryName }} ({{ mostExploredCategoryCount }} palabras)
+                </p>
+              </ng-container>
+              <ng-template #noCategory>
+                <p>No hay categoría más explorada</p>
+              </ng-template>
+            </div>
+            <!-- Caja 3: Tiempo total y sugerencia -->
+            <div class="stat-box">
+              <p>
+                Has practicado un total de
+                {{ (tiempoLibreMs / 60000) | number:'1.0-0' }} minutos
+              </p>
+              <!-- <div *ngIf="categoriaSugerida">
+                <p>
+                  Sugerencia: Explora la categoría
+                  <strong>{{ categoriaSugerida.nombre }}</strong>
+                </p>
+              </div> -->
+            </div>
+          </ng-container>
+
+          <!-- Modo EXAMEN -->
+          <ng-container *ngSwitchCase="'examen'">
+            <div class="stat-box">
+              <p>Disponible próximamente...</p>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

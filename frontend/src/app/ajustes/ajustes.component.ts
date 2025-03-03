@@ -44,4 +44,13 @@ export class AjustesComponent {
     console.log('Cerrando panel de ajustes');
     this.router.navigate(['/guiado']); // Redirige a la ruta guiado
   }
+  navigateTo(destination: string) {
+    if (destination === 'admin') {
+      this.router.navigate(['/admin']);
+    } else if (destination === 'ajustes') {
+      this.router.navigate(['/ajustes']);
+    } else if (destination === 'perfil') {
+      this.router.navigate(['/perfil']);
+    }
+  }
 }

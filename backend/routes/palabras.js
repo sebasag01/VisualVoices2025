@@ -11,7 +11,8 @@ const {
     editarPalabra,
     borrarPalabra,
     asociarCategoria,
-    obtenerPalabrasPorCategoria
+    obtenerPalabrasPorCategoria,
+    obtenerPalabrasPorNivel
 } = require('../controllers/palabras');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middleware/validar-campos');
@@ -23,6 +24,7 @@ const router = Router();
 // Rutas públicas
 router.get('/', obtenerPalabras);
 router.get('/categoria', obtenerPalabrasPorCategoria); // Devuelve palabras por categoría
+router.get('/por-nivel', obtenerPalabrasPorNivel); //Devuelve palabras por nivel
 router.get('/:id', obtenerPalabra);
 
 // Rutas restringidas a administradores

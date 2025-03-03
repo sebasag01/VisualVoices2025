@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
     }
   
     // Lista de rutas permitidas sin autenticación
-    const allowedRoutes = ['/landing', '/guiado'];
+    const allowedRoutes = ['/landing', '/guiado', '/home', '/perfil', '/ajustes'];
   
     // Si la ruta actual está permitida, no hacer nada
     if (allowedRoutes.includes(currentRoute)) {
@@ -76,8 +76,8 @@ export class AppComponent implements OnInit {
   
         // Si el usuario está en `/landing` o `/`, redirigir a `/home`
         if (currentRoute === '/landing' || currentRoute === '/') {
-          console.log('[DEBUG] Redirigiendo a /home para usuario autenticado');
-          this.router.navigate(['/guiado']);
+          console.log('[DEBUG] Redirigiendo a /mode-selector para usuario autenticado');
+          this.router.navigate(['/mode-selector']);
         }
       },
       error: (error) => {

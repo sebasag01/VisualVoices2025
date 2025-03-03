@@ -1,0 +1,642 @@
+@font-face {
+    font-family: 'lexend';
+    src: url('../../assets/fonts/lexend.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  /* Importar la fuente personalizada desde la carpeta public */
+  @font-face {
+    font-family: "ChauPhilomene";
+    src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 80vh;
+    background-color: #fff8d4;
+    max-width: 100% !important; 
+    width: 100% !important;
+  }
+  
+  /* Asegurar que .content ocupe toda la pantalla */
+  .content {
+    width: 100vw;
+    height: 100vh;
+    background-color: #fff8d4;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  
+  .instructions {
+    margin-top: 25px;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: -27px;
+    font-family: 'lexend';
+    
+  }
+  
+  .layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  
+  
+  
+  .button-grid {
+    flex: 0 0 35%;
+    background-color: #f4a940;
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+  
+  
+  
+  
+  .image-container {
+    flex-grow: 1;
+    width: calc(100% - 5%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .canvas-container {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  
+  
+  /* Botones dinámicos para categorías (blancos) */
+  .main-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: nowrap;
+  }
+  .main-button {
+    padding: 10px 20px;
+    font-size: 1.3rem;
+    background-color: white;
+    
+    border-radius: 8px;
+    font-family: "ChauPhilomene", sans-serif;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    
+  }
+  
+  
+  
+  .main-button.active {
+    border:#000 3px solid;
+    border-color: #000;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.8); /* Sombra para resaltar */
+    
+  
+  
+  }
+  
+  
+  /* Botones dinámicos para palabras (azules) */
+  .grid-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    width: 100%;
+    justify-items: center;
+  }
+  .secondary-button {
+    background-color: #41b8d5;
+    color: black;
+    font-size: 1.4rem;
+    
+    border: 2px solid black;
+    border-radius: 12px;
+    padding: 15px;
+    width: 150px;
+    height: 80px;
+    text-align: center;
+    transition: background-color 0.3s;
+    font-family: "Lexend", sans-serif;
+    border-width: 3px;
+  }
+  .secondary-button:hover {
+    background-color: #35a0c7;
+  }
+  
+  /* Importar la fuente personalizada desde la carpeta public */
+  @font-face {
+    font-family: "ChauPhilomene";
+    src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: "Lexend";
+    src: url("../../assets/fonts/lexend.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  .logo-fixed {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    text-align: left;
+    z-index: 100;
+  }
+  .logo {
+    width: 50px;
+    height: auto;
+    margin-right: 10px;
+  }
+  .logo-text {
+    font-family: "ChauPhilomene", sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+  .visual {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  .voices {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 2px;
+  }
+  /*MENÚ DERECHO*/
+  .icon-menu-fixed {
+    display: flex;
+    justify-content: flex-end; /* Alinea a la derecha */
+    gap: 20px;
+    font-size: 30px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .icon-menu-fixed a {
+    color: black;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+  .icon-menu-fixed a:hover {
+    transform: scale(1.1);
+  }
+  .modo-guiado {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  
+  
+  /* Estilos para la cámara */
+  /* Cuando la cámara está activa, queremos que el avatar sea la mitad del ancho */
+  .half-width {
+    width: 50% !important;
+  }
+  
+  /* Contenedor de la cámara */
+  .camera-container {
+    width: 50%;
+    height: 100vh; /* o el alto que prefieras */
+    display: flex;
+    flex-direction: column;  /* Organiza en columna: video arriba, botón abajo */
+    align-items: center;
+    justify-content: center;
+    background-color: #fff8d4;
+  }
+  
+  /* El video en modo espejo */
+  .mirror-video {
+    width: 90%;
+    height: 80vh;       /* Aumenta la altura para que el video sea más largo */
+    object-fit: cover;  /* Se asegura de que el video se recorte y llene el área */
+    transform: scaleX(-1); /* Modo espejo */
+    border: 2px solid #000;
+    border-radius: 10px;
+  }
+  
+  
+  /* Nueva clase para un botón de desactivar webcam más pequeño */
+  .small-disable-webcam-btn {
+    margin-top: 10px;         /* Espacio entre el video y el botón */
+    padding: 5px 10px;        /* Menos padding para que sea pequeño */
+    font-size: 1rem;          /* Fuente más pequeña */
+    border: none;
+    border-radius: 12px;      /* Bordes redondeados */
+    background-color: #ff4d4d;/* Color de fondo */
+    color: white;             /* Color de texto */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .small-disable-webcam-btn:hover {
+    background-color: #e60000;
+  }
+  
+  .current-word {
+    margin-top: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .small-webcam-btn {
+    padding: 5px 10px;              /* Menos padding para que sea pequeño */
+    font-size: 1rem;                /* Fuente un poco más pequeña */
+    font-family: "Lexend", sans-serif;
+    width: auto;
+    height: auto;
+    border: 2px solid black;
+    border-radius: 12px;            /* Bordes redondeados */
+    background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
+    color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
+    transition: background-color 0.3s ease;
+    z-index: 999;
+
+  }
+  
+  .small-webcam-btn:hover {
+    background-color: #35a0c7;      /* Cambio de color en hover */
+  }
+  
+  
+  .tutorial-btn {
+    padding: 5px 10px;              /* Menos padding para que sea pequeño */
+    font-size: 1rem;                /* Fuente un poco más pequeña */
+    font-family: "Lexend", sans-serif;
+    width: auto;
+    height: auto;
+    border: 2px solid black;
+    border-radius: 12px;            /* Bordes redondeados */
+    background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
+    color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
+    transition: background-color 0.3s ease;
+    z-index: 999;
+
+  }
+  
+  .tutorial-btn:hover {
+    background-color: #35a0c7;      /* Cambio de color en hover */
+  }
+
+  .back-to-modes-button {
+    padding: 5px 10px;              /* Menos padding para que sea pequeño */
+    font-size: 1rem;                /* Fuente un poco más pequeña */
+    font-family: "Lexend", sans-serif;
+    width: auto;
+    height: auto;
+    border: 2px solid black;
+    border-radius: 12px;            /* Bordes redondeados */
+    background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
+    color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
+    transition: background-color 0.3s ease;
+    z-index: 999;
+
+  }
+  
+  .back-to-modes-button:hover {
+    background-color: #35a0c7;      /* Cambio de color en hover */
+  }
+  
+  /* search-bar.css */
+
+.search-bar {
+    width: 100%;
+    background-color: transparent;    /* Fondo transparente */
+    border: 3px solid black;          /* Borde negro */
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+  
+  .search-bar input {
+    flex: 1;                          /* Ocupar todo el espacio posible */
+    background: transparent;
+    border: none;                     /* Sin borde interior */
+    outline: none;                    /* Quitar outline al enfocar */
+    color: #000;                      /* Texto en negro */
+    font-size: 1rem;
+  }
+  
+  .search-bar input::placeholder {
+    color: rgba(0, 0, 0, 0.5);        /* Placeholder gris */
+    font-family: "Lexend", sans-serif;
+  }
+  
+  /* El botón con la lupa */
+  .search-bar button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;                       /* Ajuste para no agrandar el botón */
+    margin-left: 0.5rem;             /* Separación del input */
+  }
+  
+  .search-bar button:focus {
+    outline: none;
+  }
+  
+  /* Icono de lupa (podrías usar un emoji, una imagen de fondo, o un icono de librería) */
+  .search-bar .lupa::before {
+    content: '🔍'; 
+    font-size: 1.2rem;
+  }
+  /* Panel derecho */
+.right-panel {
+    flex: 0 0 35%;
+    background-color: #f4a940;
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+  
+  /* Estilo general de cada fila de categoría */
+  .category-item {
+    display: flex;
+    justify-content: space-between; /* Título a la izq, flecha a la dcha */
+    align-items: center;
+    background-color: white;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid black;
+    font-family: "Lexend", sans-serif;
+  }
+  
+  .category-item:hover {
+    background-color: #d2d1d3b1; /* un ligero hover */
+  }
+  
+  .cat-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .cat-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .cat-subtitle {
+    color: gray;
+    font-size: 0.9rem;
+  }
+  
+  .cat-arrow {
+    font-size: 1.2rem;
+  }
+  
+  /* Lista de palabras de una categoría */
+  .word-list {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+  
+  .word-item {
+    background-color: white;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid black;
+  }
+  
+  .word-item:hover {
+    background-color: #ffc580;
+  }
+  
+  .word-title {
+    font-weight: bold;
+  }
+  
+  .back-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: black;
+    border: 2px solid black;
+    padding: 6px 12px;
+    border-radius: 8px;
+    width: fit-content;
+    background-color: #ffedd2;
+  }
+  
+  .back-button:hover {
+    background-color: #ffc580;
+  }
+  /* Contenedor que queremos al 30% */
+.multi-select-dropdown {
+    position: relative; 
+    width: 30%;          /* Ajusta según tu necesidad */
+    min-width: 200px;    /* Un mínimo para que no sea demasiado pequeño */
+    display: inline-block;
+    margin-bottom: 1rem; /* Espacio debajo si lo deseas */
+  }
+  
+  /* Botón que muestra el dropdown */
+  .dropdown-button {
+    width: 100%;
+    background-color: #41b8d5; 
+    border: 2px solid #000;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: space-between; /* Para poner la flechita a la derecha */
+    align-items: center;
+    font-family: "ChauPhilomene", sans-serif;
+  }
+  
+  /* Flecha desplegable */
+  .arrow {
+    transition: transform 0.3s ease;
+    margin-left: 8px;
+  }
+  
+  /* Rotar flecha al abrir */
+  .arrow.rotate {
+    transform: rotate(180deg);
+  }
+  
+  /* Contenido desplegable */
+  .dropdown-content {
+    position: absolute;
+    top: 110%; /* un poco debajo del botón */
+    left: 0;
+    z-index: 999;
+    background-color: #fff;
+    width: 100%;
+    border: 2px solid #000;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    max-height: 0;          /* Comenzamos colapsado */
+    overflow: hidden;       /* Ocultamos el contenido mientras está cerrado */
+    transition: max-height 0.3s ease;
+    font-family: "ChauPhilomene", sans-serif;
+  }
+  
+  /* Cuando el contenedor tiene la clase .open, mostramos el contenido */
+  .multi-select-dropdown.open .dropdown-content {
+    max-height: 200px;  /* la altura máxima que permita ver varios checkboxes */
+    overflow-y: auto;   /* scroll interno si excede la altura */
+  }
+  
+  /* Cada elemento dentro del menú */
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-family: sans-serif;
+  }
+  
+  /* Quitar subrayado */
+  .dropdown-item input {
+    margin-right: 8px;
+    cursor: pointer;
+  }
+  
+
+  /*NUEVO DISEÑO DE CARDS*/
+
+  /* Contenedor grid para las categorías */
+.category-grid {
+   display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  /* Centra horizontalmente los elementos en cada celda */
+  justify-items: center;  
+  /* Centra verticalmente los elementos en cada celda */
+  align-items: center;
+  
+  margin: 10px auto; /* Opcional, para centrar el grid en su contenedor padre */
+}
+
+/* Estilos de la Card (los puedes pegar tal cual los tienes) */
+/* From Uiverse.io by alexruix */
+.card {
+  width: 190px;
+  height: 254px;
+  border-radius: 20px;
+  background: #f5f5f5;
+  position: relative;
+  padding: 1.8rem;
+  border: 2px solid #c3c6ce;
+  transition: 0.5s ease-out;
+  overflow: visible;
+  cursor: pointer; /* Para indicar que se puede hacer click */
+}
+
+.card-details {
+  color: black;
+  height: 100%;
+  gap: 0.5em;
+  display: grid;
+  place-content: center;
+}
+
+.text-title {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.text-body {
+  color: rgb(134, 134, 134);
+}
+
+/* Botón dentro de la card */
+.card-button {
+  transform: translate(-50%, 125%);
+  width: 60%;
+  border-radius: 1rem;
+  border: none;
+  background-color: #008bf8;
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  opacity: 0;
+  transition: 0.3s ease-out;
+}
+
+/* Hover */
+.card:hover {
+  border-color: #008bf8;
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+}
+
+.card:hover .card-button {
+  transform: translate(-50%, 50%);
+  opacity: 1;
+}
+
+.user-icon{
+  z-index: 999;
+}
+
+.ajustes-icon{
+  z-index: 999;
+}
+
+.logout-icon{
+  z-index: 999;
+}
+

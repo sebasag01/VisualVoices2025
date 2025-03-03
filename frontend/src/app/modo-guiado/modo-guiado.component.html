@@ -1,23 +1,81 @@
+
 <app-header></app-header>
 
 <div class="container">
+  
   <div class="content">
-    <p class="instructions">EXPLORA LIBREMENTE LOS BOTONES. CLICA Y TE MOSTRAREMOS CÓMO SE SIGNA...</p>
-    <div class="layout">
-      <div class="image-container">
-        <app-canvas></app-canvas>      
+    <div class="layout"> 
+      
+      <div class="image-container" id="avatar-element" [ngClass]="{'half-width': showWebcam}">
+        <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
+      </div>
+      
+      <!-- Contenedor del video, se muestra solo si showWebcam === true -->
+      <div class="camera-container" *ngIf="showWebcam">
+        <video #videoElement class="mirror-video" autoplay></video>
+
+        <div *ngIf="modo === 'guiado'" class="current-word" (click)="handleWordClick()">
+          <p>{{ currentWord }}</p>
+        </div>
+        
+        <button (click)="toggleWebcam()"  class="small-disable-webcam-btn">
+          Desactivar Webcam
+        </button>
       </div>
 
-      <app-card
-        [word]="currentWord"
-        [explanation]="currentExplanation"
-        (wordClick)="handleWordClick()"
-        (repeatClick)="handleRepeatClick()"
-        (prevClick)="prevWord()"
-        (nextClick)="nextWord()"
-      ></app-card>
+
+      <div class="button-grid" *ngIf="!showWebcam">
+        <div class="icon-menu-fixed">
+          <!-- <button (click)="iniciarTutorial()" class="tutorial-btn">Mostrar Tutorial</button> -->
+          <button (click)="toggleWebcam()" class="small-webcam-btn">
+            Pruebate
+          </button>
+
+          <button (click)="volverAModos()" class="back-to-modes-button">
+            Volver a Modos
+          </button>
+
+          <a (click)="navigateTo('perfil')" title="Mi Perfil">
+            <i class="fa-solid fa-user"></i>
+          </a>
+          <a (click)="navigateTo('ajustes')" title="Ajustes">
+            <i class="fa-solid fa-gear"></i>
+          </a>
+          <a (click)="logout()" title="Cerrar Sesión">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </a>
+        </div>
+        
+        
+
+        <!-- VISTA PARA MODO GUIADO -->
+        <div  class="modo-guiado" id="modo-guiado-container">
+          
+          <app-card
+            [showWelcome]="showWelcome"
+            [levelNumber]="nivelActual"
+            (continueClicked)="continuar()"
+            (startOverClicked)="empezarDesdePrimera()"
+            [word]="currentWord"
+            [explanation]="currentExplanation"
+            (wordClick)="handleWordClick()"
+            (repeatClick)="handleRepeatClick()"
+            (prevClick)="prevWord()"
+            [nextLabel]="isLastWord() ? 'Avanzar Nivel' : 'Siguiente'"
+            (nextClick)="isLastWord() ? advanceLevel() : nextWord()"
+            (chooseLevelClicked)="openChooseLevel()"
+            [availableLevels]="availableLevels"
+            [showChooseLevel]="showChooseLevel"
+            (levelSelected)="onLevelSelected($event)">
+          </app-card>
+          <div class="nuevo-div">
+            
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 </div>
 
-<app-footer></app-footer>
+
