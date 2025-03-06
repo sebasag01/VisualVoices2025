@@ -9,7 +9,14 @@
       <!-- Contenedor del avatar a la izquierda -->
       <div class="image-container" id="avatar-element" [ngClass]="{'libre-half-width': showWebcam}">
         <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
-      </div>
+         <!-- Menú de herramientas (ahora en el lado izquierdo) -->
+  <div class="tools-menu" [class.open]="toolMenuOpen">
+    <p class="tools-menu-placeholder">Menú de herramientas</p>
+  </div>
+</div>
+
+
+      
       
       <!-- Contenedor de la cámara, se muestra solo cuando showWebcam es true -->
       <div class="camera-container libre-full-right" *ngIf="showWebcam">
@@ -41,31 +48,28 @@
           </a>
         </div>
 
-        <!-- Resto del contenido del panel derecho (barra de búsqueda, dropdown, categorías, etc.) -->
-        <div class="search-bar" id="search-container">
-          <input type="text" placeholder="Busca cualquier palabra o categoría" id="search-input" />
-          <button id="search-btn" title="Buscar">
+        <div class="search-bar" id="search-container" (click)="toggleDropdown($event)">
+          <input 
+            type="text" 
+            placeholder="Busca cualquier palabra o categoría" 
+            id="search-input" 
+            [(ngModel)]="searchText" 
+            (input)="onSearchInput()" 
+            (focus)="onInputFocus()" 
+          />
+          <button id="search-btn" title="Buscar" (click)="performSearch()">
             <span class="lupa"></span>
           </button>
         </div>
-
-        <!-- Dropdown multiselección -->
-        <div class="multi-select-dropdown" *ngIf="!selectedCategory" [class.open]="isOpen" (click)="toggleDropdown($event)">
-          <!-- Botón de apertura -->
-          <button type="button" class="dropdown-button">
-            Filtrar Categorías
-            <span class="arrow" [class.rotate]="isOpen">&#9662;</span>
-          </button>
-
-          <!-- Contenido desplegable -->
-          <div class="dropdown-content" (click)="$event.stopPropagation()">
-            <!-- Para cada categoría, un checkbox -->
-            <label class="dropdown-item" *ngFor="let cat of categorias">
+        <div class="multi-select-dropdown" [class.open]="isOpen" (click)="$event.stopPropagation()">
+          <div class="dropdown-content">
+            <!-- Recorremos las categorías que pasan el filtro de texto -->
+            <label class="dropdown-item" *ngFor="let cat of filteredCategoriesBySearch">
               <input 
                 type="checkbox" 
                 [value]="cat._id" 
                 (change)="onCheckboxChange($event, cat)" 
-                [checked]="selectedCategoryIds.includes(cat._id)"
+                [checked]="selectedCategoryIds.includes(cat._id)" 
               />
               {{ cat.nombre }}
             </label>
@@ -89,24 +93,28 @@
 </div>
 
         <!-- LISTA DE PALABRAS (vista 2) -->
-        <div class="word-list" *ngIf="selectedCategory">
-          <!-- Botón para volver a la lista de categorías -->
-          <div class="back-button" (click)="volverAListaCategorias()">
-            <i class="fa-solid fa-arrow-left"></i> 
-            <span>Volver</span>
-          </div>
+        <!-- LISTA DE PALABRAS (vista 2) -->
+<div class="word-list" *ngIf="selectedCategory">
+  <!-- Botón para volver a la lista de categorías -->
+  <div class="back-button" (click)="volverAListaCategorias()">
+    <i class="fa-solid fa-arrow-left"></i> 
+    <span>Volver</span>
+  </div>
 
-          <h3>{{ selectedCategory.nombre }}</h3>
+  <h3>{{ selectedCategory.nombre }}</h3>
 
-          <div
-            class="word-item"
-            *ngFor="let palabra of palabrasDeCategoriaSeleccionada"
-            (click)="seleccionarPalabra(palabra)"
-          >
-            <!-- Nombre de la palabra -->
-            <div class="word-title">{{ palabra.palabra }}</div>
-          </div>
-        </div>
+  <div
+    class="word-item"
+    *ngFor="let palabra of palabrasDeCategoriaSeleccionada"
+    (click)="seleccionarPalabra(palabra)"
+    [ngClass]="{'selected-word': selectedWord?.palabra === palabra.palabra}"
+  >
+    <!-- Nombre de la palabra -->
+    <div class="word-title">{{ palabra.palabra }}</div>
+  </div>
+</div>
+
+
 
       </div><!-- fin right-panel -->
 

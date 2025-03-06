@@ -12,11 +12,11 @@ import { ExploredWordsService } from '../services/explored_word.service'; // Imp
 import introJs from 'intro.js';
 import { HeaderComponent } from '../header/header.component';
 import { StatsService } from '../services/stats.service';
-
+import { FormsModule } from '@angular/forms'; // ¡Importante para [(ngModel)]!
 @Component({
   selector: 'app-modo-libre',
   standalone: true,
-  imports: [CommonModule, CanvasComponent, HeaderComponent],
+  imports: [CommonModule, CanvasComponent, HeaderComponent, FormsModule],
   templateUrl: './modo-libre.component.html',
   styleUrls: ['./modo-libre.component.css']
 })
@@ -36,7 +36,7 @@ export class ModoLibreComponent implements OnInit, OnDestroy  {
 
   // Para controlar la visibilidad del dropdown
   isOpen = false;
-
+  searchText: string = '';
   // Array con los IDs de las categorías seleccionadas
   selectedCategoryIds: string[] = [];
 
@@ -45,6 +45,9 @@ export class ModoLibreComponent implements OnInit, OnDestroy  {
 
   currentStatsId: string | null = null; // Asegúrate de almacenar el ID de la sesión
 
+  selectedWord: any = null;       // Palabra que está seleccionada
+  hasClickedWord: boolean = false; // Para saber si es la primera vez que se cliquea
+  toolMenuOpen: boolean = false;   // Controla que el menú esté abierto o cerrado
 
   constructor(
     private router: Router,
@@ -55,6 +58,38 @@ export class ModoLibreComponent implements OnInit, OnDestroy  {
     private exploredWordsService: ExploredWordsService, // Inyectamos para registrar exploraciones
     private statsService: StatsService
   ) {}
+
+  seleccionarPalabra(palabra: any): void {
+    // 1) Guardamos la palabra seleccionada
+    this.selectedWord = palabra;
+    
+    // 2) Si es la primera palabra clicada en esta sesión de modo libre:
+    if (!this.hasClickedWord) {
+      this.toolMenuOpen = true;   // Abrimos el menú
+      this.hasClickedWord = true; // Marcamos que ya se ha cliqueado al menos una vez
+    }
+
+    // 3) Reproducimos la animación (tal como ya lo hacías)
+    if (palabra.animaciones && palabra.animaciones.length > 0) {
+      const animacionesUrls = palabra.animaciones.map(
+        (animacion: any) => `${environment.apiUrl}/gltf/animaciones/${animacion.filename}`
+      );
+      this.animacionService.cargarAnimaciones(animacionesUrls, true);
+    } else {
+      console.warn('No hay animaciones asociadas a esta palabra.');
+    }
+
+    // 4) Registrar exploración en BD (modo libre), etc.
+    this.usuariosService.explorarPalabraLibre(this.userId, palabra._id).subscribe({
+      next: (resp) => {
+        console.log('Palabra explorada. Lleva ', resp.totalExploradas, ' en total');
+        this.exploredWordsService.setExploredCount(resp.totalExploradas);
+      },
+      error: (err) => {
+        console.error('Error al marcar como explorada:', err);
+      }
+    });
+  }
 
   ngOnInit(): void {
     // 1) Cargar categorías
@@ -112,12 +147,17 @@ export class ModoLibreComponent implements OnInit, OnDestroy  {
     }
   }
 
+  /**
+   * Al iniciar, recargas "cat.palabras" para cada categoría, lo que
+   * ya tenías implementado. Así en "cat.palabras" tendremos la lista
+   * de palabras de esa categoría.
+   */
   cargarCategorias(): void {
     this.categoriasService.obtenerCategorias().subscribe({
       next: (data) => {
         this.categorias = data;
 
-        // Cargar las palabras de cada categoría (para el resumen)
+        // Cargar las palabras de cada categoría
         this.categorias.forEach(cat => {
           this.categoriasService.obtenerPalabrasPorCategoria(cat._id).subscribe({
             next: (palabras) => {
@@ -131,6 +171,51 @@ export class ModoLibreComponent implements OnInit, OnDestroy  {
         console.error('Error al cargar las categorías:', error);
       },
     });
+  }
+   /**
+   * Este getter filtra las categorías según el texto buscado:
+   * - Si la categoría coincide en su nombre con searchText,
+   *   la mostramos.
+   * - O si alguna de sus palabras coincide, también la mostramos.
+   */
+   get filteredCategoriesBySearch(): any[] {
+    if (!this.searchText) {
+      // Si no hay texto, devolvemos todas
+      return this.categorias;
+    }
+
+    const lowerSearch = this.searchText.toLowerCase();
+    return this.categorias.filter(cat => {
+      const catMatches = cat.nombre.toLowerCase().includes(lowerSearch);
+      const wordMatches = cat.palabras?.some((p: any) => 
+        p.palabra.toLowerCase().includes(lowerSearch)
+      );
+      return catMatches || wordMatches;
+    });
+  }
+  /**
+   * Cuando el usuario escribe en el input, simplemente
+   * actualizamos "searchText" (via ngModel) y con eso
+   * se recalcula el getter filteredCategoriesBySearch.
+   */
+  onSearchInput(): void {
+    // Si quieres, podrías hacer algo extra; por ahora, no hace falta.
+  }
+
+  /**
+   * Al enfocar el input, abrimos el desplegable.
+   */
+  onInputFocus(): void {
+    this.isOpen = true;
+  }
+
+  /**
+   * Al hacer clic en buscar (botón lupa), puedes forzar algo extra,
+   * aunque no es estrictamente necesario porque el filtrado es "live".
+   */
+  performSearch(): void {
+    // Por ejemplo, podrías cerrar el dropdown:
+    // this.isOpen = false;
   }
 
   /**
@@ -181,48 +266,28 @@ export class ModoLibreComponent implements OnInit, OnDestroy  {
   volverAListaCategorias(): void {
     this.selectedCategory = null;
     this.palabrasDeCategoriaSeleccionada = [];
+    // Añade esta línea
+  this.toolMenuOpen = false;
+  // opcionalmente, limpiar la palabra seleccionada
+  this.selectedWord = null;
+  // Restablecer la variable para que la próxima vez que
+  // entremos a vista 2 y cliquemos una palabra, se abra el menú
+  this.hasClickedWord = false;
   }
+
+ 
 
   /**
-   * Cuando clicas en una palabra, reproduces la animación y registras exploración
+   * Maneja el click en el checkbox (seleccionar/deseleccionar categorías).
    */
-  seleccionarPalabra(palabra: any): void {
-    // 1) Reproducir animación
-    if (palabra.animaciones && palabra.animaciones.length > 0) {
-      const animacionesUrls = palabra.animaciones.map(
-        (animacion: any) => `${environment.apiUrl}/gltf/animaciones/${animacion.filename}`
-      );
-      this.animacionService.cargarAnimaciones(animacionesUrls, true);
-    } else {
-      console.warn('No hay animaciones asociadas a esta palabra.');
-    }
-
-    // 2) Registrar exploración en BD (modo libre)
-    this.usuariosService.explorarPalabraLibre(this.userId, palabra._id).subscribe({
-      next: (resp) => {
-        console.log('Palabra explorada. Lleva ', resp.totalExploradas, ' en total');
-        // Actualizar BehaviorSubject con el total explorado
-        this.exploredWordsService.setExploredCount(resp.totalExploradas);
-      },
-      error: (err) => {
-        console.error('Error al marcar como explorada:', err);
-      }
-    });
-  }
-
-  // Maneja el click en el checkbox
   onCheckboxChange(event: Event, cat: any) {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
-      // Agregar el ID si no está
       if (!this.selectedCategoryIds.includes(cat._id)) {
         this.selectedCategoryIds.push(cat._id);
       }
     } else {
-      // Quitar el ID si se desmarca
-      this.selectedCategoryIds = this.selectedCategoryIds.filter(
-        id => id !== cat._id
-      );
+      this.selectedCategoryIds = this.selectedCategoryIds.filter(id => id !== cat._id);
     }
     console.log('Seleccionados:', this.selectedCategoryIds);
   }
@@ -234,11 +299,14 @@ export class ModoLibreComponent implements OnInit, OnDestroy  {
     }
   }
 
-  // Mostrar/ocultar el dropdown
-  toggleDropdown(event: MouseEvent): void {
-    event.stopPropagation();
-    this.isOpen = !this.isOpen;
-  }
+ /**
+   * Muestra/oculta el dropdown al hacer clic en el área de la barra,
+   * pero sin cerrarlo cuando hacemos clic en el interior del propio dropdown.
+   */
+ toggleDropdown(event: MouseEvent): void {
+  event.stopPropagation();
+  this.isOpen = !this.isOpen;
+}
 
   // Navegación
   navigateTo(destination: string) {

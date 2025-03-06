@@ -73,6 +73,7 @@
   
   
   .image-container {
+    position: relative;  /* Muy importante para anclar el menú */
     flex-grow: 1;
     width: calc(100% - 5%);
     height: 100vh;
@@ -388,7 +389,8 @@
     font-size: 1.2rem;
   }
   /* Panel derecho */
-.right-panel {
+  .right-panel {
+    position: relative; /* Muy importante */
     flex: 0 0 35%;
     background-color: #f4a940;
     padding: 20px;
@@ -559,7 +561,7 @@
 .category-grid {
    display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 30px;
   /* Centra horizontalmente los elementos en cada celda */
   justify-items: center;  
   /* Centra verticalmente los elementos en cada celda */
@@ -572,7 +574,7 @@
 /* From Uiverse.io by alexruix */
 .card {
   width: 190px;
-  height: 254px;
+  height: 190px;
   border-radius: 20px;
   background: #f5f5f5;
   position: relative;
@@ -640,3 +642,43 @@
   z-index: 999;
 }
 
+/* Para marcar la palabra que está seleccionada */
+.word-item.selected-word {
+  background-color: #ffe387;  /* un color que destaque */
+  border: 3px solid black;    /* subrayar la selección */
+}
+
+.tools-menu {
+  position: absolute;
+  /* Anclado al borde derecho del contenedor */
+  right: 0;
+  
+  /* Para centrar verticalmente */
+  top: 50%;
+  transform: translateY(-50%) translateX(100%);
+  
+  width: 150px;     /* Ajusta según tus necesidades */
+  height: 70%;      /* Ocupa el 70% de la altura */
+  
+  background-color: #ffc580; 
+  transition: transform 0.4s ease;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+/* Cuando se abre, 
+   solo cambiamos translateX(100%) a translateX(0), 
+   manteniendo la parte de translateY(-50%) */
+.tools-menu.open {
+  transform: translateY(-50%) translateX(0);
+}
+
+.tools-menu-placeholder {
+  font-size: 1.2rem;
+  color: #000;
+}
