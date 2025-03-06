@@ -10,9 +10,97 @@
       <div class="image-container" id="avatar-element" [ngClass]="{'libre-half-width': showWebcam}">
         <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
          <!-- Menú de herramientas (ahora en el lado izquierdo) -->
-  <div class="tools-menu" [class.open]="toolMenuOpen">
-    <p class="tools-menu-placeholder">Menú de herramientas</p>
-  </div>
+         <div class="tools-menu" [class.open]="toolMenuOpen">
+          <!-- Un contenedor para los 4 botones, en columna -->
+          <div class="tools-buttons">
+            <!-- BOTÓN 1: Play -->
+            <button class="btn-small">
+              <div class="btn-small-content">
+                <div class="btn-small-icon">
+                  <!-- Ícono Play (SVG simplificado) -->
+                  <svg 
+                    viewBox="0 0 512 512" 
+                    width="40" 
+                    height="40" 
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path 
+                      fill="#aaaaaa"
+                      d="M96 52v408l320-204L96 52z"
+                    />
+                  </svg>
+                </div>
+                <p class="btn-small-text">Play</p>
+              </div>
+            </button>
+        
+            <!-- BOTÓN 2: Loop (repetir) -->
+            <button class="btn-small">
+              <div class="btn-small-content">
+                <div class="btn-small-icon">
+                  <!-- Ícono Loop (SVG simplificado) -->
+                  <svg 
+                    viewBox="0 0 512 512" 
+                    width="40" 
+                    height="40" 
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path 
+                      fill="#aaaaaa"
+                      d="M512 96v128l-48-48c-36.2 36.2-85.8 56-137.9 56-29.4 0-58-6.6-84.2-19.5l33.7-54.7C294 167 319.4 172 336.1 172c39.8 0 77.2-15.5 105.1-43.4l-48-48H512zM176 340c-39.8 0-77.2 15.5-105.1 43.4l48 48H0V304l48 48c36.2-36.2 85.8-56 137.9-56 29.4 0 58 6.6 84.2 19.5l-33.7 54.7c-18.6-7.6-44-12.6-60.4-12.6z"
+                    />
+                  </svg>
+                </div>
+                <p class="btn-small-text">Loop</p>
+              </div>
+            </button>
+        
+            <!-- BOTÓN 3: Webcam -->
+            <button class="btn-small">
+              <div class="btn-small-content">
+                <div class="btn-small-icon">
+                  <!-- Ícono Webcam (SVG simplificado) -->
+                  <svg
+                    viewBox="0 0 512 512"
+                    width="40"
+                    height="40"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path 
+                      fill="#aaaaaa"
+                      d="M256,64C150.1,64,64,150.1,64,256s86.1,192,192,192s192-86.1,192-192S361.9,64,256,64z M256,128
+                      c35.3,0,64,28.7,64,64c0,35.3-28.7,64-64,64s-64-28.7-64-64C192,156.7,220.7,128,256,128z M256,416
+                      c-44.3,0-83.6-19.2-110.7-49.6c31.2-19.5,67.7-30.4,110.7-30.4c43,0,79.6,10.9,110.8,30.4C339.6,396.8,300.3,416,256,416z"
+                    />
+                  </svg>
+                </div>
+                <p class="btn-small-text">Webcam</p>
+              </div>
+            </button>
+        
+            <!-- BOTÓN 4: Velocidad (podemos usar un icono de "velocímetro") -->
+            <button class="btn-small">
+              <div class="btn-small-content">
+                <div class="btn-small-icon">
+                  <!-- Ícono de velocímetro (SVG simplificado) -->
+                  <svg 
+                    viewBox="0 0 512 512" 
+                    width="40" 
+                    height="40" 
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path 
+                      fill="#aaaaaa"
+                      d="M256 64C132.3 64 32 164.3 32 288c0 97 64.6 178.9 153.9 205.3 8.4 2.5 17.6-2 20.1-10.5l11-36.5c2.3-7.7-2.1-15.9-9.7-18.5-49.2-17.3-84.4-64.3-84.4-117.9 0-68 55.1-123 123-123s123 55 123 123c0 53.7-35.2 100.6-84.4 117.9-7.6 2.7-12 10.8-9.7 18.5l11 36.5c2.5 8.5 11.7 13 20.1 10.5C415.4 466.8 480 385 480 288 480 164.3 379.7 64 256 64zm0 96c-44.2 0-80 35.7-80 80 0 44.2 35.8 80 80 80 44.3 0 80-35.8 80-80 0-44.3-35.7-80-80-80z"
+                    />
+                  </svg>
+                </div>
+                <p class="btn-small-text">Speed</p>
+              </div>
+            </button>
+          </div>
+        </div>
+        
 </div>
 
 
