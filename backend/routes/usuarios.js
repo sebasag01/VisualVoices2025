@@ -32,8 +32,8 @@ router.get("/:id/ultima-palabra", [validarJWT]);
 router.post(
   "/",
   [
-    check("nombre", "El argumento nombre es obligatorio").not().isEmpty(),
-    check("apellidos", "El argumento apellidos es obligatorio").not().isEmpty(),
+    //check("nombre", "El argumento nombre es obligatorio").not().isEmpty(),
+    //check("apellidos", "El argumento apellidos es obligatorio").not().isEmpty(),
     check("email", "El argumento email es obligatorio").not().isEmpty(),
     check("password", "El argumento password es obligatorio").not().isEmpty(),
     validarCampos,
@@ -51,8 +51,8 @@ router.put(
   "/:id",
   [
     validarJWT,
-    check("nombre", "El argumento nombre es obligatorio").not().isEmpty(),
-    check("apellidos", "El argumento apellidos es obligatorio").not().isEmpty(),
+    //check("nombre", "El argumento nombre es obligatorio").not().isEmpty(),
+    //check("apellidos", "El argumento apellidos es obligatorio").not().isEmpty(),
     check("email", "El argumento email es obligatorio").not().isEmpty(),
     check("id", "El identificador no es válido").isMongoId(),
     validarCampos,

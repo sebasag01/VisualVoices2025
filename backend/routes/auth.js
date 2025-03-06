@@ -67,8 +67,8 @@ router.post('/', loginLimiter, [
 ], login);
 
 router.post('/register', [
-  check('nombre', 'El argumento nombre es obligatorio').not().isEmpty().trim().escape(),
-  check('apellidos', 'El argumento apellidos es obligatorio').not().isEmpty().trim().escape(),
+  //check('nombre', 'El argumento nombre es obligatorio').not().isEmpty().trim().escape(),
+  //check('apellidos', 'El argumento apellidos es obligatorio').not().isEmpty().trim().escape(),
   check('email', 'El argumento email es obligatorio').not().isEmpty().isEmail().withMessage('El formato del correo no es válido.').normalizeEmail(),  
   check('password')
   .not().isEmpty().withMessage('El argumento password es obligatorio')
