@@ -1,28 +1,28 @@
-
 <app-header></app-header>
 
 <div class="container">
-  
   <div class="content">
-    <div class="layout"> 
-      
-      <div class="image-container" id="avatar-element" [ngClass]="{'half-width': showWebcam}">
+    <div class="layout">
+      <div class="image-container" id="avatar-element" [ngClass]="{ 'half-width': showWebcam }">
         <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
       </div>
-      
+
       <!-- Contenedor del video, se muestra solo si showWebcam === true -->
       <div class="camera-container" *ngIf="showWebcam">
         <video #videoElement class="mirror-video" autoplay></video>
 
-        <div *ngIf="modo === 'guiado'" class="current-word" (click)="handleWordClick()">
+        <div
+          *ngIf="modo === 'guiado'"
+          class="current-word"
+          (click)="handleWordClick()"
+        >
           <p>{{ currentWord }}</p>
         </div>
-        
-        <button (click)="toggleWebcam()"  class="small-disable-webcam-btn">
+
+        <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
           Desactivar Webcam
         </button>
       </div>
-
 
       <div class="button-grid" *ngIf="!showWebcam">
         <div class="icon-menu-fixed">
@@ -31,26 +31,24 @@
             Pruebate
           </button>
 
-          <button (click)="volverAModos()" class="back-to-modes-button">
+          <!-- <button (click)="volverAModos()" class="back-to-modes-button">
             Volver a Modos
-          </button>
+          </button> -->
+
+          <a (click)="volverAModos()" title="Modos">
+            <i class="fa-solid fa-home"></i>
+          </a>
 
           <a (click)="navigateTo('perfil')" title="Mi Perfil">
             <i class="fa-solid fa-user"></i>
-          </a>
-          <a (click)="navigateTo('ajustes')" title="Ajustes">
-            <i class="fa-solid fa-gear"></i>
           </a>
           <a (click)="logout()" title="Cerrar Sesión">
             <i class="fa-solid fa-right-from-bracket"></i>
           </a>
         </div>
-        
-        
 
         <!-- VISTA PARA MODO GUIADO -->
-        <div  class="modo-guiado" id="modo-guiado-container">
-          
+        <div class="modo-guiado" id="modo-guiado-container">
           <app-card
             [showWelcome]="showWelcome"
             [levelNumber]="nivelActual"
@@ -66,16 +64,12 @@
             (chooseLevelClicked)="openChooseLevel()"
             [availableLevels]="availableLevels"
             [showChooseLevel]="showChooseLevel"
-            (levelSelected)="onLevelSelected($event)">
+            (levelSelected)="onLevelSelected($event)"
+          >
           </app-card>
-          <div class="nuevo-div">
-            
-          </div>
+          <div class="nuevo-div"></div>
         </div>
-
       </div>
     </div>
   </div>
 </div>
-
-

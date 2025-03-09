@@ -1,8 +1,39 @@
+@font-face {
+  font-family: 'lexend';
+  src: url('../../assets/fonts/lexend.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Importar la fuente personalizada desde la carpeta public */
+@font-face {
+  font-family: "ChauPhilomene";
+  src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
 .card-container {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
+}
+
+h2 {
+  margin-bottom: 50px; /* Aumenta el espacio debajo del título */
+  font-family: "Lexend", sans-serif;
+  color: black;
+}
+
+/* Contenedor de los botones */
+div > button.tutorial-btn {
+  display: block; /* Cada botón en su propia fila */
+  width: 80%; /* Ocupar un buen ancho sin ser demasiado grande */
+  margin: 10px auto; /* Espaciado vertical uniforme y centrado horizontalmente */
+  text-align: center; /* Centrar el texto */
 }
   
 .card {

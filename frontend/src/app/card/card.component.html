@@ -7,7 +7,7 @@
 
     <ng-container *ngIf="showWelcome && !showChooseLevel; else secondStep">
       <h2>¡Bienvenido al nivel {{ levelNumber }}!</h2>
-      <p>Puedes continuar donde lo dejaste, o empezar desde la primera palabra.</p>
+      <!-- <p>Puedes continuar donde lo dejaste, o empezar desde la primera palabra.</p> -->
       <div> 
         <button (click)="continueClicked.emit()" class="tutorial-btn">Continuar donde iba</button>
         <button (click)="startOverClicked.emit()" class="tutorial-btn">Empezar desde el principio</button>
