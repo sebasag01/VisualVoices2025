@@ -12,6 +12,8 @@ const {
   actualizarIndicePalabra,
   explorarPalabraLibre, categoriaMasExplorada,
   obtenerPalabrasAprendidasPorNivel,
+  actualizarLastWordLearned,
+  updateFirstTime
 
 } = require("../controllers/usuarios");
 const { check } = require("express-validator");
@@ -27,6 +29,7 @@ router.get('/:id/palabras-aprendidas/:nivel', obtenerPalabrasAprendidasPorNivel)
 
 router.get("/:id/ultima-palabra", [validarJWT]);
 
+router.patch('/:id/first-time', [validarJWT], updateFirstTime);
 
 
 router.post(
@@ -81,5 +84,7 @@ router.patch('/:id/explore-word/:wordId', [
   ], explorarPalabraLibre);
 
 router.get('/:id/categoria-mas-explorada', validarJWT, categoriaMasExplorada);
+router.patch('/:id/lastWord', validarJWT, actualizarLastWordLearned);
+
 
 module.exports = router;

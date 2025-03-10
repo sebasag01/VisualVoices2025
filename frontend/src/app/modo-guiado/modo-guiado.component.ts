@@ -250,17 +250,31 @@ export class ModoGuiadoComponent implements OnInit {
   }
 
   // 8. Navegar a la siguiente palabra
-  nextWord() {
-    if (this.currentIndex < this.words.length - 1) {
-      this.currentIndex++;
-      this.usuariosService.updateUserWordIndex(this.userId, this.currentIndex).subscribe({
-        next: (resp: any) => {
-          console.log('Índice actualizado en BD:', resp.usuario?.currentWordIndex);
-        },
-        error: (err: any) => console.error('Error actualizando índice:', err)
-      });
-    }
+  // 8. Navegar a la siguiente palabra
+nextWord() {
+  // Si NO estamos en la última palabra
+  if (this.currentIndex < this.words.length - 1) {
+    this.currentIndex++;
+    // Actualizamos el índice en la BD
+    this.usuariosService.updateUserWordIndex(this.userId, this.currentIndex).subscribe({
+      next: (resp: any) => {
+        console.log('Índice actualizado en BD:', resp.usuario?.currentWordIndex);
+
+        // Actualizar lastWordLearned con la palabra que acabamos de “terminar”
+        // O con la palabra en la que acabamos de entrar, según tu lógica.
+        const lastLearned = this.words[this.currentIndex-1].palabra; 
+        this.usuariosService
+          .updateUserLastWordLearned(this.userId, lastLearned)
+          .subscribe({
+            next: () => console.log('Última palabra actualizada en el usuario'),
+            error: (err: any) => console.error('Error actualizando última palabra:', err)
+          });
+      },
+      error: (err: any) => console.error('Error actualizando índice:', err)
+    });
   }
+}
+
 
   // 9. Saber si estamos en la última palabra
   isLastWord(): boolean {
@@ -269,6 +283,19 @@ export class ModoGuiadoComponent implements OnInit {
 
   // 10. Avanzar de nivel
   advanceLevel() {
+    const ultimaPalabraDelNivel = this.words[this.words.length - 1].palabra;
+    const textoNivel = `Lección ${this.nivelActual}`;
+    const ultimaPalabraTexto = `${ultimaPalabraDelNivel} (${textoNivel})`;
+    
+    if (this.words.length > 0) {
+      const ultimaPalabraDelNivel = this.words[this.words.length - 1].palabra;
+      this.usuariosService.updateUserLastWordLearned(this.userId, ultimaPalabraTexto)
+      .subscribe({
+          next: () => console.log('Última palabra del nivel anterior guardada'),
+          error: (err: any) => console.error('Error guardando la última palabra:', err)
+        });
+    }
+
     const newLevel = this.nivelActual + 1;
 
     // Cerrar sesión de stats del nivel actual si está activa

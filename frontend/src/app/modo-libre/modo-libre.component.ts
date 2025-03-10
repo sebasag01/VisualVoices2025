@@ -64,6 +64,9 @@ export class ModoLibreComponent implements OnInit, OnDestroy  {
     this.usuariosService.getAuthenticatedUser().subscribe({
       next: (resp) => {
         const user = resp.usuario;
+
+        this.userId = user.uid;
+
         // Por ejemplo, iniciar la sesión en modo libre:
         this.statsService.startMode(user.uid, 'libre').subscribe({
           next: (resp) => {

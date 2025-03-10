@@ -109,7 +109,7 @@ const crearUsuario = async (req, res = response) => {
             msg: 'Usuario registrado correctamente',
             usuario: {
                 uid: usuario._id,
-                nombre: usuario.nombre,
+                //nombre: usuario.nombre,
                 email: usuario.email,
                 rol: 'ROL_USUARIO',
             },
@@ -409,6 +409,72 @@ const actualizarIndicePalabra = async (req, res = response) => {
       });
     }
   };
+
+  const actualizarLastWordLearned = async (req, res = response) => {
+    try {
+      const { id } = req.params;        // id del usuario
+      const { lastWord } = req.body;    // la palabra que quieres setear
+      const usuarioActualizado = await Usuario.findByIdAndUpdate(
+        id,
+        { lastWordLearned: lastWord },
+        { new: true }
+      );
+  
+      if (!usuarioActualizado) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Usuario no encontrado'
+        });
+      }
+  
+      res.json({
+        ok: true,
+        msg: 'Última palabra aprendida actualizada',
+        usuario: usuarioActualizado
+      });
+  
+    } catch (error) {
+      console.error('Error al actualizar la última palabra aprendida:', error);
+      res.status(500).json({
+        ok: false,
+        msg: 'Error interno al actualizar la última palabra aprendida'
+      });
+    }
+  };
+
+  const updateFirstTime = async (req, res = response) => {
+    try {
+      const { id } = req.params;   // el ID del usuario
+      // supongamos que mandas en el body un booleano: { isNewUser: false }
+      const { isnewuser  } = req.body; 
+  
+      const usuarioActualizado = await Usuario.findByIdAndUpdate(
+        id,
+        { isnewuser  },  // le asignas el valor que recibes del body
+        { new: true }
+      );
+  
+      if (!usuarioActualizado) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Usuario no encontrado'
+        });
+      }
+  
+      return res.json({
+        ok: true,
+        msg: 'isnewuser  actualizado',
+        usuario: usuarioActualizado
+      });
+    } catch (error) {
+      console.error('Error al actualizar isnewuser :', error);
+      res.status(500).json({
+        ok: false,
+        msg: 'Error al actualizar isnewuser '
+      });
+    }
+  };
+  
   
   
   
@@ -423,5 +489,6 @@ module.exports = {
     explorarPalabraLibre,
     categoriaMasExplorada,
     obtenerPalabrasAprendidasPorNivel,
-    
+    actualizarLastWordLearned,
+    updateFirstTime
 };

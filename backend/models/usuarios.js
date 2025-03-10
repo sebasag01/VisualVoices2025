@@ -3,11 +3,11 @@ const { Schema, model } = require('mongoose');
 const UsuarioSchema = Schema({
     nombre: {
         type: String,
-        required: true
+        required: false
     },
     apellidos: {
         type: String,
-        required: true
+        required: false
     },
     email: {
         type: String,
@@ -33,6 +33,14 @@ const UsuarioSchema = Schema({
     currentWordIndex: {
         type: Number,
         default: 0
+    },
+    lastWordLearned: {
+        type: String,
+        default: ''
+    },
+    isnewuser : {
+        type: Boolean,
+        default: true
     },
     exploredFreeWords: [{
         type: Schema.Types.ObjectId,

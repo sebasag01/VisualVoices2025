@@ -79,6 +79,24 @@ export class UsuariosService {
   obtenerPalabrasAprendidasPorNivel(id: string, nivel: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}/palabras-aprendidas/${nivel}`, { withCredentials: true });
   }
+
+  updateUserLastWordLearned(userId: string, lastWord: string): Observable<any> {
+    // PATCH /api/usuarios/:id/lastWord  
+    return this.http.patch(`${this.apiUrl}/${userId}/lastWord`, 
+      { lastWord }, 
+      { withCredentials: true }
+    );
+  }
+
+  updateFirstTime(userId: string, isNew: boolean): Observable<any> {
+    return this.http.patch(
+      `${this.apiUrl}/${userId}/first-time`,
+      { isnewuser : isNew }, // el body
+      { withCredentials: true }
+    );
+  }
+  
+  
   
 
   

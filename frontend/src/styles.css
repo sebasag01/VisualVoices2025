@@ -39,6 +39,15 @@
 
   }
 
+  .introjs-helperLayer.custom-highlight {
+    transform: translateY(-40px) !important; /* Desplaza el highlight 50px hacia arriba */
+    padding-top: 60px !important;
+    padding-bottom: 30px !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    box-sizing: content-box !important;
+  }
+
 
   /* (Opcional) Si quieres más espacio alrededor del texto */
   .introjs-tooltiptext {
