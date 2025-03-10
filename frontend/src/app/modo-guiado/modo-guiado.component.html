@@ -3,7 +3,11 @@
 <div class="container">
   <div class="content">
     <div class="layout">
-      <div class="image-container" id="avatar-element" [ngClass]="{ 'half-width': showWebcam }">
+      <div
+        class="image-container"
+        id="avatar-element"
+        [ngClass]="{ 'half-width': showWebcam }"
+      >
         <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
       </div>
 
@@ -26,10 +30,11 @@
 
       <div class="button-grid" *ngIf="!showWebcam">
         <div class="icon-menu-fixed">
+          <!-- <p class="titol">MODO APRENDE</p> -->
           <!-- <button (click)="iniciarTutorial()" class="tutorial-btn">Mostrar Tutorial</button> -->
-          <button (click)="toggleWebcam()" class="small-webcam-btn">
+          <!-- <button (click)="toggleWebcam()" class="small-webcam-btn">
             Pruebate
-          </button>
+          </button> -->
 
           <!-- <button (click)="volverAModos()" class="back-to-modes-button">
             Volver a Modos
@@ -52,6 +57,7 @@
           <app-card
             [showWelcome]="showWelcome"
             [levelNumber]="nivelActual"
+            [levelNumber]="nivelActual"
             (continueClicked)="continuar()"
             (startOverClicked)="empezarDesdePrimera()"
             [word]="currentWord"
@@ -59,7 +65,7 @@
             (wordClick)="handleWordClick()"
             (repeatClick)="handleRepeatClick()"
             (prevClick)="prevWord()"
-            [nextLabel]="isLastWord() ? 'Avanzar Nivel' : 'Siguiente'"
+            [nextLabel]="isLastWord() ? 'Finalizar nivel' : 'Siguiente'"
             (nextClick)="isLastWord() ? advanceLevel() : nextWord()"
             (chooseLevelClicked)="openChooseLevel()"
             [availableLevels]="availableLevels"
