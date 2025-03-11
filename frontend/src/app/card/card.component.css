@@ -1,10 +1,39 @@
+@font-face {
+  font-family: "lexend";
+  src: url("../../assets/fonts/lexend.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Importar la fuente personalizada desde la carpeta public */
+@font-face {
+  font-family: "ChauPhilomene";
+  src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .card-container {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
 }
-  
+
+h2 {
+  margin-bottom: 50px; /* Aumenta el espacio debajo del título */
+  font-family: "Lexend", sans-serif;
+  color: black;
+}
+
+/* Contenedor de los botones */
+div > button.tutorial-btn {
+  display: block; /* Cada botón en su propia fila */
+  width: 80%; /* Ocupar un buen ancho sin ser demasiado grande */
+  margin: 10px auto; /* Espaciado vertical uniforme y centrado horizontalmente */
+  text-align: center; /* Centrar el texto */
+}
+
 .card {
   width: 100%;
   height: 100%;
@@ -24,20 +53,20 @@
 }
 
 .tutorial-btn {
-  padding: 5px 10px;              /* Menos padding para que sea pequeño */
-  font-size: 1rem;                /* Fuente un poco más pequeña */
+  padding: 5px 10px; /* Menos padding para que sea pequeño */
+  font-size: 1rem; /* Fuente un poco más pequeña */
   font-family: "Lexend", sans-serif;
   width: auto;
   height: auto;
   border: 2px solid black;
-  border-radius: 12px;            /* Bordes redondeados */
-  background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
-  color: rgb(0, 0, 0);            /* Texto negro para buen contraste */
+  border-radius: 12px; /* Bordes redondeados */
+  background-color: #41b8d5; /* Color de fondo que combina con los otros botones */
+  color: rgb(0, 0, 0); /* Texto negro para buen contraste */
   transition: background-color 0.3s ease;
 }
 
 .tutorial-btn:hover {
-  background-color: #35a0c7;      /* Cambio de color en hover */
+  background-color: #35a0c7; /* Cambio de color en hover */
 }
 
 .card-leaving {
@@ -46,29 +75,29 @@
 
 /* Posicionando el botón de palabra MUCHO más arriba */
 .word-button-container {
-  margin-top: 10px;               /* Mínimo espacio desde el borde superior */
-  position: relative;             /* Para posicionar relativamente */
-  margin-bottom: 80px;            /* Mayor espacio abajo para separar de la explicación */
-  width: 100%;                    /* Ancho completo */
-  display: flex;                  /* Usar flexbox */
-  justify-content: center;        /* Centrar horizontalmente */
-  align-items: flex-start;        /* Alinear al inicio */
+  margin-top: 20px; /* Mínimo espacio desde el borde superior */
+  position: relative; /* Para posicionar relativamente */
+  margin-bottom: 40px; /* Mayor espacio abajo para separar de la explicación */
+  width: 100%; /* Ancho completo */
+  display: flex; /* Usar flexbox */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: flex-start; /* Alinear al inicio */
 }
 
 .explanation {
   color: black;
   font-size: 25px;
-  font-family: 'Lexend', sans-serif;
+  font-family: "Lexend", sans-serif;
   padding: 10px;
   border-radius: 10px;
-  margin-top: 40px;               /* Espacio adicional desde el botón */
-  margin-bottom: 80px;            /* Espacio antes de los botones de navegación */
+  margin-top: 40px; /* Espacio adicional desde el botón */
+  margin-bottom: 80px; /* Espacio antes de los botones de navegación */
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-grow: 1;                   /* Permite que crezca para llenar el espacio */
+  flex-grow: 1; /* Permite que crezca para llenar el espacio */
 }
 
 .word-navigation-container {
@@ -79,13 +108,13 @@
 }
 
 .word-button {
-  background: none;      /* Quita el fondo */
-  border: none;          /* Quita el borde */
-  padding: 0;            /* Quita el padding */
-  font-size: 3rem;       /* Aumenta el tamaño de la fuente */
+  background: none; /* Quita el fondo */
+  padding: 0; /* Quita el padding */
+  font-size: 3rem; /* Aumenta el tamaño de la fuente */
   font-weight: bold;
-  cursor: pointer;       /* Conserva el cursor pointer al pasar el ratón */
-  font-family: 'Lexend', sans-serif;
+  cursor: pointer; /* Conserva el cursor pointer al pasar el ratón */
+  font-family: "Lexend", sans-serif;
+  color: black;
 }
 
 /* Opcional: eliminar o ajustar el efecto hover */
@@ -93,7 +122,6 @@
   background: none;
   transform: none;
 }
-
 
 .repeat-button {
   position: absolute; /* Posicionar fuera del botón PALABRA */
@@ -125,22 +153,75 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: auto;      /* Empuja las flechas hasta el final del espacio disponible */
-  padding-bottom: 30px;  /* Espacio al fondo */
+  margin-top: auto; /* Empuja las flechas hasta el final del espacio disponible */
+  padding-bottom: 30px; /* Espacio al fondo */
 }
 
 .prev-button,
 .next-button {
   background-color: transparent;
-  border: none;
   cursor: pointer;
-  margin: 0 20px;  /* Agregando margen a los lados de cada botón para separarlos */
+  margin: 0 20px; /* Agregando margen a los lados de cada botón para separarlos */
 }
 
 .arrow-icon {
   width: 60px;
   height: 60px;
   cursor: pointer;
+}
+
+.level-buttons-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+  gap: 20px; /* Espaciado entre botones */
+  justify-items: center; /* Centra los botones en sus celdas */
+  width: 100%;
+  padding: 20px;
+}
+
+button.learn-more {
+  width: 100%; /* Ocupa el 100% del espacio disponible en la celda */
+  max-width: 200px; /* Tamaño máximo del botón */
+  padding: 1.5em 2.5em; /* Botones más grandes */
+  font-size: 18px;
+}
+
+/* From Uiverse.io by adamgiebl */
+button {
+  background-color: #41b8d5; /* Color de fondo que combina con los otros botones */
+  font-family: "Lexend", sans-serif;
+  padding: 0.6em 1.3em;
+  font-weight: 900;
+  font-size: 18px;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  box-shadow: 0.1em 0.1em;
+  cursor: pointer;
+}
+
+button:hover {
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.2em 0.2em;
+}
+
+button:active {
+  transform: translate(0.05em, 0.05em);
+  box-shadow: 0.05em 0.05em;
+}
+
+/* Cambiar la apariencia de los botones bloqueados */
+.learn-more:disabled {
+  /* Eliminar la opacidad y el cursor prohibido */
+  background-color: #d3d3d3; /* Gris para los botones bloqueados */
+  color: black; /* Gris oscuro para el texto */
+  cursor: default; /* El cursor vuelve al predeterminado */
+  opacity: 1; /* Quitar la opacidad reducida */
+}
+
+/* Clase para los botones bloqueados */
+.disabled-button {
+  background-color: #d3d3d3; /* Gris para los botones bloqueados */
+  color: #555; /* Gris oscuro para el texto */
 }
 
 @keyframes slide-in {

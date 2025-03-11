@@ -1,92 +1,99 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsuariosService } from '../services/usuarios.service';
-
-
-interface UserData {
-  username: string;
-  fullname: string;
-  email: string;
-  password: string;
-  [key: string]: string; // Permite indexar con una clave string
-}
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';  // ✅ Importado FormsModule para usar ngModel
+import { HeaderComponent } from '../header/header.component';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'app-miperfil',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent],
   templateUrl: './miperfil.component.html',
-  styleUrls: ['./miperfil.component.css']
+  styleUrls: ['./miperfil.component.css'],
+  standalone: true,
+  imports: [HeaderComponent, FooterComponent, CommonModule, FormsModule] // ✅ Agregado FormsModule
 })
-export class MiperfilComponent {
-  constructor(private router: Router,
-    private usuariosService: UsuariosService,
+export class MiperfilComponent implements OnInit {
+  userData: any = {}; // Ahora es un objeto genérico
 
-  ) {}
-
-  closePanel(): void {
-    console.log('Cerrando panel de ajustes');
-    this.router.navigate(['/guiado']);
-  }
-
-  // Datos simulados del usuario usando la interfaz UserData
-  userData: UserData = {
-    username: 'UsuarioDemo',
-    fullname: 'Nombre Completo Demo',
-    email: 'demo@email.com',
-    password: '123456'
-  };
-
-  // Control de edición para cada campo
   isEditing: Record<string, boolean> = {
     username: false,
     fullname: false,
     email: false,
+    imagen: false, // Agregado para evitar errores si se usa en la interfaz
     password: false
   };
 
-  toggleEdit(field: string): void {
-    if (!this.isEditing[field]) {
-      this.isEditing[field] = true;
+  emailUsuario: string = 'angeladmin@gmail.com';  // Asignamos manualmente el email
+
+  constructor(private usuarioService: UsuariosService, private router: Router) {}
+
+  ngOnInit() {
+    this.loadUserData();
+  }
+
+  loadUserData() {
+
+    this.userData.email = this.emailUsuario;  // Asignamos el email manualmente a userData
+
+    this.usuarioService.getAuthenticatedUser().subscribe({
+      next: (data) => {
+        console.log('Datos recibidos:', data); // Verificando los datos recibidos
+        const user = data.usuario; // Asegurándote de acceder al objeto usuario
+        this.userData = user;
+    
+        // Verificar que el email esté cargado correctamente
+        if (user && user.email) {
+          this.emailUsuario = user.email;
+          console.log('Email del usuario:', this.emailUsuario); // Verificar que el email está correcto
+        } else {
+          console.log('Email no disponible para este usuario');
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar los datos del usuario:', error);
+      }
+    });
+    
+    
+  }
+
+  toggleEdit(field: string) {  // Cambié el tipo de field a 'string' para flexibilidad
+    if (this.isEditing[field]) {
+      const updatedField = { [field]: this.userData[field] };
+      this.usuarioService.updateUsuario(this.userData.email, updatedField).subscribe(
+        () => {
+          this.isEditing[field] = false;
+        },
+        (error) => {
+          console.error('Error al actualizar:', error);
+        }
+      );
     } else {
-      this.isEditing[field] = false;
-      console.log(`Campo '${field}' actualizado a:`, this.userData[field]);
+      this.isEditing[field] = true;
     }
   }
 
-  profileImage: string | null = 'assets/default-profile.png';
-
-  onFileSelected(event: any): void {
+  onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {
-        this.profileImage = reader.result as string;
+      reader.onload = (e: any) => {
+        this.userData.imagen = e.target.result;
       };
       reader.readAsDataURL(file);
     }
   }
+
   navigateTo(destination: string) {
-    if (destination === 'admin') {
-      this.router.navigate(['/admin']);
-    } else if (destination === 'ajustes') {
-      this.router.navigate(['/ajustes']);
-    } else if (destination === 'perfil') {
-      this.router.navigate(['/perfil']);
-    }
+    this.router.navigate([`/${destination}`]);
   }
 
   logout(): void {
     console.log('[DEBUG] Cerrando sesión desde Modo Libre...');
-    this.usuariosService.logout().subscribe({
+    this.usuarioService.logout().subscribe({
       next: (response) => {
         console.log('[DEBUG] Respuesta del logout:', response);
-        // Aquí puedes limpiar datos locales si lo necesitas
-        // Por ejemplo, this.usuario = null; si lo tuvieras
         this.router.navigate(['/landing']);
       },
       error: (error) => {
@@ -94,5 +101,9 @@ export class MiperfilComponent {
         alert('Error al cerrar sesión.');
       },
     });
+  }
+
+  volverAModos(): void {
+    this.router.navigate(['/modos']);
   }
 }

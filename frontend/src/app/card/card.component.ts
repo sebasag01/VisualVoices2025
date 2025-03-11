@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 export class CardComponent {
   @Input() word: string = '';
   @Input() explanation: string = '';
-  @Input() nextLabel: string = 'Siguiente';
+  @Input() nextLabel: string = 'Finalizar nivel';
   @Input() showWelcome: boolean = false;
   @Input() levelNumber: number = 1;
   @Input() showChooseLevel = false; 
