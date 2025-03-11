@@ -30,15 +30,9 @@
 
       <div class="button-grid" *ngIf="!showWebcam">
         <div class="icon-menu-fixed">
-          <!-- <p class="titol">MODO APRENDE</p> -->
-          <!-- <button (click)="iniciarTutorial()" class="tutorial-btn">Mostrar Tutorial</button> -->
-          <!-- <button (click)="toggleWebcam()" class="small-webcam-btn">
-            Pruebate
-          </button> -->
-
-          <!-- <button (click)="volverAModos()" class="back-to-modes-button">
-            Volver a Modos
-          </button> -->
+          <button (click)="toggleWebcam()" class="small-webcam-btn">
+            Pruébate
+          </button>
 
           <a (click)="volverAModos()" title="Modos">
             <i class="fa-solid fa-home"></i>
@@ -73,7 +67,6 @@
             (levelSelected)="onLevelSelected($event)"
           >
           </app-card>
-          <div class="nuevo-div"></div>
         </div>
       </div>
     </div>

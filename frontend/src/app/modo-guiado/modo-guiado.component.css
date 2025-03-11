@@ -5,7 +5,6 @@
   font-style: normal;
 }
 
-/* Importar la fuente personalizada desde la carpeta public */
 @font-face {
   font-family: "ChauPhilomene";
   src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
@@ -23,7 +22,6 @@
   width: 100% !important;
 }
 
-/* Asegurar que .content ocupe toda la pantalla */
 .content {
   width: 100vw;
   height: 100vh;
@@ -33,20 +31,80 @@
   align-items: stretch;
 }
 
-.instructions {
-  margin-top: 25px;
-  font-size: 1.2rem;
-  text-align: center;
-  margin-bottom: -27px;
-  font-family: "lexend";
-}
-
 .layout {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
   width: 100vw;
   height: 100vh;
+}
+
+/* AVATAR */
+
+.image-container {
+  flex-grow: 1;
+  width: calc(100% - 5%);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* CÁMARA */
+.camera-container {
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff8d4;
+}
+
+.mirror-video {
+  width: 90%;
+  height: 80vh;
+  object-fit: cover;
+  transform: scaleX(-1); /* Modo espejo */
+  border: 2px solid #000;
+  border-radius: 10px;
+}
+
+/* PALABRA EN MODO CÁMARA */
+
+.current-word {
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* .half-width {
+  width: 50% !important;
+} */
+
+/* BOTÓN DESACTIVAR WEBCAM */
+
+.small-disable-webcam-btn {
+  margin-top: 10px;
+  padding: 5px 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  background-color: #ff4d4d;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.small-disable-webcam-btn:hover {
+  background-color: #e60000;
 }
 
 .button-grid {
@@ -62,139 +120,7 @@
   box-sizing: border-box;
 }
 
-/* Selector de modos */
-.mode-selector {
-  width: 90%;
-  padding: 15px;
-  font-family: "ChauPhilomene", sans-serif;
-  font-size: 1.5rem;
-  background-color: transparent;
-  border: 2px solid black;
-  border-radius: 10px;
-  text-align: center;
-  margin-bottom: 20px;
-  cursor: pointer;
-  color: black;
-  outline: none;
-}
-
-.image-container {
-  flex-grow: 1;
-  width: calc(100% - 5%);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-.canvas-container {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-/* Botones dinámicos para categorías (blancos) */
-.main-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: nowrap;
-}
-.main-button {
-  padding: 10px 20px;
-  font-size: 1.3rem;
-  background-color: white;
-
-  border-radius: 8px;
-  font-family: "ChauPhilomene", sans-serif;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.main-button.active {
-  border: #000 3px solid;
-  border-color: #000;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.8); /* Sombra para resaltar */
-}
-
-/* Botones dinámicos para palabras (azules) */
-.grid-buttons {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  width: 100%;
-  justify-items: center;
-}
-.secondary-button {
-  background-color: #41b8d5;
-  color: black;
-  font-size: 1.4rem;
-
-  border: 2px solid black;
-  border-radius: 12px;
-  padding: 15px;
-  width: 150px;
-  height: 80px;
-  text-align: center;
-  transition: background-color 0.3s;
-  font-family: "Lexend", sans-serif;
-  border-width: 3px;
-}
-.secondary-button:hover {
-  background-color: #35a0c7;
-}
-
-/* Importar la fuente personalizada desde la carpeta public */
-@font-face {
-  font-family: "ChauPhilomene";
-  src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Lexend";
-  src: url("../../assets/fonts/lexend.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
-.logo-fixed {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  text-align: left;
-  z-index: 100;
-}
-.logo {
-  width: 50px;
-  height: auto;
-  margin-right: 10px;
-}
-.logo-text {
-  font-family: "ChauPhilomene", sans-serif;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #000;
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-}
-.visual {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-.voices {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-top: 2px;
-}
-/*MENÚ DERECHO*/
+/*ICONOS MENÚ DERECHO*/
 
 .icon-menu-fixed {
   position: fixed;
@@ -216,149 +142,32 @@
 .icon-menu-fixed a:hover {
   transform: scale(1.1);
 }
+
+/* BOTÓN DE PRUEBATE */
+
+.small-webcam-btn {
+  padding: 5px 10px;
+  font-size: 1rem;
+  font-family: "Lexend", sans-serif;
+  width: auto;
+  height: auto;
+  border: 2px solid black;
+  border-radius: 12px;
+  background-color: #41b8d5;
+  color: rgb(0, 0, 0);
+  transition: background-color 0.3s ease;
+}
+
+.small-webcam-btn:hover {
+  background-color: #35a0c7;
+}
+
+/* CUADRO MODO GUIADO */
+
 .modo-guiado {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
-}
-
-
-/* Estilos para la cámara */
-/* Cuando la cámara está activa, queremos que el avatar sea la mitad del ancho */
-.half-width {
-  width: 50% !important;
-}
-
-/* Contenedor de la cámara */
-.camera-container {
-  width: 50%;
-  height: 100vh; /* o el alto que prefieras */
-  display: flex;
-  flex-direction: column; /* Organiza en columna: video arriba, botón abajo */
-  align-items: center;
-  justify-content: center;
-  background-color: #fff8d4;
-}
-
-/* El video en modo espejo */
-.mirror-video {
-  width: 90%;
-  height: 80vh; /* Aumenta la altura para que el video sea más largo */
-  object-fit: cover; /* Se asegura de que el video se recorte y llene el área */
-  transform: scaleX(-1); /* Modo espejo */
-  border: 2px solid #000;
-  border-radius: 10px;
-}
-
-/* Nueva clase para un botón de desactivar webcam más pequeño */
-.small-disable-webcam-btn {
-  margin-top: 10px; /* Espacio entre el video y el botón */
-  padding: 5px 10px; /* Menos padding para que sea pequeño */
-  font-size: 1rem; /* Fuente más pequeña */
-  border: none;
-  border-radius: 12px; /* Bordes redondeados */
-  background-color: #ff4d4d; /* Color de fondo */
-  color: white; /* Color de texto */
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.small-disable-webcam-btn:hover {
-  background-color: #e60000;
-}
-
-.tutorial-btn {
-  padding: 5px 10px; /* Menos padding para que sea pequeño */
-  font-size: 1rem; /* Fuente un poco más pequeña */
-  font-family: "Lexend", sans-serif;
-  width: auto;
-  height: auto;
-  border: 2px solid black;
-  border-radius: 12px; /* Bordes redondeados */
-  background-color: #41b8d5; /* Color de fondo que combina con los otros botones */
-  color: rgb(0, 0, 0); /* Texto blanco para buen contraste */
-  transition: background-color 0.3s ease;
-}
-
-.tutorial-btn:hover {
-  background-color: #35a0c7; /* Cambio de color en hover */
-}
-
-.back-to-modes-button {
-  padding: 5px 10px; /* Menos padding para que sea pequeño */
-  font-size: 1rem; /* Fuente un poco más pequeña */
-  font-family: "Lexend", sans-serif;
-  width: auto;
-  height: auto;
-  border: 2px solid black;
-  border-radius: 12px; /* Bordes redondeados */
-  background-color: #41b8d5; /* Color de fondo que combina con los otros botones */
-  color: rgb(0, 0, 0); /* Texto blanco para buen contraste */
-  transition: background-color 0.3s ease;
-  z-index: 999;
-}
-
-.back-to-modes-button:hover {
-  background-color: #35a0c7; /* Cambio de color en hover */
-}
-
-.current-word {
-  margin-top: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 2rem;
-  font-weight: bold;
-  text-align: center;
-  cursor: pointer;
-}
-
-.small-webcam-btn {
-  padding: 5px 10px; /* Menos padding para que sea pequeño */
-  font-size: 1rem; /* Fuente un poco más pequeña */
-  font-family: "Lexend", sans-serif;
-  width: auto;
-  height: auto;
-  border: 2px solid black;
-  border-radius: 12px; /* Bordes redondeados */
-  background-color: #41b8d5; /* Color de fondo que combina con los otros botones */
-  color: rgb(0, 0, 0); /* Texto blanco para buen contraste */
-  transition: background-color 0.3s ease;
-}
-
-.small-webcam-btn:hover {
-  background-color: #35a0c7; /* Cambio de color en hover */
-}
-
-.titol{
-  font-family: "ChauPhilomene", sans-serif;
-  font-size: 2rem;
-  font-weight: bold;
-  color: #000;
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-  margin-right: 50px;
-  margin-top: 13px;
-}
-
-.back-button {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 15px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  color: black;
-  border: 2px solid black;
-  padding: 6px 12px;
-  border-radius: 8px;
-  width: fit-content;
-  background-color: #ffedd2;
-}
-
-.back-button:hover {
-  background-color: #ffc580;
 }
