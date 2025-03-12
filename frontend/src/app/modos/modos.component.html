@@ -15,19 +15,19 @@
   </div>
 
   <div class="modes-container">
-    <div class="mode-card" *ngFor="let mode of modes" (click)="navigateToMode(mode.route)">
-      <div class="top-border"></div>
-
+    <div
+      class="mode-card"
+      *ngFor="let mode of modes"
+      (click)="navigateToMode(mode.route)"
+    >
       <div class="mode-title">
-        <h2>
-          <img [src]="mode.icon" alt="Icono" />{{ mode.name }}
-        </h2>
+        <h2><img [src]="mode.icon" alt="Icono" />{{ mode.name }}</h2>
         <p>{{ mode.description }}</p>
       </div>
 
       <div class="mode-stats">
         <ng-container [ngSwitch]="mode.id">
-          <!-- Modo GUIADO -->
+          <!-- APRENDE PARA NUEVOS USUARIOS NO FUNCIONAL -->
           <ng-container *ngSwitchCase="'guiado'">
             <div *ngIf="isNewUserInGuidedMode; else guiadoStats">
               <div class="stat-box empty-guide">
@@ -44,12 +44,14 @@
               </div>
             </div>
             <ng-template #guiadoStats>
-              <!-- Caja 2: Nivel / Lección actual -->
+              <!-- MODO GUIADO: APRENDE -->
+
+              <!-- Caja 1: nivel -->
               <div class="stat-box level-box">
                 <p>Estás en el nivel</p>
                 <div class="level-circle">{{ userLevel }}</div>
               </div>
-              <!-- Caja 1: Progreso -->
+              <!-- Caja 2: Progreso -->
               <div class="stat-box">
                 <p>Progreso</p>
                 <div class="progress">
@@ -62,54 +64,49 @@
                   </div>
                 </div>
               </div>
-              <!-- Caja 3: Próxima lección o última palabra -->
+              <!-- Caja 3: Última palabra -->
               <div class="stat-box">
-                <p *ngIf="nextLevel; else lastWord">
-                  Próxima lección: {{ nextLevel }}
-                </p>
+                <p *ngIf="nextLevel; else lastWord"></p>
                 <ng-template #lastWord>
-                  <!-- <p>Última palabra: {{ lastWordLearned }}</p> -->
                   <p>Última palabra: {{ lastWordLearned }}</p>
-
                 </ng-template>
               </div>
             </ng-template>
           </ng-container>
 
-          <!-- Modo LIBRE -->
+          <!-- MODO LIBRE: EXPLORA -->
           <ng-container *ngSwitchCase="'libre'">
             <!-- Caja 1: Palabras exploradas -->
             <div class="stat-box">
-              <p>Has explorado {{ exploredCount }} / {{ totalWords }} palabras</p>
+              <p>
+                Has explorado {{ exploredCount }} / {{ totalWords }} palabras
+              </p>
             </div>
             <!-- Caja 2: Categoría más explorada -->
             <div class="stat-box">
               <ng-container *ngIf="mostExploredCategoryName; else noCategory">
                 <p>
                   Categoría más explorada:
-                  {{ mostExploredCategoryName }} ({{ mostExploredCategoryCount }} palabras)
+                  {{ mostExploredCategoryName }} ({{
+                    mostExploredCategoryCount
+                  }}
+                  palabras)
                 </p>
               </ng-container>
               <ng-template #noCategory>
                 <p>No hay categoría más explorada</p>
               </ng-template>
             </div>
-            <!-- Caja 3: Tiempo total y sugerencia -->
+            <!-- Caja 3: Tiempo total -->
             <div class="stat-box">
               <p>
                 Tiempo práctica:
-                {{ (tiempoLibreMs / 60000) | number:'1.0-0' }} minutos
+                {{ tiempoLibreMs / 60000 | number : "1.0-0" }} minutos
               </p>
-              <!-- <div *ngIf="categoriaSugerida">
-                <p>
-                  Sugerencia: Explora la categoría
-                  <strong>{{ categoriaSugerida.nombre }}</strong>
-                </p>
-              </div> -->
             </div>
           </ng-container>
 
-          <!-- Modo EXAMEN -->
+          <!-- MODO EXAMEN: RÉTATE -->
           <ng-container *ngSwitchCase="'examen'">
             <div class="stat-box">
               <p>Disponible próximamente...</p>

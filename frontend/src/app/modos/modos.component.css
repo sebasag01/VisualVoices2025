@@ -12,6 +12,8 @@
   font-style: normal;
 }
 
+/* ESTILOS GENERALES */
+
 .mode-selector-container {
   color: black;
   display: flex;
@@ -23,43 +25,7 @@
   overflow: hidden;
 }
 
-.modes-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; /* Centra los modos */
-  gap: 25px;
-  width: 50%;
-  height: 85vh;
-  max-width: 700px;
-  margin-right: 80px;
-}
-
-
-.mode-card {
-  background-color: #8fd4e3;
-  /* Aumenta los valores de padding y min-height para que el bloque sea más grande */
-  padding: 30px;           /* en lugar de 20px */
-  min-height: 220px;       /* en lugar de 120px, por ejemplo */
-  
-  width: 100%;
-  max-width: 650px; /* Si necesitas más ancho, puedes subirlo a 700px u 800px */
-  
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start; 
-  text-align: left;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: background-color 0.3s, transform 0.4s;
-}
-
-.mode-card:hover {
-  background-color: #41b8d5;
-  transform: scale(1.07); 
-}
-
+/* ICONOS MENÚ DERECHA */
 
 .icon-menu-fixed {
   position: fixed;
@@ -83,6 +49,8 @@
   transform: scale(1.1);
 }
 
+/* AVATAR */
+
 .avatar-container {
   flex: 1;
   display: flex;
@@ -91,12 +59,49 @@
   height: 85vh;
 }
 
+/* CONTENEDORES DE MODOS */
+
+.modes-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; 
+  gap: 25px;
+  width: 50%;
+  height: 85vh;
+  max-width: 700px;
+  margin-right: 80px;
+}
+
+/* CARD DE MODO */
+
+.mode-card {
+  background-color: #8fd4e3;
+  padding: 30px;
+  min-height: 220px;
+  width: 100%;
+  max-width: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: background-color 0.3s, transform 0.4s;
+}
+
+.mode-card:hover {
+  background-color: #41b8d5;
+  transform: scale(1.07);
+}
+
 .mode-title {
   display: flex;
-  align-items: center; /* Alinear elementos en la misma línea */
-  gap: 15px; /* Espacio entre título y descripción */
+  align-items: center; 
+  gap: 15px; 
   width: 100%;
-  flex-wrap: wrap; /* Para que la descripción baje si es necesario */
+  flex-wrap: wrap; 
 }
 
 .mode-title h2 {
@@ -105,7 +110,7 @@
   font-family: "ChauPhilomene", sans-serif;
   margin: 0;
   display: flex;
-  align-items: center; /* Para alinear el icono con el texto */
+  align-items: center; 
 }
 
 .mode-title h2 img {
@@ -120,28 +125,21 @@
   font-family: "ChauPhilomene", sans-serif;
   margin: 0;
   color: black;
-  flex: 1; /* Hace que la descripción use el espacio disponible */
-  white-space: nowrap; /* Evita que se rompa la línea */
+  flex: 1; 
+  white-space: nowrap; 
   overflow: hidden;
-  text-overflow: ellipsis; /* Si es muy larga, agrega "..." */
+  text-overflow: ellipsis; 
 }
-
 
 .mode-stats {
   display: flex;
-  justify-content: center; /* Centra las estadísticas */
+  justify-content: center; 
   width: 100%;
   gap: 10px;
   flex-wrap: wrap;
   text-align: center;
   gap: 60px;
 }
-.stat-box p {
-  font-family: "ChauPhilomene", sans-serif;
-  font-size: 1.1rem; /* o 18px, 1.3em, etc. */
-
-}
-
 
 .stat-box {
   flex: 1;
@@ -157,13 +155,9 @@
   overflow: hidden;
 }
 
-
-
-
-
-.empty-guide {
-  text-align: center;
-  color: black;
+.stat-box p {
+  font-family: "ChauPhilomene", sans-serif;
+  font-size: 1.1rem; /* o 18px, 1.3em, etc. */
 }
 
 .stat-box.empty-guide {
@@ -174,19 +168,24 @@
   width: 100%;
 }
 
-.progress {
-  margin-top: 10px;
-  width: 100%;
-  height: 35px;
-  background-color: #ddd;
-  border-radius: 10px;
-  overflow: hidden;
+.empty-guide {
+  text-align: center;
+  color: black;
 }
 
 .progressTwo {
   margin-top: 10px;
   width: 150%;
   height: 20px;
+  background-color: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress {
+  margin-top: 10px;
+  width: 100%;
+  height: 35px;
   background-color: #ddd;
   border-radius: 10px;
   overflow: hidden;
@@ -207,8 +206,6 @@
   font-weight: bold;
   text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
   font-family: "ChauPhilomene", sans-serif;
-
-
 }
 
 .progress-fill {
@@ -238,24 +235,10 @@
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* BotÃ³n para el modo libre */
-.explore-button {
-  padding: 8px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  border: none;
-  background-color: #41b8d5;
-  color: white;
-  border-radius: 5px;
-  margin-top: 10px;
-}
-
 .introjs-tooltip {
   min-width: 350px;
   max-width: 500px;
-  min-height: 250px; /* Ajusta este valor según necesites */
-  max-height: 400px; /* Opcional: limita la altura máxima */
-  overflow-y: auto; /* Agrega scroll si el contenido es más grande */
+  min-height: 250px;
+  max-height: 400px;
+  overflow-y: auto;
 }
-
-
