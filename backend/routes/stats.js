@@ -22,3 +22,18 @@ router.get('/libre-total/:userId', validarJWT, getTiempoTotalLibre);
 
 
 module.exports = router;
+
+// Este archivo define las rutas relacionadas con la gestión de estadísticas de la aplicación.
+// 1. Se importan los métodos del controlador 'stats': startLevel, endLevel, tiemposPorNivel, etc.
+// 2. Se utilizan los middlewares 'validarJWT' y 'tieneRol' para proteger ciertas rutas.
+
+// Rutas definidas:
+// 1. POST '/start-level': Inicia una sesión de nivel.
+// 2. PATCH '/end-level/:statsId': Finaliza la sesión de nivel identificada por 'statsId'.
+// 3. GET '/tiempos-por-nivel': Obtiene estadísticas de tiempos promediados, mínimos, máximos, etc. por nivel.
+// 4. POST '/start-mode': Inicia una sesión en un modo específico (libre, guiado, examen), protegido por 'validarJWT'.
+// 5. PATCH '/end-mode/:statsId': Finaliza la sesión de modo identificada por 'statsId', también protegido por 'validarJWT'.
+// 6. GET '/estadisticas': Devuelve las estadísticas generales de la aplicación (distribución de usuarios por nivel
+//    y tiempos por nivel), protegido por 'validarJWT' y 'tieneRol("ROL_ADMIN")'.
+// 7. GET '/libre-total/:userId': Obtiene la suma de duración total en modo libre para el usuario especificado, 
+//    protegido por 'validarJWT'.

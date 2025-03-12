@@ -5,6 +5,10 @@ const mongoose = require('mongoose');
 
 // POST /api/stats/start-level
 // body: { userId, level }
+// La función 'startLevel' inicia una sesión de nivel para un usuario.
+// 1. Extrae 'userId' y 'level' del cuerpo de la petición (req.body).
+// 2. Crea un nuevo documento Stats con estos datos.
+// 3. Guarda la sesión y devuelve el ID de la misma.
 const startLevel = async (req, res) => {
   try {
     const { userId, level } = req.body;
@@ -21,32 +25,40 @@ const startLevel = async (req, res) => {
     res.status(500).json({ ok: false, msg: 'Error al iniciar nivel' });
   }
 };
+
+// La función 'endLevel' finaliza una sesión de nivel existente.
+// 1. Recibe el 'statsId' en los parámetros de la URL.
+// 2. Busca la sesión correspondiente en la base de datos. 
+// 3. Registra la hora de finalización y calcula la duración en milisegundos.
+// 4. Devuelve la duración de la sesión.
 const endLevel = async (req, res) => {
-    try {
-      const { statsId } = req.params; // se envía como /api/stats/end-level/:statsId
-      const session = await Stats.findById(statsId);
-      if (!session) {
-        return res.status(404).json({ ok: false, msg: 'Sesión no encontrada' });
-      }
-  
-      // Marcamos la hora de finalización
-      session.endTime = new Date();
-      session.durationMs = session.endTime.getTime() - session.startTime.getTime();
-  
-      await session.save();
-  
-      res.json({
-        ok: true,
-        msg: 'Sesión de nivel finalizada',
-        durationMs: session.durationMs,
-      });
-    } catch (error) {
-      console.error('Error al finalizar nivel:', error);
-      res.status(500).json({ ok: false, msg: 'Error al finalizar nivel' });
+  try {
+    const { statsId } = req.params; 
+    const session = await Stats.findById(statsId);
+    if (!session) {
+      return res.status(404).json({ ok: false, msg: 'Sesión no encontrada' });
     }
+
+    session.endTime = new Date();
+    session.durationMs = session.endTime.getTime() - session.startTime.getTime();
+  
+    await session.save();
+  
+    res.json({
+      ok: true,
+      msg: 'Sesión de nivel finalizada',
+      durationMs: session.durationMs,
+    });
+  } catch (error) {
+    console.error('Error al finalizar nivel:', error);
+    res.status(500).json({ ok: false, msg: 'Error al finalizar nivel' });
+  }
 };
 
-  // GET /api/stats/tiempos-por-nivel
+// La función 'tiemposPorNivel' calcula estadísticas de tiempo por nivel basadas en sesiones finalizadas.
+// 1. Filtra documentos Stats con 'endTime' definido (sesiones cerradas).
+// 2. Agrupa por 'level' calculando promedio, mínimo, máximo y total de sesiones.
+// 3. Ordena los resultados por nivel y los devuelve.
 const tiemposPorNivel = async (req, res) => {
   try {
     const resultados = await Stats.aggregate([
@@ -63,7 +75,7 @@ const tiemposPorNivel = async (req, res) => {
         }
       },
       {
-        $sort: { _id: 1 } // ordena por nivel asc
+        $sort: { _id: 1 } 
       }
     ]);
     res.json({ ok: true, data: resultados });
@@ -73,6 +85,10 @@ const tiemposPorNivel = async (req, res) => {
   }
 };
 
+// La función 'getEstadisticasGenerales' obtiene:
+// 1) Distribución de usuarios por nivel (a partir de la colección 'Usuario').
+// 2) Tiempos por nivel (desde la colección 'Stats') para sesiones finalizadas.
+// 3) Devuelve ambos conjuntos de datos al cliente.
 const getEstadisticasGenerales = async (req, res) => {
   console.log('[DEBUG] getEstadisticasGenerales llamado. Usuario:', req.uid || req.usuario);
   try {
@@ -109,6 +125,10 @@ const getEstadisticasGenerales = async (req, res) => {
   }
 };
 
+// La función 'startMode' inicia una sesión Stats para un 'mode' específico.
+// 1. Recibe 'userId', 'mode' y opcionalmente 'level' desde el cuerpo.
+// 2. Crea el documento en la base de datos, con la fecha de inicio.
+// 3. Devuelve el id de la sesión creada.
 const startMode = async (req, res) => {
   try {
     const { userId, mode, level } = req.body;
@@ -116,7 +136,7 @@ const startMode = async (req, res) => {
     const newSession = new Stats({
       userId,
       mode,
-      level: level || null, // si no lo pasas
+      level: level || null, 
       startTime: new Date(),
     });
     await newSession.save();
@@ -132,7 +152,10 @@ const startMode = async (req, res) => {
   }
 };
 
-// PATCH /api/stats/end-mode/:statsId
+// La función 'endMode' cierra la sesión de un modo específico (p.e. modo libre).
+// 1. Recibe el 'statsId' en los parámetros de la ruta.
+// 2. Busca la sesión y registra la hora de finalización, calculando la duración total.
+// 3. Guarda los cambios y devuelve la duración de la sesión.
 const endMode = async (req, res) => {
   try {
     const { statsId } = req.params;
@@ -142,7 +165,6 @@ const endMode = async (req, res) => {
       return res.status(404).json({ ok: false, msg: 'Sesión no encontrada' });
     }
 
-    // Cerramos la sesión
     session.endTime = new Date();
     session.durationMs =
       session.endTime.getTime() - session.startTime.getTime();
@@ -160,18 +182,20 @@ const endMode = async (req, res) => {
   }
 };
 
-// GET /api/stats/tiempo-total-libre/:userId
+// La función 'getTiempoTotalLibre' calcula la duración total en modo 'libre' para un usuario.
+// 1. Toma el 'userId' de los parámetros.
+// 2. Suma los 'durationMs' de todas las sesiones finalizadas (endTime definido) con mode = 'libre'.
+// 3. Devuelve la suma (o 0 si no hay sesiones) en milisegundos.
 const getTiempoTotalLibre = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    // Sumamos los durationMs de todos los Stats con mode = 'libre' para ese userId
     const agregados = await Stats.aggregate([
       {
         $match: {
           userId: new mongoose.Types.ObjectId(userId),
           mode: 'libre',
-          endTime: { $exists: true }, // solo sesiones ya cerradas
+          endTime: { $exists: true },
         },
       },
       {
@@ -183,7 +207,6 @@ const getTiempoTotalLibre = async (req, res) => {
     ]);
 
     if (agregados.length === 0) {
-      // no hay registros
       return res.json({
         ok: true,
         totalDurationMs: 0,
@@ -202,13 +225,13 @@ const getTiempoTotalLibre = async (req, res) => {
   }
 };
 
-  
-  module.exports = {
-    startLevel,
-    endLevel,
-    tiemposPorNivel,
-    getEstadisticasGenerales,
-    getTiempoTotalLibre,
-    endMode,
-    startMode
-  };
+module.exports = {
+  startLevel,
+  endLevel,
+  tiemposPorNivel,
+  getEstadisticasGenerales,
+  getTiempoTotalLibre,
+  endMode,
+  startMode
+};
+
