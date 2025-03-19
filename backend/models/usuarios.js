@@ -43,6 +43,10 @@ const UsuarioSchema = Schema({
         type: Number,
         default: 1
     },
+    maxUnlockedLevel: {
+        type: Number,
+        default: 1
+    },
     currentWordIndex: {
         type: Number,
         default: 0

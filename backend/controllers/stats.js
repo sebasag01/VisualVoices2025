@@ -11,8 +11,8 @@ const mongoose = require('mongoose');
 // 3. Guarda la sesión y devuelve el ID de la misma.
 const startLevel = async (req, res) => {
   try {
-    const { userId, level } = req.body;
-    const newSession = new Stats({ userId, level });
+    const { userId, level, mode  } = req.body;
+    const newSession = new Stats({ userId, level, mode });
     await newSession.save();
 
     res.json({

@@ -12,16 +12,18 @@
         <button
           *ngFor="let lvl of availableLevels"
           (click)="onLevelSelect(lvl)"
-          [disabled]="lvl > levelNumber"
-          [ngClass]="{ 'disabled-button': lvl > levelNumber }"
+          [disabled]="lvl > unlockedLevel"
+          [ngClass]="{ 'disabled-button': lvl > unlockedLevel }"
           class="learn-more"
         >
-          <ng-container *ngIf="lvl > levelNumber">
+          
+          <ng-container *ngIf="lvl > unlockedLevel">
             <i class="fa-solid fa-lock"></i> Nivel {{ lvl }}
           </ng-container>
-          <ng-container *ngIf="lvl <= levelNumber">
+          <ng-container *ngIf="lvl <= unlockedLevel">
             Nivel {{ lvl }}
           </ng-container>
+        
         </button>
       </div>
     </ng-container>

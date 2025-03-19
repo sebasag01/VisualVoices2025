@@ -248,35 +248,61 @@ const borrarUsuario = async (req, res = response) => {
 // 3. Retorna el objeto del usuario actualizado.
 const actualizarNivelUsuario = async (req, res = response) => {
   try {
-      const { id } = req.params;
-      const { newLevel } = req.body;
+    const { id } = req.params;
+    const { newLevel, preserveMaxLevel } = req.body;
 
-      const usuarioActualizado = await Usuario.findByIdAndUpdate(
-          id,
-          { currentLevel: newLevel },
-          { new: true }
-      );
+    console.log('Nivel update request:', { 
+      userId: id, 
+      newLevel, 
+      preserveMaxLevel,
+      requestBody: req.body // Log the entire body to see what's coming in
+    });
 
-      if (!usuarioActualizado) {
-          return res.status(404).json({
-              ok: false,
-              msg: 'Usuario no encontrado'
-          });
-      }
-
-      res.json({
-          ok: true,
-          msg: 'Nivel actualizado',
-          usuario: usuarioActualizado
+    // Buscamos al usuario primero
+    const usuario = await Usuario.findById(id);
+    if (!usuario) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Usuario no encontrado'
       });
+    }
+
+    console.log('User before update:', {
+      currentLevel: usuario.currentLevel,
+      maxUnlockedLevel: usuario.maxUnlockedLevel
+    });
+
+    // Actualizamos el nivel de la sesión actual
+    usuario.currentLevel = newLevel;
+    
+    // Si el nuevo nivel es mayor que el máximo desbloqueado, actualizamos maxUnlockedLevel
+    if (newLevel > usuario.maxUnlockedLevel) {
+      usuario.maxUnlockedLevel = newLevel;
+    }
+    // No hacemos nada si el nuevo nivel es menor y preserveMaxLevel es true
+    // Esto preserva el nivel máximo desbloqueado
+
+    await usuario.save();
+
+    console.log('User after update:', {
+      currentLevel: usuario.currentLevel,
+      maxUnlockedLevel: usuario.maxUnlockedLevel
+    });
+
+    res.json({
+      ok: true,
+      msg: 'Nivel actualizado',
+      usuario: usuario
+    });
   } catch (error) {
-      console.error('Error al actualizar nivel del usuario:', error);
-      res.status(500).json({
-          ok: false,
-          msg: 'Error actualizando nivel del usuario'
-      });
+    console.error('Error al actualizar nivel del usuario:', error);
+    res.status(500).json({
+      ok: false,
+      msg: 'Error actualizando nivel del usuario'
+    });
   }
 };
+
 
 // La función 'actualizarIndicePalabra' actualiza el índice de la palabra que el usuario 
 // está aprendiendo actualmente.

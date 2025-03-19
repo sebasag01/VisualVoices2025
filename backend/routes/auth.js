@@ -16,7 +16,7 @@ router.get('/usuario', validarJWT, async (req, res) => {
     console.log('[DEBUG] Verificación de usuario con uid:', req.uid);
   
     try {
-      const usuario = await Usuario.findById(req.uid, 'nombre rol currentLevel currentWordIndex exploredFreeWords lastWordLearned isnewuser');
+      const usuario = await Usuario.findById(req.uid, 'nombre email rol currentLevel currentWordIndex maxUnlockedLevel exploredFreeWords lastWordLearned isnewuser');
       if (!usuario) {
         console.log('[ERROR] Usuario no encontrado para uid:', req.uid);
         return res.status(404).json({
@@ -32,8 +32,10 @@ router.get('/usuario', validarJWT, async (req, res) => {
         usuario: {
           uid: usuario._id,
           nombre: usuario.nombre,
+          email: usuario.email,
           rol: usuario.rol,
           currentLevel: usuario.currentLevel,
+          maxUnlockedLevel: usuario.maxUnlockedLevel,
           currentWordIndex: usuario.currentWordIndex,
           exploredFreeWords: usuario.exploredFreeWords,
           lastWordLearned: usuario.lastWordLearned,

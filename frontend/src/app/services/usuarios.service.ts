@@ -57,9 +57,25 @@ export class UsuariosService {
     return this.http.get(`${environment.apiUrl}/login/usuario`, { withCredentials: true });
   }
 
+  // In usuarios.service.ts
   updateUserLevel(userId: string, newLevel: number): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/${userId}/nivel`, { newLevel },{ withCredentials: true });
+    console.log(`Enviando actualización de nivel: ${newLevel} para usuario: ${userId}`);
+    
+    // Be explicit about what we're sending
+    const payload = {
+      newLevel: newLevel,
+      preserveMaxLevel: true  // We always want to preserve the max level
+    };
+    
+    console.log('Sending payload:', payload);
+    
+    return this.http.patch(
+      `${this.apiUrl}/${userId}/nivel`, 
+      payload, 
+      { withCredentials: true }
+    );
   }
+  
   updateUserWordIndex(userId: string, newIndex: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${userId}/indice`, { newIndex }, { withCredentials: true });
   }

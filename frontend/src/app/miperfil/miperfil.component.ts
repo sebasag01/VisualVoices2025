@@ -24,7 +24,7 @@ export class MiperfilComponent implements OnInit {
     password: false
   };
 
-  emailUsuario: string = 'angeladmin@gmail.com';  // Asignamos manualmente el email
+  emailUsuario: string = '';  // Asignamos manualmente el email
 
   constructor(private usuarioService: UsuariosService, private router: Router) {}
 
@@ -33,8 +33,6 @@ export class MiperfilComponent implements OnInit {
   }
 
   loadUserData() {
-
-    this.userData.email = this.emailUsuario;  // Asignamos el email manualmente a userData
 
     this.usuarioService.getAuthenticatedUser().subscribe({
       next: (data) => {

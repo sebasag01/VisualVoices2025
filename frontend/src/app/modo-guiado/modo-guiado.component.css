@@ -171,3 +171,21 @@
   align-items: center;
   height: 100%;
 }
+
+/* Add these animation classes */
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.fade-in {
+  opacity: 1;
+  transition: opacity 0.3s ease-in;
+}
+
+/* Make sure the app-card has an initial state */
+app-card {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  width: 100%;
+}
