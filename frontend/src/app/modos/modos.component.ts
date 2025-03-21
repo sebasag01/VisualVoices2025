@@ -8,6 +8,7 @@ import { ExploredWordsService } from '../services/explored_word.service';
 import { HeaderComponent } from '../header/header.component';
 import { StatsService } from '../services/stats.service';
 import { CategoriasService } from '../services/categorias.service';
+import introJs from 'intro.js';
 
 const MODES = [
   {
@@ -41,6 +42,8 @@ const MODES = [
   imports: [CommonModule, CanvasComponent, HeaderComponent],
 })
 export class ModosComponent implements OnInit, OnDestroy {
+  userId: string = '';
+
   modes = MODES;
   currentAnimationUrls: string[] = [];
 
@@ -48,7 +51,7 @@ export class ModosComponent implements OnInit, OnDestroy {
   isNewUserInGuidedMode = true;
   animatedProgress = 0;
   progressPercent = 0;
-  maxWords = 3;
+  maxWords = 4;
   userLevel = 1;
   nextLevel: number | null = null;
   lastWordLearned: string = 'Adántrate aprendiendo nuevas palabras';
@@ -66,7 +69,8 @@ export class ModosComponent implements OnInit, OnDestroy {
   tiempoLibreMs: number = 0;
   categoriaSugerida: any = null;
   currentStatsId: string | null = null;
-
+  //tutorial
+  private introInstance: any = null;
   private refreshInterval: any;
 
   constructor(
@@ -83,10 +87,29 @@ export class ModosComponent implements OnInit, OnDestroy {
     this.usuariosService.getAuthenticatedUser().subscribe({
       next: (resp) => {
         const user = resp.usuario;
+        console.log('DEBUG: Usuario completo:', user);
+        console.log('DEBUG: isNewUser value:', user.isNewUser);
+        console.log('DEBUG: isNewUser type:', typeof user.isNewUser);
+        this.userId = user.uid; // Asignar el ID del usuario
 
-        // --- Modo GUIADO ---
+        if (user.isnewuser) {
+          // 1) Lanza el tutorial
+          console.log('isNewUser = true, mostrando tutorial...');
+          this.iniciarTutorialParaNuevoUsuario();
+
+          // 2) Marca en la BD que ya no es nuevo (para no repetir)
+          this.usuariosService.updateFirstTime(user.uid, false).subscribe({
+            next: () => console.log('Marcado como isNewUser=false'),
+            error: (err) => console.error('Error actualizando isNewUser:', err),
+          });
+        } else {
+          console.log('isNewUser = false, no muestro tutorial');
+        }
+
+        // Modo GUIADO
         this.isNewUserInGuidedMode =
           user.currentWordIndex === undefined || user.currentWordIndex < 0;
+
         if (this.isNewUserInGuidedMode) {
           this.animateProgress();
         } else {
@@ -94,10 +117,16 @@ export class ModosComponent implements OnInit, OnDestroy {
             ((user.currentWordIndex + 1) / this.maxWords) * 100
           );
         }
-        // Usar user.nivel o user.currentLevel (o 1 por defecto)
-        this.userLevel = user.nivel || user.currentLevel || 1;
+        this.userLevel = user.maxUnlockedLevel || 1;
         this.nextLevel = user.nextLevel || null;
-        this.lastWordLearned = user.lastWordLearned || 'Error';
+
+        // Aquí lees la última palabra directamente del usuario
+        // y la muestras en el front sin necesidad de calcular nada:
+        if (user.lastWordLearned) {
+          this.lastWordLearned = user.lastWordLearned;
+        } else {
+          this.lastWordLearned = 'Aún no has aprendido ninguna palabra';
+        }
 
         // Calcular tiempo invertido (por ejemplo, para guiado)
         this.timeInvested = this.calculateTimeSpent(user.startTime);
@@ -239,6 +268,18 @@ export class ModosComponent implements OnInit, OnDestroy {
   }
 
   navigateToMode(route: string) {
+    // Cerrar el tutorial de intro.js si está activo
+    const introjs = document.querySelector('.introjs-overlay');
+    if (introjs) {
+      // Forzar la salida del tutorial
+      const exitEvent = new Event('click');
+      const doneButton = document.querySelector('.introjs-donebutton');
+      if (doneButton) {
+        doneButton.dispatchEvent(exitEvent);
+      }
+    }
+
+    // Navegar a la ruta del modo
     this.router.navigate([route]);
   }
 
@@ -266,6 +307,75 @@ export class ModosComponent implements OnInit, OnDestroy {
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
     }
+  }
+
+  iniciarTutorialParaNuevoUsuario() {
+    console.log('[DEBUG] Iniciando tutorial - userId:', this.userId);
+    console.log('[DEBUG] Iniciando tutorial - userId:', this.userId);
+    console.log(
+      '[DEBUG] Verificando elementos DOM:',
+      document.querySelector('.mode-selector-container'),
+      document.querySelector('.modes-container')
+    );
+
+    const intro = introJs();
+    this.introInstance = intro; // Guardar la instancia
+
+    intro.setOptions({
+      steps: [
+        {
+          // Mensaje inicial "Bienvenido a la web"
+          title: '¡Bienvenido!',
+          intro:
+            'Ésta es la página principal desde donde podrás acceder a cada modo.',
+        },
+        {
+          // Selecciona un elemento que represente "toda la página",
+          // o si prefieres no resaltar nada, deja solo el texto.
+          element: '.mode-selector-container',
+          intro:
+            'Esta sección te muestra la página principal, con tu avatar y los modos disponibles.',
+          position: 'bottom',
+        },
+        {
+          // Después, apuntas a la parte derecha donde están los 3 modos
+          element: '.modes-container',
+          intro:
+            'Aquí tienes los 3 modos. ¡Te recomendamos empezar por "APRENDE" si es tu primera vez!',
+          position: 'auto' as unknown as 'left' | 'right' | 'bottom' | 'top',
+          highlightClass: 'custom-highlight', // Aplica la clase personalizada
+        },
+      ],
+      showProgress: true,
+      showBullets: false,
+      skipLabel: 'Saltar',
+      doneLabel: 'Hecho',
+    });
+
+    intro.oncomplete(() => {
+      console.log(
+        '[DEBUG] Tutorial completado, actualizando isNewUser a false...'
+      );
+      this.usuariosService.updateFirstTime(this.userId, false).subscribe({
+        next: () => console.log('Marcado como isNewUser=false'),
+        error: (err) => console.error('Error actualizando isNewUser:', err),
+      });
+    });
+
+    // También puedes manejar onexit en caso de que el usuario cierre el tutorial
+    intro.onexit(() => {
+      console.log('[DEBUG] Tutorial salido, actualizando isNewUser a false...');
+      this.usuariosService.updateFirstTime(this.userId, false).subscribe({
+        next: () => console.log('Marcado como isNewUser=false'),
+        error: (err) => console.error('Error actualizando isNewUser:', err),
+      });
+    });
+
+    // Dar un breve delay para asegurarnos de que el DOM está renderizado
+    setTimeout(() => {
+      console.log('Iniciando tutorial...');
+      intro.start();
+    }, 1500);
   }
 
   logout(): void {

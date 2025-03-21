@@ -11,9 +11,11 @@ export class StatsService {
 
   constructor(private http: HttpClient) {}
 
-  startLevel(userId: string, level: number): Observable<any> {
-    return this.http.post(`${this.statsUrl}/start-level`, { userId, level }, { withCredentials: true });
+  startLevel(userId: string, level: number, mode: string = 'guiado'): Observable<any> {
+    return this.http.post(`${this.statsUrl}/start-level`, { userId, level, mode }, { withCredentials: true });
   }
+  
+  
 
   endLevel(statsId: string): Observable<any> {
     return this.http.patch(`${this.statsUrl}/end-level/${statsId}`, {}, { withCredentials: true });

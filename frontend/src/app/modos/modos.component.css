@@ -12,6 +12,8 @@
   font-style: normal;
 }
 
+/* ESTILOS GENERALES */
+
 .mode-selector-container {
   color: black;
   display: flex;
@@ -23,33 +25,7 @@
   overflow: hidden;
 }
 
-.modes-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 25px;
-  width: 50%;
-  height: 85vh;
-  max-width: 700px;
-  margin-right: 80px;
-}
-
-.mode-card {
-  position: relative;
-  background-color: #8fd4e3;
-  padding: 30px 30px;
-  width: 100%;
-  cursor: pointer;
-  font-family: "ChauPhilomene", sans-serif;
-  text-align: left;
-  border-radius: 5px;
-  transition: background-color 0.3s ease-in-out, transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-}
-
-.mode-card:hover {
-  background-color: #41b8d5;
-  transform: scale(1.07);
-}
+/* ICONOS MENÚ DERECHA */
 
 .icon-menu-fixed {
   position: fixed;
@@ -73,6 +49,8 @@
   transform: scale(1.1);
 }
 
+/* AVATAR */
+
 .avatar-container {
   flex: 1;
   display: flex;
@@ -81,62 +59,105 @@
   height: 85vh;
 }
 
+/* CONTENEDORES DE MODOS */
+
+.modes-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; 
+  gap: 25px;
+  width: 50%;
+  height: 85vh;
+  max-width: 700px;
+  margin-right: 80px;
+}
+
+/* CARD DE MODO */
+
+.mode-card {
+  background-color: #8fd4e3;
+  padding: 30px;
+  min-height: 220px;
+  width: 100%;
+  max-width: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: background-color 0.3s, transform 0.4s;
+}
+
+.mode-card:hover {
+  background-color: #41b8d5;
+  transform: scale(1.07);
+}
+
 .mode-title {
   display: flex;
-  align-items: baseline;
-  gap: 20px;
-  justify-content: start;
+  align-items: center; 
+  gap: 15px; 
+  width: 100%;
+  flex-wrap: wrap; 
 }
 
 .mode-title h2 {
   font-size: 32px;
   font-weight: bold;
+  font-family: "ChauPhilomene", sans-serif;
   margin: 0;
-  white-space: nowrap;
+  display: flex;
+  align-items: center; 
 }
 
 .mode-title h2 img {
   width: 40px;
   height: auto;
   vertical-align: middle;
-  margin-right: 15px;
-  top: -3px;
-  position: relative;
+  margin-right: 10px;
 }
 
 .mode-title p {
-  font-size: 25px;
+  font-size: 22px;
   font-family: "ChauPhilomene", sans-serif;
   margin: 0;
-  flex: 1;
+  color: black;
+  flex: 1; 
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
 
 .mode-stats {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; 
+  width: 100%;
   gap: 10px;
-  margin-top: 15px;
-  align-items: center;
+  flex-wrap: wrap;
+  text-align: center;
+  gap: 60px;
 }
 
 .stat-box {
   flex: 1;
-  background-color: none;
-  color: black;
+  min-width: 120px;
+  max-width: 140px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  padding: 10px;
-  font-size: 20px;
-  font-family: "ChauPhilomene", sans-serif;
   border-radius: 8px;
+  overflow: hidden;
 }
 
 .stat-box p {
   font-family: "ChauPhilomene", sans-serif;
-}
-
-.empty-guide {
-  text-align: center;
-  color: black;
+  font-size: 1.1rem; /* o 18px, 1.3em, etc. */
 }
 
 .stat-box.empty-guide {
@@ -147,19 +168,24 @@
   width: 100%;
 }
 
-.progress {
-  margin-top: 10px;
-  width: 100%;
-  height: 35px;
-  background-color: #ddd;
-  border-radius: 10px;
-  overflow: hidden;
+.empty-guide {
+  text-align: center;
+  color: black;
 }
 
 .progressTwo {
   margin-top: 10px;
   width: 150%;
   height: 20px;
+  background-color: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress {
+  margin-top: 10px;
+  width: 100%;
+  height: 35px;
   background-color: #ddd;
   border-radius: 10px;
   overflow: hidden;
@@ -179,6 +205,7 @@
   font-size: 16px;
   font-weight: bold;
   text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+  font-family: "ChauPhilomene", sans-serif;
 }
 
 .progress-fill {
@@ -187,10 +214,15 @@
   transition: width 0.5s ease-in-out;
 }
 
+.level-box p {
+  margin-bottom: 7px;
+}
+
 .level-box {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 5px;
 }
 
 .level-circle {
@@ -208,14 +240,87 @@
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* BotÃ³n para el modo libre */
-.explore-button {
-  padding: 8px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  border: none;
-  background-color: #41b8d5;
-  color: white;
-  border-radius: 5px;
-  margin-top: 10px;
+.introjs-tooltip {
+  min-width: 350px;
+  max-width: 500px;
+  min-height: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+
+.progress-ring {
+  width: 80px;
+  height: 80px;
+}
+.progress-ring__background {
+  fill: none;
+  stroke: #ddd;
+  stroke-width: 10;
+}
+.progress-ring__progress {
+  fill: none;
+  stroke: rgb(10, 117, 247);
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+.progress-text-explored {
+  font-size: 26px;
+  font-weight: bold;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  fill: black;
+  font-family: "ChauPhilomene", sans-serif;
+
+}
+
+
+
+
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  50% {
+    border-color: transparent;
+  }
+}
+
+.animation {
+  font: bold 20px Consolas, Monaco, monospace;
+  font-family: "Lexend", sans-serif;
+  border-right: .1em solid black;
+  width: 13.20ch;
+  margin: 0.7em 0.7em;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: typing 5s steps(13, end) infinite, 
+            blink-caret .5s step-end infinite alternate;
+}
+
+
+@keyframes blink-star {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.favorite-category {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.star {
+  font-size: 24px;
+  color: gold;
+  /* animation: blink-star 2s infinite alternate; */
 }

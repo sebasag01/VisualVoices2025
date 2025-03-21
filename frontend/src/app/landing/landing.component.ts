@@ -39,7 +39,7 @@ export class LandingComponent implements OnInit, OnDestroy {
 
     this.waveInterval = setInterval(() => {
       this.cargarAnimacionHola();
-    }, 10000);
+    }, 5000);
   }
 
   ngOnDestroy(): void {
@@ -50,26 +50,21 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   private cargarAnimacionHola(): void {
-    // 1er bloque (rápido)
+    // 1er bloque
     const primerBloque = ['padre_0.gltf','padre_1.gltf','padre_2.gltf'];
-    
-    // 2do bloque (resto)
+  
+    // 2do bloque
     const segundoBloque = Array.from({ length: 13 }, (_, i) => `padre_${i+3}.gltf`);
-    
-    // Enviar todo junto (o primero enviamos solo el bloque1, luego bloque2).
-    const urlsPrimerBloque = primerBloque.map(a => `${environment.apiUrl}/gltf/animaciones/${a}`);
-    const urlsSegundoBloque = segundoBloque.map(a => `${environment.apiUrl}/gltf/animaciones/${a}`);
   
-    // Mandar primero el bloque rápido
-    this.animacionService.cargarAnimaciones(urlsPrimerBloque, true);
+    // Combinar los dos arrays
+    const bloquesCombinados = [...primerBloque, ...segundoBloque];
   
-    // (Opcional) un pequeño retraso para el segundo, o en paralelo
-    setTimeout(() => {
-      this.animacionService.cargarAnimaciones(urlsSegundoBloque, true);
-    }, 500);
+    // Generar URLs
+    const urlsCombinadas = bloquesCombinados.map(a => `${environment.apiUrl}/gltf/animaciones/${a}`);
+  
+    // Enviar todo junto en una sola llamada
+    this.animacionService.cargarAnimaciones(urlsCombinadas, true);
   }
-  
-  
 }
 
 

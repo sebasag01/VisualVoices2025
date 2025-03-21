@@ -121,12 +121,22 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     light.position.set(10, 10, 10);
     this.scene.add(light);
 
+
+
+
+
+
+
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
     this.scene.add(hemiLight);
 
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
     dirLight.position.set(10, 20, 10);
     this.scene.add(dirLight);
+
+
+
+
   }
 
   private addControls(): void {

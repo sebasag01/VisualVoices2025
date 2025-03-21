@@ -15,7 +15,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./registro.component.css'],
 })
 export class RegistroComponent {
-  user = { email: '', password: '', repeatPassword: '', nombre: '', apellidos: '' };
+  user = { email: '', password: '', repeatPassword: ''};
   passwordFieldType: string = 'password'; // Controla si el campo es 'password' o 'text'
   passwordMismatch: boolean = false; // Variable para indicar que las contraseñas no coinciden
   showPasswordHint: boolean = false; // Controla la visibilidad del hint

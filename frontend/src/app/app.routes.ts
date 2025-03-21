@@ -15,7 +15,6 @@ import { AdminPalabrasComponent } from './admin/admin_palabras.component';
 import { AdminCategoriasComponent } from './admin/admin_categorias.component';
 import { AdminEstadisticasComponent } from './admin/admin_estadisticas.component'; // Importarlo
 
-import { AjustesComponent } from './ajustes/ajustes.component';
 import { MiperfilComponent } from './miperfil/miperfil.component';
 import { ModoLibreComponent } from './modo-libre/modo-libre.component';
 
@@ -23,7 +22,6 @@ export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'modos', component: ModosComponent },
   { path: 'landing', component: LandingComponent },
-  {path: 'ajustes', component: AjustesComponent },
   {path: 'perfil', component: MiperfilComponent },
   { path: 'admin', component: AdminComponent, canActivate: [AdminRoleGuard], 
     children: [
@@ -35,7 +33,6 @@ export const routes: Routes = [
     ] 
   },
   { path: 'pruebas', component: PruebasComponent }, 
-  // { path: 'home', component: HomeComponent },
   { path: 'guiado', component: ModoGuiadoComponent },
   { path: 'libre', component: ModoLibreComponent },
   { path: 'test-upload', component: TestUploadComponent, canActivate: [AdminRoleGuard] }, //canActivate: [AdminGuard] }, // Protege esta ruta

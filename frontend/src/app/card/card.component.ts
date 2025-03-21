@@ -12,11 +12,13 @@ import { CommonModule } from '@angular/common';
 export class CardComponent {
   @Input() word: string = '';
   @Input() explanation: string = '';
-  @Input() nextLabel: string = 'Siguiente';
+  @Input() nextLabel: string = 'Finalizar nivel';
   @Input() showWelcome: boolean = false;
   @Input() levelNumber: number = 1;
   @Input() showChooseLevel = false; 
   @Input() availableLevels: number[] = [];
+  @Input() unlockedLevel: number = 1;
+
 
   @Output() wordClick = new EventEmitter<void>();
   @Output() repeatClick = new EventEmitter<void>();

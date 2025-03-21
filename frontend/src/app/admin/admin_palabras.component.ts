@@ -38,8 +38,8 @@ import { GltfService } from '../services/gltf.service'; // <-- Importa el servic
         <thead>
           <tr>
             <th>Palabra</th>
+            <th>Categoria</th>
             <th>Explicación</th>
-            <th>Categoría</th>
             <th>Nivel</th>
             <th>Orden</th>
             <th>Acciones</th>
