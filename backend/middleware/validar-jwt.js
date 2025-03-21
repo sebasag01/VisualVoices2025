@@ -1,3 +1,10 @@
+// La función 'validarJWT' actúa como middleware para verificar el token JWT enviado en las cookies.
+// 1. Obtiene el token desde 'req.cookies.token'.
+// 2. Si no hay token, responde con un estado 401 (no autorizado).
+// 3. Si existe un token, lo verifica usando 'jwt.verify' con la clave secreta de 'process.env.JWTSECRET'.
+// 4. Desestructura 'uid' y 'rol' del token decodificado y los asigna a 'req.uid' y 'req.rol', respectivamente.
+// 5. Si la verificación falla, devuelve un mensaje de "Token no válido" con un estado 401.
+
 const jwt = require('jsonwebtoken');
 
 const validarJWT = (req, res, next) => {

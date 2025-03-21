@@ -36,7 +36,10 @@ export class ModoGuiadoComponent implements OnInit {
   currentIndex = 0;
   maxWords = 4;
   nivelActual = 1;
+  maxUnlockedLevel = 1;
   availableLevels = [1, 2, 3];
+  totalLevels: number = 4;
+
 
   // Usuario, estadisticas, etc.
   userId: string = '';
@@ -52,6 +55,10 @@ export class ModoGuiadoComponent implements OnInit {
   currentCategoryId: string | null = null;
   currentAnimationUrls: string[] = [];
   modo: string = 'guiado';
+
+  isLoading = false; //Para el estado de carga
+
+
 
   // Cámara
   @ViewChild('videoElement', { static: false }) videoElement!: ElementRef;
@@ -70,14 +77,21 @@ export class ModoGuiadoComponent implements OnInit {
   ngOnInit(): void {
     // 1) Cargar categoría si lo necesitas en guiado (no siempre es necesario)
     this.cargarCategorias();
-
+  
     // 2) Obtener usuario, nivelActual e índice actual
     this.usuariosService.getAuthenticatedUser().subscribe({
       next: (resp) => {
+        console.log('USUARIO COMPLETO OBTENIDO:', resp.usuario);
         this.userId = resp.usuario.uid || resp.usuario._id;
         this.nivelActual = resp.usuario.currentLevel || 1;
+        this.maxUnlockedLevel = resp.usuario.maxUnlockedLevel || 1;
         this.currentIndex = resp.usuario.currentWordIndex || 0;
+        
+        console.log(`VALORES INICIALES - Nivel actual: ${this.nivelActual}, Nivel máximo: ${this.maxUnlockedLevel}`);
+  
+        this.availableLevels = Array.from({ length: this.totalLevels }, (_, i) => i + 1);
 
+        
         // Cargar las palabras de este nivel
         this.cargarPalabrasPorNivel(this.nivelActual);
       },
@@ -146,13 +160,16 @@ export class ModoGuiadoComponent implements OnInit {
 
   // 1. Cargar palabras por nivel
   cargarPalabrasPorNivel(nivel: number): void {
+    this.isLoading = true; // Activar carga al inicio
     this.palabrasService.obtenerPalabrasPorNivel(nivel).subscribe({
       next: (data) => {
         this.words = data.slice(0, this.maxWords);
         console.log('Palabras del nivel', nivel, this.words);
+        this.isLoading = false; // Desactivar carga al terminar
       },
       error: (error) => {
         console.error('Error al cargar las palabras:', error);
+        this.isLoading = false; // También desactivar en caso de error
       },
     });
   }
@@ -174,7 +191,7 @@ export class ModoGuiadoComponent implements OnInit {
     }
 
     // Iniciar nueva sesión de stats para este nivel
-    this.statsService.startLevel(this.userId, this.nivelActual).subscribe({
+    this.statsService.startLevel(this.userId, this.nivelActual, 'guiado').subscribe({
       next: (resp) => {
         this.currentStatsId = resp.statsId;
         console.log('Stats iniciado, ID:', this.currentStatsId);
@@ -300,10 +317,10 @@ nextWord() {
           error: (err: any) => console.error('Error guardando la última palabra:', err)
         });
     }
-
+  
     const newLevel = this.nivelActual + 1;
-
-    // Cerrar sesión de stats del nivel actual si está activa
+  
+    // Cerrar la sesión de stats actual (ya existente)
     if (this.currentStatsId) {
       this.statsService.endLevel(this.currentStatsId).subscribe({
         next: (resp) => {
@@ -313,55 +330,50 @@ nextWord() {
       });
       this.currentStatsId = null;
     }
-
-    // Actualizar nivel en BD
+  
+    // Guardamos el valor actual de maxUnlockedLevel antes de la actualización
+    const currentMaxLevel = this.maxUnlockedLevel;
+    
+    // Actualizar nivel en la base de datos
     this.usuariosService.updateUserLevel(this.userId, newLevel).subscribe({
       next: (resp) => {
-        console.log(
-          'Nivel actualizado en el servidor:',
-          resp.usuario.currentLevel
-        );
+        console.log('Respuesta completa del servidor:', resp);
+        console.log('Nivel actualizado en el servidor:', resp.usuario.currentLevel);
+        console.log('Nivel máximo del servidor:', resp.usuario.maxUnlockedLevel);
+        
+        // Actualizamos nivel actual
         this.nivelActual = resp.usuario.currentLevel;
-
-        // Resetear índice a 0
+        
+        // IMPORTANTE: Siempre mantenemos el valor más alto entre lo que teníamos y lo que viene del servidor
+        this.maxUnlockedLevel = Math.max(currentMaxLevel, resp.usuario.maxUnlockedLevel || 1);
+        console.log(`Nivel máximo final: ${this.maxUnlockedLevel}`);
+        
+        // También aseguramos que el maxUnlockedLevel sea al menos igual al nivel actual
+        this.maxUnlockedLevel = Math.max(this.maxUnlockedLevel, this.nivelActual);
+        console.log(`Nivel máximo ajustado: ${this.maxUnlockedLevel}`);
+        
+        this.availableLevels = Array.from({ length: this.totalLevels }, (_, i) => i + 1);
+        console.log('Niveles disponibles actualizados:', this.availableLevels);
+  
+        // Resetear índice a 0 y actualizar palabras
         this.currentIndex = 0;
         this.usuariosService.updateUserWordIndex(this.userId, 0).subscribe({
           next: () => console.log('Índice reseteado a 0'),
           error: (err) => console.error('Error reseteando índice:', err),
         });
-
-        // Mostramos pantalla de bienvenida para que elija qué hacer
+        
+        // Mostrar pantalla de bienvenida y recargar palabras
         this.showWelcome = true;
         this.showChooseLevel = false;
-
-        // Cargamos las palabras del nuevo nivel
-        // Cargar las nuevas palabras ...
         this.cargarPalabrasPorNivel(this.nivelActual);
-
-        // Iniciar nueva sesión de stats para el nuevo nivel (opcional)
-        this.statsService.startLevel(this.userId, this.nivelActual).subscribe({
+  
+        // Iniciar nueva sesión de stats para el nuevo nivel
+        this.statsService.startLevel(this.userId, this.nivelActual, 'guiado').subscribe({
           next: (resp2) => {
             this.currentStatsId = resp2.statsId;
-            console.log(
-              'Nueva sesión para el nivel actual:',
-              this.currentStatsId
-            );
+            console.log('Nueva sesión para el nivel actual:', this.currentStatsId);
           },
-          error: (err) =>
-            console.error('Error iniciando nueva sesión de stats:', err),
-        });
-
-        // 3) Iniciar una nueva sesión de stats para el nuevo nivel (opcional si quieres rastrear)
-        this.statsService.startLevel(this.userId, this.nivelActual).subscribe({
-          next: (resp2) => {
-            this.currentStatsId = resp2.statsId;
-            console.log(
-              'Nueva sesión para el nivel actual:',
-              this.currentStatsId
-            );
-          },
-          error: (err) =>
-            console.error('Error iniciando nueva sesión de stats:', err),
+          error: (err) => console.error('Error iniciando nueva sesión de stats:', err),
         });
       },
       error: (err) => {
@@ -375,33 +387,65 @@ nextWord() {
     this.showChooseLevel = true;
   }
 
+  // In your onLevelSelected method, add a CSS class to trigger animation
   onLevelSelected(level: number) {
-    // Actualizar nivel en BD
-    this.usuariosService.updateUserLevel(this.userId, level).subscribe({
-      next: (resp) => {
-        console.log(
-          'Nivel actualizado en el servidor:',
-          resp.usuario.currentLevel
-        );
-        this.nivelActual = resp.usuario.currentLevel;
-      },
-      error: (err) => console.error('Error actualizando nivel:', err),
-    });
-
-    // Reiniciar índice
-    this.currentIndex = 0;
-    this.usuariosService.updateUserWordIndex(this.userId, 0).subscribe({
-      next: () => console.log('Reinicio a la primera palabra'),
-      error: (err) => console.error('Error reiniciando índice:', err),
-    });
-
-    // Cargar palabras del nuevo nivel
-    this.cargarPalabrasPorNivel(this.nivelActual);
-
-    // Cerrar welcome
-    this.showWelcome = false;
-    this.showChooseLevel = false;
+    const cardElement = document.querySelector('.modo-guiado app-card');
+    if (cardElement) {
+      cardElement.classList.remove('fade-in', 'fade-out');
+      void (cardElement as HTMLElement).offsetWidth;
+      cardElement.classList.add('fade-out');
+    }
+    
+    setTimeout(() => {
+      if (this.currentStatsId) {
+        this.statsService.endLevel(this.currentStatsId).subscribe({
+          next: () => console.log('Sesión anterior cerrada'),
+          error: (err) => console.error('Error al cerrar sesión anterior', err),
+        });
+        this.currentStatsId = null;
+      }
+      
+      // Actualiza el nivel; el backend preserva maxUnlockedLevel si el nuevo nivel es menor
+      this.nivelActual = level;
+      this.usuariosService.updateUserLevel(this.userId, level).subscribe({
+        next: (resp) => {
+          console.log('Nivel actualizado en el servidor:', resp.usuario.currentLevel);
+          // Actualiza ambos valores
+          this.nivelActual = resp.usuario.currentLevel;
+          this.maxUnlockedLevel = resp.usuario.maxUnlockedLevel;
+          // Genera los niveles disponibles según maxUnlockedLevel
+          this.availableLevels = Array.from({ length: this.totalLevels }, (_, i) => i + 1);
+        },
+        error: (err) => console.error('Error actualizando nivel:', err),
+      });
+      this.currentIndex = 0;
+      this.usuariosService.updateUserWordIndex(this.userId, 0).subscribe({
+        next: () => console.log('Reinicio a la primera palabra'),
+        error: (err) => console.error('Error reiniciando índice:', err),
+      });
+      
+      this.cargarPalabrasPorNivel(level);
+      
+      this.statsService.startLevel(this.userId, level, 'guiado').subscribe({
+        next: (resp) => {
+          this.currentStatsId = resp.statsId;
+          console.log('Sesión iniciada para el nuevo nivel:', resp.statsId);
+          if (cardElement) {
+            cardElement.classList.remove('fade-out');
+            void (cardElement as HTMLElement).offsetWidth;
+            cardElement.classList.add('fade-in');
+          }
+        },
+        error: (err) => console.error('Error iniciando stats:', err)
+      });
+      
+      this.showWelcome = false;
+      this.showChooseLevel = false;
+    }, 300);
   }
+  
+  
+  
 
   // Getter opcional para el porcentaje de avance
   get progressPercent(): number {

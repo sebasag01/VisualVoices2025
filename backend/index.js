@@ -1,3 +1,10 @@
+// Archivo principal del servidor que inicializa la aplicación y configura:
+// 1. La carga de variables de entorno mediante dotenv.
+// 2. Conexión a la base de datos (dbConnection).
+// 3. Configuraciones de seguridad (helmet, express-mongo-sanitize, CORS).
+// 4. Definición de rutas de la API para usuarios, login, categorías, palabras, GLTF y estadísticas.
+// 5. Inicia el servidor en el puerto definido en las variables de entorno.
+
 // Importación de módulos
 require('dotenv').config(); // Esto carga el archivo .env
 const express = require('express');

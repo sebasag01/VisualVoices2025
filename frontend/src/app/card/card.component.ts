@@ -17,6 +17,8 @@ export class CardComponent {
   @Input() levelNumber: number = 1;
   @Input() showChooseLevel = false; 
   @Input() availableLevels: number[] = [];
+  @Input() unlockedLevel: number = 1;
+
 
   @Output() wordClick = new EventEmitter<void>();
   @Output() repeatClick = new EventEmitter<void>();

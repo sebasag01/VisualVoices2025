@@ -117,7 +117,7 @@ export class ModosComponent implements OnInit, OnDestroy {
             ((user.currentWordIndex + 1) / this.maxWords) * 100
           );
         }
-        this.userLevel = user.currentLevel || 1;
+        this.userLevel = user.maxUnlockedLevel || 1;
         this.nextLevel = user.nextLevel || null;
 
         // Aquí lees la última palabra directamente del usuario
