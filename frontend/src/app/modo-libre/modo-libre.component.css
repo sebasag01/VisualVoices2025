@@ -474,8 +474,6 @@
   background: #008cff;
   border: 1px solid #000000;
   
-  box-shadow: 0 0 5px #9500ff, 0 0 20px #008cff,
-              0 0 50px #008cff, 0 0 100px #008cff;
 }
   /* Estado seleccionado (queda “pegado” el brillo en la palabra clicada) */
   .word-item.selected-word {
@@ -485,8 +483,7 @@
     background: #008cff;
     border: 0.5px solid #000000;
     
-    box-shadow: 0 0 5px #9500ff, 0 0 20px #008cff,
-                0 0 50px #008cff, 0 0 100px #9500ff;
+   
   }
   .word-title {
     font-weight: bold;
