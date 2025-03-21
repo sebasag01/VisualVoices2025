@@ -31,19 +31,18 @@
   align-items: stretch;
 }
 
+/* LAYOUT */
 .layout {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start; /* Alinea a la izquierda */
   align-items: stretch;
   width: 100vw;
   height: 100vh;
 }
 
 /* AVATAR */
-
 .image-container {
-  flex-grow: 1;
-  width: calc(100% - 5%);
+  width: calc(100% - 35vw); /* Toma el 65% del espacio de la pantalla */
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -54,23 +53,25 @@
 
 /* CÁMARA */
 .camera-container {
-  width: 50%;
-  height: 100vh;
+  width: 35vw; /* Ocupa el 35% del ancho de la pantalla */
+  height: 100vh; /* Ocupa toda la altura */
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  justify-content: center; /* Centra el video dentro del contenedor */
+  align-items: center; /* Asegura que el video se mantenga bien centrado */
   background-color: #fff8d4;
 }
 
+/* VIDEO */
 .mirror-video {
-  width: 90%;
-  height: 80vh;
-  object-fit: cover;
+  width: 100%; /* Que ocupe todo el contenedor de la cámara */
+  height: 100%; /* Que ocupe toda la altura */
+  object-fit: cover; /* Se ajusta sin deformarse */
   transform: scaleX(-1); /* Modo espejo */
-  border: 2px solid #000;
-  border-radius: 10px;
+  border: none; /* Sin bordes */
+  border-radius: 0; /* Sin bordes redondeados */
 }
+
+
 
 /* PALABRA EN MODO CÁMARA */
 
@@ -170,4 +171,23 @@
   justify-content: center;
   align-items: center;
   height: 100%;
+}
+
+
+.buttons-container {
+  position: absolute;
+  bottom: 10px; /* Mueve los botones hacia la parte inferior */
+  left: 50%; /* Centra los botones horizontalmente */
+  transform: translateX(-50%); /* Ajusta la alineación exacta para que estén centrados */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* Espaciado entre los botones */
+  z-index: 10; /* Asegura que los botones estén por encima de otros elementos */
+}
+
+/* Ajustar el margen de los botones */
+.small-disable-webcam-btn,
+.current-word {
+  margin: 0;
 }

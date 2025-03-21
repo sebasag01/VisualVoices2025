@@ -247,3 +247,80 @@
   max-height: 400px;
   overflow-y: auto;
 }
+
+
+.progress-ring {
+  width: 80px;
+  height: 80px;
+}
+.progress-ring__background {
+  fill: none;
+  stroke: #ddd;
+  stroke-width: 10;
+}
+.progress-ring__progress {
+  fill: none;
+  stroke: rgb(10, 117, 247);
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+.progress-text-explored {
+  font-size: 26px;
+  font-weight: bold;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  fill: black;
+  font-family: "ChauPhilomene", sans-serif;
+
+}
+
+
+
+
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  50% {
+    border-color: transparent;
+  }
+}
+
+.animation {
+  font: bold 20px Consolas, Monaco, monospace;
+  font-family: "Lexend", sans-serif;
+  border-right: .1em solid black;
+  width: 13.20ch;
+  margin: 0.7em 0.7em;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: typing 5s steps(13, end) infinite, 
+            blink-caret .5s step-end infinite alternate;
+}
+
+
+@keyframes blink-star {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.favorite-category {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.star {
+  font-size: 24px;
+  color: gold;
+  /* animation: blink-star 2s infinite alternate; */
+}

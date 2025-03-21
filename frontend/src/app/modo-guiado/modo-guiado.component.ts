@@ -288,13 +288,13 @@ nextWord() {
 
   // 10. Avanzar de nivel
   advanceLevel() {
-    const ultimaPalabraDelNivel = this.words[this.words.length - 1].palabra;
-    const textoNivel = `Lección ${this.nivelActual}`;
-    const ultimaPalabraTexto = `${ultimaPalabraDelNivel} (${textoNivel})`;
+    // const ultimaPalabraDelNivel = this.words[this.words.length - 1].palabra;
+    // const textoNivel = `Lección ${this.nivelActual}`;
+    // const ultimaPalabraTexto = `${ultimaPalabraDelNivel} `;
     
     if (this.words.length > 0) {
       const ultimaPalabraDelNivel = this.words[this.words.length - 1].palabra;
-      this.usuariosService.updateUserLastWordLearned(this.userId, ultimaPalabraTexto)
+      this.usuariosService.updateUserLastWordLearned(this.userId, ultimaPalabraDelNivel)
       .subscribe({
           next: () => console.log('Última palabra del nivel anterior guardada'),
           error: (err: any) => console.error('Error guardando la última palabra:', err)

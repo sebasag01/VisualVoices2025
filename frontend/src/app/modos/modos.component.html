@@ -53,7 +53,7 @@
               </div>
               <!-- Caja 2: Progreso -->
               <div class="stat-box">
-                <p>Progreso actuall</p>
+                <p>Progreso actual</p>
                 <div class="progress">
                   <div
                     class="progress-bar progress-bar-striped progress-bar-animated"
@@ -68,7 +68,9 @@
               <div class="stat-box">
                 <p *ngIf="nextLevel; else lastWord"></p>
                 <ng-template #lastWord>
-                  <p>Última palabra: {{ lastWordLearned }}</p>
+                  <p>Última palabra</p>
+                  <!-- From Uiverse.io by JkHuger -->
+                  <div class="animation"> {{ lastWordLearned }}</div>
                 </ng-template>
               </div>
             </ng-template>
@@ -77,30 +79,86 @@
           <!-- MODO LIBRE: EXPLORA -->
           <ng-container *ngSwitchCase="'libre'">
             <!-- Caja 1: Palabras exploradas -->
-            <div class="stat-box">
+            <!-- <div class="stat-box">
               <p>
                 Has explorado {{ exploredCount }} / {{ totalWords }} palabras
               </p>
+            </div> -->
+            <div class="stat-box">
+              <svg viewBox="0 0 100 100" class="progress-ring">
+                <circle
+                  class="progress-ring__background"
+                  cx="50"
+                  cy="50"
+                  r="40"
+                />
+                <circle
+                  class="progress-ring__progress"
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  stroke-dasharray="251.2"
+                  [attr.stroke-dashoffset]="
+                    251.2 - (exploredCount / totalWords) * 251.2
+                  "
+                />
+                <text x="50" y="50" class="progress-text-explored">
+                  {{ exploredCount }}/{{ totalWords }}
+                </text>
+              </svg>
+              <p>palabras exploradas</p>
             </div>
             <!-- Caja 2: Categoría más explorada -->
             <div class="stat-box">
               <ng-container *ngIf="mostExploredCategoryName; else noCategory">
+
+
+                
+                <span class="star">⭐⭐⭐</span>
                 <p>
-                  Categoría más explorada:
-                  {{ mostExploredCategoryName }} ({{
-                    mostExploredCategoryCount
-                  }}
-                  palabras)
+                  Categoría favorita:
+                  {{ mostExploredCategoryName }} 
+                  <!-- ( {{ mostExploredCategoryCount }} palabras) -->
+
                 </p>
               </ng-container>
               <ng-template #noCategory>
                 <p>No hay categoría más explorada</p>
               </ng-template>
             </div>
+
             <!-- Caja 3: Tiempo total -->
             <div class="stat-box">
+              <svg
+                width="200"
+                height="200"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="50" cy="50" r="45" fill="black" stroke="none" />
+                <line
+                  id="hand"
+                  x1="50"
+                  y1="50"
+                  x2="50"
+                  y2="15"
+                  stroke="white"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                >
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 50 50"
+                    to="360 50 50"
+                    dur="5s"
+                    repeatCount="indefinite"
+                  />
+                </line>
+                <circle cx="50" cy="50" r="3" fill="white" />
+              </svg>
               <p>
-                Tiempo práctica:
+                Tiempo práctica: <br>
                 {{ tiempoLibreMs / 60000 | number : "1.0-0" }} minutos
               </p>
             </div>
