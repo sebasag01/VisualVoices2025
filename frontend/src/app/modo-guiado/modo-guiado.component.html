@@ -9,13 +9,30 @@
         [ngClass]="{ 'half-width': showWebcam }"
       >
         <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
-      </div>
+      
 
-      <!-- Contenedor del video, se muestra solo si showWebcam === true -->
+       <!-- Botones que solo se mostrarán cuando la cámara esté activa -->
+       <div class="buttons-container" *ngIf="showWebcam">
+        <!-- Botón para la palabra -->
+        <div
+          *ngIf="modo === 'guiado'"
+          class="current-word"
+          (click)="handleWordClick()"
+        >
+          <p>{{ currentWord }}</p>
+        </div>
+
+        <!-- Botón para desactivar la webcam -->
+        <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
+          Desactivar Webcam
+        </button>
+      </div>
+    </div>
+
       <div class="camera-container" *ngIf="showWebcam">
         <video #videoElement class="mirror-video" autoplay></video>
 
-        <div
+        <!-- <div
           *ngIf="modo === 'guiado'"
           class="current-word"
           (click)="handleWordClick()"
@@ -25,7 +42,7 @@
 
         <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
           Desactivar Webcam
-        </button>
+        </button> -->
       </div>
 
       <div class="button-grid" *ngIf="!showWebcam">
@@ -46,7 +63,6 @@
           </a>
         </div>
 
-        <!-- VISTA PARA MODO GUIADO -->
         <div class="modo-guiado" id="modo-guiado-container">
           <app-card
             [showWelcome]="showWelcome"
