@@ -439,26 +439,55 @@
     font-size: 1.2rem;
   }
   
-  /* Lista de palabras de una categoría */
-  .word-list {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-  }
+ /* Grid de 2 columnas para la vista 2 */
+.word-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-top: 30px;
+}
+
+/* Simulamos un botón con el estilo solicitado */
+.word-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 500;
+  color: #000000;
+  background: #35a0c7;
+  cursor: pointer;
+  box-shadow: transparent;
+  border: 2px solid #000000;
+  transition: 0.5s ease;
+  user-select: none;
+  text-shadow: none; /* para mayor claridad */
+}
   
-  .word-item {
-    background-color: white;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    border: 2px solid black;
-  }
+  /* Efecto hover */
+.word-item:hover,
+.word-item:focus {
+  color: #000000;
+  background: #008cff;
+  border: 1px solid #000000;
   
-  .word-item:hover {
-    background-color: #ffc580;
+  box-shadow: 0 0 5px #9500ff, 0 0 20px #008cff,
+              0 0 50px #008cff, 0 0 100px #008cff;
+}
+  /* Estado seleccionado (queda “pegado” el brillo en la palabra clicada) */
+  .word-item.selected-word {
+    transform: scale(1.06); /* ajústalo a tu gusto, 1.05 ~ 1.10 */
+    z-index: 2; /* para evitar que se 'meta' bajo otras palabras al crecer */
+    color: #000000;
+    background: #008cff;
+    border: 0.5px solid #000000;
+    
+    box-shadow: 0 0 5px #9500ff, 0 0 20px #008cff,
+                0 0 50px #008cff, 0 0 100px #9500ff;
   }
-  
   .word-title {
     font-weight: bold;
   }
@@ -642,75 +671,134 @@
   z-index: 999;
 }
 
-/* Para marcar la palabra que está seleccionada */
-.word-item.selected-word {
-  background-color: #ffe387;  /* un color que destaque */
-  border: 3px solid black;    /* subrayar la selección */
-}
 
-.tools-menu {
-  position: absolute;
-  /* Anclado al borde derecho del contenedor */
-  right: 0;
-  
-  /* Para centrar verticalmente */
-  top: 50%;
-  transform: translateY(-50%) translateX(100%);
-  
-  width: 150px;     /* Ajusta según tus necesidades */
-  height: 70%;      /* Ocupa el 70% de la altura */
-  
-  background-color: #ffc580; 
-  transition: transform 0.4s ease;
-  
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-}
 
-/* Cuando se abre, 
-   solo cambiamos translateX(100%) a translateX(0), 
-   manteniendo la parte de translateY(-50%) */
-.tools-menu.open {
-  transform: translateY(-50%) translateX(0);
-}
+
 
 .tools-menu-placeholder {
   font-size: 1.2rem;
   color: #000;
 }
 
-/* Contenedor para apilar los botones en columna */
-.tools-buttons {
+
+/* NUEVO DISEÑO RADIO-BUTTONS */
+
+/* AHORA: .radio-input es el contenedor deslizable */
+.radio-input {
+  position: absolute;
+  /* Anclado al borde derecho */
+  right: 0;
+
+  /* Centrado vertical */
+  top: 50%;
+  transform: translateY(-50%) translateX(100%);
+  transition: transform 0.4s ease;
+
+  /* Ajusta el tamaño como quieras */
+  width: 100px; /* un poco más ancho */
+  min-height: 300px; /* o el alto que desees */
+  padding: 10px;
+  border-radius: 10px 0px 0px 10px;
+
+  /* Fondo negro (por tu diseño) */
+  background-color: black;
+
+  /* Para superponerse al avatar o a otros elementos */
+  z-index: 9999;
+
+  /* Layout interno en columna, con algo de separación */
   display: flex;
   flex-direction: column;
-  align-items: center;  /* Opcional: centrar horizontalmente */
-  justify-content: center; /* Opcional: centrar verticalmente, 
-                              pero solo si su contenedor tiene height definido */
-  gap: 20px; /* Espacio vertical entre botones */
-  width: 100%; /* Si deseas que ocupe todo el ancho del .tools-menu */
-  height: auto; /* Ajusta según tu diseño */
+  gap: 4px;
 }
 
-/* From Uiverse.io by Cksunandh */ 
-.btn-small {
-  position: relative;
-  padding: 0;
-  width: 100px; /* Smaller width */
-  height: 100px; /* Smaller height */
-  border: 2px solid #888888;
-  outline: none;
-  background-color: #f4f5f6;
-  border-radius: 20px; /* Adjusted border-radius */
-  box-shadow:
-    
-    3px 10px 12px rgba(0, 0, 0, 0.2);
-  transition: 0.3s ease-in-out; /* Smooth animation */
-  cursor: pointer;
+/* Al 'abrirlo' (clase .open), se desliza hacia la izquierda */
+.radio-input.open {
+  transform: translateY(-50%) translateX(0);
 }
+
+.radio-input input {
+  display: none;
+}
+
+.radio-input .label {
+  width: 83px;
+  height: 80px;
+  background: linear-gradient(to bottom, #333333, rgb(36, 35, 35));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: all 0.1s linear;
+  border-top: 1px solid #4e4d4d;
+  background-color: #333333;
+  position: relative;
+  cursor: pointer;
+  box-shadow: none; /* sin sombra */
+}
+
+.label:first-child {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+.label:last-child {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+/* Si el radio está checked, aplicamos un fondo especial */
+.label:has(input[type="radio"]:checked) {
+  box-shadow: none;
+  background: linear-gradient(to bottom, #1d1d1d, #1d1d1d);
+  border-top: none;
+}
+
+.label::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 103%;
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(
+    to bottom,
+    transparent 10%,
+    transparent,
+    transparent 90%
+  );
+  transition: all 0.1s linear;
+  z-index: -1;
+}
+
+.label:has(input[type="radio"]:checked)::before {
+  background: linear-gradient(
+    to bottom,
+    transparent 10%,
+    #cae2fd63,
+    transparent 90%
+  );
+}
+
+.label .text {
+  color: white;
+  font-size: 15px;
+  line-height: 12px;
+  padding: 0;
+  font-weight: 800;
+  text-transform: uppercase;
+  transition: all 0.1s linear;
+  text-shadow: -1px -1px 1px rgba(224, 224, 224, 0.1),
+               0px 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.label input[type="radio"]:checked + .text {
+  color: rgb(202, 226, 253);
+  text-shadow: 0px 0px 12px #cae2fd;
+}
+
 
 /* Hover animation: Scaling the button and adjusting shadow */
 .btn-small:hover {
@@ -789,3 +877,177 @@
 .btn-small:hover .btn-small-text {
   transform: translateY(-5px); /* Move the text up slightly on hover */
 }
+/* Estilo exclusivo para el label de PLAY2 */
+.label-play2 {
+  position: relative; /* Para ubicar .stop-container */
+}
+
+/* Caja pequeña para STOP */
+.stop-container {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 30px;
+  height: 0px;
+  background-color: #222;
+  border-radius: 4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Ocultar el radio real de STOP */
+.stop-container input[type="radio"] {
+  display: none;
+}
+
+.stop-text {
+  color: white;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+/* Cuando el STOP esté marcado, cambiamos color */
+.stop-container:has(input[type="radio"]:checked) {
+  background-color: #444;
+}
+/* Asegúrate de que la "label" de play2 es position: relative
+   para posicionar Stop en la esquina */
+   .label-play2 {
+    position: relative;
+    /* Mantén el resto de estilos heredados de .label si lo deseas */
+  }
+  
+  /* El pequeño label-stop se ubica ABSOLUTO 
+     dentro de la "caja" de .label-play2 */
+  .label-play2 .label-stop {
+    position: absolute;
+    bottom: 0px;  /* Ajusta a tu gusto */
+    right: 0px;
+    width: 27px;  /* tamaño reducido */
+    height: 27px;
+    background-color: #444;  /* un color distinto */
+    border-radius: 3px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  /* Ocultamos el input radio de STOP para que solo se vea el “Stop” */
+  .label-play2 .label-stop input[type="radio"] {
+    display: none;
+  }
+  
+  /* Texto “Stop” más pequeño */
+  .label-play2 .stop-text {
+    color: white;
+    font-size: 10px;
+    text-transform: uppercase;
+    pointer-events: none; /* Deja que el clic ocurra en el contenedor */
+  }
+  
+  /* Efecto al estar marcado STOP */
+  .label-play2 .label-stop:has(input[type="radio"]:checked) {
+    background-color: #222;  /* se oscurece al hacer click */
+  }
+  /* Para todos tus .label con un icon dentro */
+.label .icon {
+  width: 32px;
+  height: 32px;
+  fill: #ffffff; /* color inicial */
+  transition: fill 0.2s, filter 0.2s;
+}
+
+/* Cuando el radio está checked => iluminado */
+.label:has(input[type="radio"]:checked) .icon {
+  fill: rgb(202, 226, 253); /* color resaltado */
+  filter: drop-shadow(0 0 6px #cae2fd);
+}
+.label-play2 {
+  position: relative;
+  /* si tienes otros estilos para “play2” */
+}
+
+.label-stop {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  cursor: pointer;
+  padding: 5px;
+  /* etc... */
+}
+
+/* Oculta el radio real de STOP */
+.label-stop input[type="radio"] {
+  display: none;
+}
+
+/* Ajusta la escala, color base, etc. de tus SVGs. 
+   E.g., .icon-play2 para el icono “play-bucle” */
+.icon-play2 {
+  fill: #fff;
+  transition: fill 0.2s, filter 0.2s;
+  width:38px;
+  height:38px;
+  cursor: pointer;
+}
+
+/* icon-stop para el sub-icono STOP */
+.icon-stop {
+  fill: #ff0000;
+  transition: fill 0.2s, filter 0.2s;
+  
+  cursor: pointer;
+}
+
+/* Efecto “iluminado” al estar checkeado PLAY2 */
+.label-play2:has(input[type="radio"]:checked) .icon-play2 {
+  fill: rgb(202, 226, 253);
+  filter: drop-shadow(0 0 5px #cae2fd);
+}
+
+/* Efecto “iluminado” al checkear STOP */
+.label-stop:has(input[type="radio"]:checked) .icon-stop {
+  fill: #ff0000;
+  filter: drop-shadow(0 0 5px #cae2fd);
+}
+
+
+/* Caja general de la webcam */
+.label-webcam {
+  /* igual que tus otras .label, por si quieres 
+     un ancho/alto/estilos en sintonía */
+  width: 130px;
+  height: 80px;
+  position: relative;
+  background: linear-gradient(to bottom, #333, #242323);
+  /* etc... */
+}
+
+/* Oculte el input si gustas, o déjalo visible. 
+   Normalmente “display: none” para tu radio. */
+.label-webcam input[type="radio"] {
+  display: none;
+}
+
+/* El <img> con webcam.svg */
+.icon-webcam {
+  display: block;          /* o inline-block, según prefieras */
+  width: 40px;             /* ajusta tu tamaño */
+  height: auto;
+  margin: 0 auto;          /* centrado horizontal */
+  transition: filter 0.2s; /* para el efecto “iluminado” */
+}
+
+/* Si deseas “iluminado” al hacer check:
+   (asumiendo que tu CSS soporta :has() ) */
+.label-webcam:has(input[type="radio"]:checked) .icon-webcam {
+  filter: drop-shadow(0 0 5px #cae2fd);
+}
+
