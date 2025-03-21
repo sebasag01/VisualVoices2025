@@ -1,6 +1,5 @@
-<form class="login-form" (ngSubmit)="loginUser()">
+<form class="login-form" (ngSubmit)="loginUser()" *ngIf="!showForgotPassword">
   <h2 class="registro-title">¡Hola de nuevo!</h2>
-  <!-- <p>¡Hola de nuevo!</p> -->
   <input
     type="email"
     placeholder="Correo electrónico"
@@ -38,22 +37,27 @@
       />
       <label for="rememberMe">Recuérdame</label>
     </div>
-    <a href="#" class="forgot-password">¿Olvidaste la contraseña?</a>
+    <a (click)="toggleForgotPassword($event)" class="forgot-password">¿Olvidaste la contraseña?</a>
   </div>
 
   <button type="submit" class="btn">Iniciar Sesión</button>
-
-  <!-- <a href="#" class="forgot-password">¿Has olvidado la contraseña?</a>  -->
   <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
-
 </form>
 
-
-
-<!--<div class="divider">
-      <span class="divider-text">O</span>
-    </div>
-    <button type="button" class="btn google-login">
-      Inicia sesión con Google
-    </button>
-  -->
+<!-- Forgot Password Form -->
+<form class="login-form password-reset-form" (ngSubmit)="resetPassword()" *ngIf="showForgotPassword">
+  <h2 class="registro-title">Recuperar Contraseña</h2>  
+  <input
+    type="email"
+    placeholder="Correo electrónico"
+    [(ngModel)]="resetEmail"
+    name="resetEmail"
+    class="input-field"
+    required
+  />
+  
+  <button type="submit" class="btn">Enviar Instrucciones</button>
+  <button type="button" class="btn btn-secondary" (click)="toggleForgotPassword()">Volver al Inicio de Sesión</button>
+  
+  <p *ngIf="resetMessage" [ngClass]="resetSuccess ? 'success-message' : 'error-message'">{{ resetMessage }}</p>
+</form>

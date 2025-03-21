@@ -113,7 +113,9 @@ export class UsuariosService {
   }
   
   
-  
+  requestPasswordReset(email: string) {
+    return this.http.post<any>(`${this.apiUrl}/auth/reset-password`, { email });
+  }
 
   
 
