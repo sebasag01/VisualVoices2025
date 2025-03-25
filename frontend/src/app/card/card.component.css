@@ -5,7 +5,6 @@
   font-style: normal;
 }
 
-/* Importar la fuente personalizada desde la carpeta public */
 @font-face {
   font-family: "ChauPhilomene";
   src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
@@ -21,17 +20,16 @@
 }
 
 h2 {
-  margin-bottom: 50px; /* Aumenta el espacio debajo del título */
+  margin-bottom: 50px; 
   font-family: "Lexend", sans-serif;
   color: black;
 }
 
-/* Contenedor de los botones */
 div > button.tutorial-btn {
-  display: block; /* Cada botón en su propia fila */
-  width: 80%; /* Ocupar un buen ancho sin ser demasiado grande */
-  margin: 10px auto; /* Espaciado vertical uniforme y centrado horizontalmente */
-  text-align: center; /* Centrar el texto */
+  display: block; 
+  width: 80%; 
+  margin: 10px auto; 
+  text-align: center; 
 }
 
 .card {
@@ -40,48 +38,37 @@ div > button.tutorial-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* Cambiado de space-around a flex-start para tener más control */
+  justify-content: flex-start; 
   background-color: transparent;
   box-shadow: none;
-  animation: slide-in 0.3s ease-in-out; /* Animación de entrada por defecto */
+  animation: slide-in 0.3s ease-in-out; 
   --cui-card-border-width: 0;
   --cui-card-border-color: transparent;
   border: none !important;
   border-width: 0 !important;
   border-color: transparent !important;
-  padding-top: 20px; /* Añadido padding para control del espaciado superior */
+  padding-top: 20px; 
 }
 
 .tutorial-btn {
-  padding: 5px 10px; /* Menos padding para que sea pequeño */
-  font-size: 1rem; /* Fuente un poco más pequeña */
+  padding: 5px 10px; 
+  font-size: 1rem; 
   font-family: "Lexend", sans-serif;
   width: auto;
   height: auto;
   border: 2px solid black;
-  border-radius: 12px; /* Bordes redondeados */
-  background-color: #41b8d5; /* Color de fondo que combina con los otros botones */
-  color: rgb(0, 0, 0); /* Texto negro para buen contraste */
+  border-radius: 12px;
+  background-color: #41b8d5; 
+  color: rgb(0, 0, 0); 
   transition: background-color 0.3s ease;
 }
 
 .tutorial-btn:hover {
-  background-color: #35a0c7; /* Cambio de color en hover */
+  background-color: #35a0c7; 
 }
 
 .card-leaving {
-  animation: slide-out 0.3s ease-in-out forwards; /* Animación de salida */
-}
-
-/* Posicionando el botón de palabra MUCHO más arriba */
-.word-button-container {
-  margin-top: 20px; /* Mínimo espacio desde el borde superior */
-  position: relative; /* Para posicionar relativamente */
-  margin-bottom: 40px; /* Mayor espacio abajo para separar de la explicación */
-  width: 100%; /* Ancho completo */
-  display: flex; /* Usar flexbox */
-  justify-content: center; /* Centrar horizontalmente */
-  align-items: flex-start; /* Alinear al inicio */
+  animation: slide-out 0.3s ease-in-out forwards; 
 }
 
 .explanation {
@@ -90,15 +77,27 @@ div > button.tutorial-btn {
   font-family: "Lexend", sans-serif;
   padding: 10px;
   border-radius: 10px;
-  margin-top: 40px; /* Espacio adicional desde el botón */
-  margin-bottom: 80px; /* Espacio antes de los botones de navegación */
+  margin-top: 40px; 
+  margin-bottom: 80px; 
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-grow: 1; /* Permite que crezca para llenar el espacio */
+  flex-grow: 1; 
 }
+/* 
+.word-button-container {
+  margin-top: 20px; 
+  position: relative; 
+  margin-bottom: 40px;
+  width: 100%; 
+  display: flex; 
+  justify-content: center; 
+  align-items: flex-start; 
+}
+
+
 
 .word-navigation-container {
   display: flex;
@@ -108,25 +107,93 @@ div > button.tutorial-btn {
 }
 
 .word-button {
-  background: none; /* Quita el fondo */
-  padding: 0; /* Quita el padding */
-  font-size: 3rem; /* Aumenta el tamaño de la fuente */
+  background: none; 
+  padding: 0; 
+  font-size: 3rem; 
   font-weight: bold;
-  cursor: pointer; /* Conserva el cursor pointer al pasar el ratón */
+  cursor: pointer; 
   font-family: "Lexend", sans-serif;
   color: black;
 }
 
-/* Opcional: eliminar o ajustar el efecto hover */
 .word-button:hover {
   background: none;
   transform: none;
+} */
+
+/* Estilizar la palabra como un botón */
+.word-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto; /* Ajusta el tamaño automáticamente */
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: "Lexend", sans-serif;
+  background-color: #41b8d5; /* Azul llamativo */
+  color: black;
+  border: 3px solid black;
+  border-radius: 12px;
+  box-shadow: 0.1em 0.1em;
+  transition: all 0.2s ease-in-out;
+  font-size: 7rem; /* Aumenta el tamaño */
+  padding: 1.5em 3em;
 }
 
+.word-button.selected-word {
+  background-color: #d3d3d3;
+  color: black;
+  cursor: default;
+  opacity: 1;
+  box-shadow: none;
+  border-color: black;
+}
+
+/* .word-button-container .word-button {
+  font-size: 2rem !important;
+} */
+
+.word-button:disabled {
+  background-color: #41b8d5 !important;
+  color: black;
+}
+
+.word-button:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.word-button-container .word-button {
+  width: 100%;
+  max-width: 200px;
+  font-size: 30px; /* Aumentar solo el tamaño de la letra */
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.letra-boton{
+  font-size: 40px !important;
+
+}
+
+
+/* .word-button:hover {
+  background-color: #35a0c7;
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.2em 0.2em;
+} */
+
+/* .word-button:active {
+  transform: translate(0.05em, 0.05em);
+  box-shadow: 0.05em 0.05em;
+} */
+
+
 .repeat-button {
-  position: absolute; /* Posicionar fuera del botón PALABRA */
-  bottom: -10px; /* Fuera del borde inferior */
-  right: -35px; /* Fuera del borde derecho */
+  position: absolute; 
+  bottom: -10px;
+  right: -35px; 
   width: 40px;
   height: 40px;
   background-color: transparent;
@@ -147,21 +214,20 @@ div > button.tutorial-btn {
   padding: 0 16px;
 }
 
-/* Agregando separación entre las flechas de navegación */
 .navigation-arrows {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: auto; /* Empuja las flechas hasta el final del espacio disponible */
-  padding-bottom: 30px; /* Espacio al fondo */
+  margin-top: auto; 
+  padding-bottom: 30px; 
 }
 
 .prev-button,
 .next-button {
   background-color: transparent;
   cursor: pointer;
-  margin: 0 20px; /* Agregando margen a los lados de cada botón para separarlos */
+  margin: 0 20px; 
 }
 
 .arrow-icon {
@@ -172,23 +238,22 @@ div > button.tutorial-btn {
 
 .level-buttons-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 columnas */
-  gap: 20px; /* Espaciado entre botones */
-  justify-items: center; /* Centra los botones en sus celdas */
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 20px;
+  justify-items: center;
   width: 100%;
   padding: 20px;
 }
 
 button.learn-more {
-  width: 100%; /* Ocupa el 100% del espacio disponible en la celda */
-  max-width: 200px; /* Tamaño máximo del botón */
-  padding: 1.5em 2.5em; /* Botones más grandes */
+  width: 100%; 
+  max-width: 200px; 
+  padding: 1.5em 2.5em; 
   font-size: 18px;
 }
 
-/* From Uiverse.io by adamgiebl */
 button {
-  background-color: #41b8d5; /* Color de fondo que combina con los otros botones */
+  background-color: #41b8d5; 
   font-family: "Lexend", sans-serif;
   padding: 0.6em 1.3em;
   font-weight: 900;
@@ -209,19 +274,16 @@ button:active {
   box-shadow: 0.05em 0.05em;
 }
 
-/* Cambiar la apariencia de los botones bloqueados */
 .learn-more:disabled {
-  /* Eliminar la opacidad y el cursor prohibido */
-  background-color: #d3d3d3; /* Gris para los botones bloqueados */
-  color: black; /* Gris oscuro para el texto */
-  cursor: default; /* El cursor vuelve al predeterminado */
-  opacity: 1; /* Quitar la opacidad reducida */
+  background-color: #d3d3d3; 
+  color: black;
+  cursor: default; 
+  opacity: 1; 
 }
 
-/* Clase para los botones bloqueados */
 .disabled-button {
-  background-color: #d3d3d3; /* Gris para los botones bloqueados */
-  color: #555; /* Gris oscuro para el texto */
+  background-color: #d3d3d3; 
+  color: #555; 
 }
 
 @keyframes slide-in {
@@ -245,3 +307,40 @@ button:active {
     opacity: 0;
   }
 }
+
+
+.title-container {
+  text-align: center;
+  margin-bottom: 30px; 
+  animation: fadeIn 1s ease-in-out; 
+}
+
+.game-title {
+  font-family: "ChauPhilomene", sans-serif;
+  font-size: 2.5rem; 
+  font-weight: bold;
+  color: black; 
+  text-transform: uppercase; 
+  letter-spacing: 2px; 
+}
+
+.game-subtitle {
+  font-family: "Lexend", sans-serif;
+  font-size: 1.2rem;
+  color: black;
+  padding: 10px 15px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+/* @keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} */
+
