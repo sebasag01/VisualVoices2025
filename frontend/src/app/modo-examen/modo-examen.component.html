@@ -1,0 +1,104 @@
+<app-header></app-header>
+
+<div class="container">
+  <div class="content">
+    <div class="layout">
+      
+      <!-- Contenedor del avatar (3D) a la izquierda -->
+      <div class="image-container" id="avatar-element" [ngClass]="{'libre-half-width': showWebcam}">
+        <!-- Canvas con la animación (usamos [animationUrls]="animaciones" que viene de ModoExamenComponent) -->
+        <app-canvas [animationUrls]="animaciones"></app-canvas>
+
+        <!-- Menú de herramientas (Radio Buttons) -->
+        <div class="radio-input open" (change)="onRadioChange($event)">
+            <!-- Play -->
+          <label class="label label-play">
+            <input type="radio" id="play" name="value-radio" value="play" />
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path d="M96 52v408l320-204-320-204z" />
+            </svg>
+          </label>
+
+          <!-- Play2 + Stop anidado -->
+          <label class="label label-play2">
+            <input type="radio" id="play2" name="value-radio" value="play2" />
+            <img class="icon-play2" src="assets/play-bucle.svg" alt="Play2" />
+
+            <label class="label-stop">
+              <input type="radio" id="stop" name="value-radio" value="stop" />
+              <svg class="icon-stop" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path d="M64 64h384v384H64z" />
+              </svg>
+            </label>
+          </label>
+
+          <!-- Webcam -->
+          <label class="label label-webcam">
+            <input type="radio" id="webcam" name="value-radio" value="webcam" />
+            <img class="icon-webcam" src="assets/webcam.svg" alt="Webcam" />
+          </label>
+
+          <!-- Velocidad (Speed) -->
+          <label class="label">
+            <input type="radio" id="veloc" name="value-radio" value="veloc" />
+            <span class="text">Veloc</span>
+          </label>
+        </div>
+      </div> 
+      
+      <!-- Contenedor de la cámara, se muestra solo si showWebcam es true -->
+      <div class="camera-container libre-full-right" *ngIf="showWebcam">
+        <video #videoElement class="mirror-video" autoplay></video>
+        <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
+          Desactivar Webcam
+        </button>
+      </div>
+
+      <!-- Panel derecho con las opciones de examen -->
+      <div class="right-panel" *ngIf="!showWebcam">
+        
+        <!-- Iconos de perfil, ajustes, logout -->
+        <div class="icon-menu-fixed">
+          <a (click)="navigateTo('perfil')" title="Mi Perfil" class="user-icon">
+            <i class="fa-solid fa-user"></i>
+          </a>
+          <a (click)="navigateTo('ajustes')" title="Ajustes" class="ajustes-icon">
+            <i class="fa-solid fa-gear"></i>
+          </a>
+          <a (click)="logout()" title="Cerrar Sesión" class="logout-icon">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </a>
+        </div>
+
+        <!-- Título del modo examen -->
+        <h2 style="text-align: center; margin-bottom: 1rem;">Modo Examen</h2>
+
+        <!-- Mensajes de carga y resultado -->
+        <div *ngIf="cargandoPregunta">Cargando pregunta...</div>
+        <div *ngIf="resultado" style="text-align: center; margin-bottom: 1rem;">
+          <p>{{ resultado }}</p>
+        </div>
+
+        <!-- Opciones de respuesta (4) -->
+        <!-- Reutilizamos la clase .word-list para que se vean en 2 columnas, o la adaptas como prefieras -->
+        <div class="word-list" *ngIf="opciones && !cargandoPregunta">
+          <div 
+            class="word-item" 
+            *ngFor="let opcion of opciones" 
+            (click)="seleccionarOpcion(opcion._id)">
+            {{ opcion.palabra }}
+          </div>
+        </div>
+
+        <!-- Botón para cargar una nueva pregunta manualmente (opcional) -->
+        <div style="margin-top: 2rem; display: flex; justify-content: center;">
+          <button class="small-webcam-btn" (click)="cargarNuevaPregunta()">
+            Nueva Pregunta
+          </button>
+        </div>
+
+      </div><!-- fin right-panel -->
+
+    </div><!-- fin layout -->
+  </div><!-- fin content -->
+</div><!-- fin container -->

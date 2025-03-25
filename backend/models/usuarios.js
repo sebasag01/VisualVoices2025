@@ -63,6 +63,16 @@ const UsuarioSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'Palabra',
       }],
+    statsExamen: {
+        correctas: {
+          type: Number,
+          default: 0
+        },
+        incorrectas: {
+          type: Number,
+          default: 0
+        }
+    },
 
 }, { collection: 'usuarios' });
 

@@ -30,7 +30,7 @@ const MODES = [
     icon: 'assets/retate.png',
     name: 'RÉTATE',
     description: 'poniendo a prueba tus conocimientos',
-    route: '/modos',
+    route: '/examen',
   },
 ];
 
