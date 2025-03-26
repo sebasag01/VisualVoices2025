@@ -182,26 +182,42 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   }
 
   private reproducirAnimacionSecuencial(loop: boolean): void {
-    // Just in case, paramos algo previo
+    // Detener cualquier animación previa
     this.stopLoop(false);
-
+    
     let index = 0;
     this.poseInterval = setInterval(() => {
       const currentPose = this.poses[index];
+    
       if (this.avatar) {
-        // Limpiamos al avatar y ponemos la pose actual
-        this.avatar.clear();
-        currentPose.children.forEach((child) => {
-          this.avatar?.add(child.clone());
+        this.avatar!.clear();
+        currentPose.children.forEach(child => {
+          this.avatar!.add(child.clone());
         });
       } else {
-        // Primera vez => creamos el avatar
+        // Primera vez: crear el avatar
         this.avatar = currentPose.clone();
+  
+        // Aplicar transformaciones de forma consistente:
+        // 1. Resetear la posición
+        this.avatar.position.set(0, 0, 0);
+  
+        // 2. Calcular el centro y restarlo para centrar el avatar
+        const box = new THREE.Box3().setFromObject(this.avatar);
+        const center = box.getCenter(new THREE.Vector3());
+        this.avatar.position.sub(center);
+  
+        // 3. Aplicar una escala fija
+        this.avatar.scale.set(1.5, 1.5, 1.5);
+  
+        // 4. Aplicar un offset vertical fijo (por ejemplo, bajar 1.1 unidades)
+        this.avatar.position.y -= 1.1;
+  
+        // Agregar a la escena
         this.scene.add(this.avatar);
       }
-
+    
       index++;
-      // Si llegamos al final
       if (index >= this.poses.length) {
         if (loop) {
           index = 0; // Repetir desde la primera
@@ -211,8 +227,10 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
           console.log('Animación completada (una sola vez).');
         }
       }
-    }, 120); // Intervalo (ms) entre poses
+    }, 120);
   }
+  
+  
 
   /**
    * Detener la animación secuencial actual.

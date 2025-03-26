@@ -1,12 +1,10 @@
-// modo-examen.component.ts
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { ExamenService } from '../services/examen.service';
 import { UsuariosService } from '../services/usuarios.service';
-import { AnimacionService } from '../services/animacion.service'; // <-- Import
-
+import { AnimacionService } from '../services/animacion.service';
 
 import { HeaderComponent } from '../header/header.component';
 import { CanvasComponent } from '../canvas/canvas.component';
@@ -19,9 +17,9 @@ import { environment } from '../../environments/environment';
   selector: 'app-modo-examen',
   standalone: true,
   imports: [
-    CommonModule,      // Para directivas como *ngIf, *ngFor, [ngClass], etc.
-    HeaderComponent,   // Para <app-header>
-    CanvasComponent,   // Para <app-canvas>
+    CommonModule,
+    HeaderComponent,
+    CanvasComponent,
     FormsModule,
   ],
   templateUrl: './modo-examen.component.html',
@@ -39,7 +37,7 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   cargandoPregunta: boolean = false;
 
   showWebcam: boolean = false;
-  //toolMenuOpen: boolean = false;
+  selectedOptionId: string = ''; // Nueva propiedad para almacenar la opción seleccionada
 
   constructor(
     private examenService: ExamenService,
@@ -62,6 +60,7 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   cargarNuevaPregunta(): void {
     this.cargandoPregunta = true;
     this.resultado = '';
+    this.selectedOptionId = ''; // Reiniciamos la opción seleccionada
 
     this.examenService.generarPregunta().subscribe({
       next: (resp) => {
@@ -73,10 +72,7 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
 
         // Si deseas cargar las animaciones en CanvasComponent
         if (this.canvasRef) {
-          // Parar cualquier animación previa
           this.canvasRef.stopLoop(false);
-
-          // Preparar URLs
           const animacionesUrls = this.animaciones.map(a =>
             `${environment.apiUrl}/gltf/animaciones/${a.filename}`
           );
@@ -94,12 +90,12 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   // EXAMEN: Seleccionar opción
   // ==========================================================
   seleccionarOpcion(opcionId: string): void {
+    this.selectedOptionId = opcionId; // Se guarda la opción seleccionada
     this.examenService.verificarRespuesta(this.questionId, opcionId).subscribe({
       next: (resp) => {
         const esCorrecta = resp.esCorrecta;
         this.resultado = esCorrecta ? '¡Respuesta correcta!' : 'Respuesta incorrecta';
-        // Si quieres cargar otra pregunta automáticamente:
-        // setTimeout(() => this.cargarNuevaPregunta(), 2000);
+        // Si se desea, se podría reiniciar la selección o cargar otra pregunta tras un tiempo
       },
       error: (err) => {
         console.error('Error al verificar respuesta:', err);
@@ -113,39 +109,31 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   onRadioChange(event: Event): void {
     const valor = (event.target as HTMLInputElement).value;
     
-    // Prepara las URLs
     const animacionesUrls = this.animaciones.map(a =>
       `${environment.apiUrl}/gltf/animaciones/${a.filename}`
     );
   
     switch (valor) {
       case 'play':
-        // Reproducir animación una sola vez
         this.animacionService.cargarAnimaciones(animacionesUrls, true, false);
         break;
-  
       case 'play2':
-        // Reproducir en bucle
         this.animacionService.cargarAnimaciones(animacionesUrls, true, true);
         break;
-  
       case 'stop':
         if (this.canvasRef) {
           this.canvasRef.stopLoop(true);
         }
         break;
-  
       case 'webcam':
         this.toggleWebcam();
         break;
-  
       case 'veloc':
         console.log('Cambiar velocidad (demo)');
         break;
     }
   }
   
-
   // ==========================================================
   // WEBCAM
   // ==========================================================
@@ -185,8 +173,6 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
       this.router.navigate(['/perfil']);
     } else if (destination === 'ajustes') {
       this.router.navigate(['/ajustes']);
-    } else {
-      // ...
     }
   }
 

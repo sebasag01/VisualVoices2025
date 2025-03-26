@@ -71,21 +71,29 @@
         </div>
 
         <!-- Título del modo examen -->
-        <h2 style="text-align: center; margin-bottom: 1rem;">Modo Examen</h2>
+        <h2 style="text-align: center; margin-bottom: 1rem;">¡¡Ponte a prueba!!</h2>
 
         <!-- Mensajes de carga y resultado -->
+        <!-- Mensajes de carga y resultado -->
         <div *ngIf="cargandoPregunta">Cargando pregunta...</div>
-        <div *ngIf="resultado" style="text-align: center; margin-bottom: 1rem;">
-          <p>{{ resultado }}</p>
+        <div *ngIf="resultado" class="resultado" 
+            [ngClass]="{'resultado-correcto': resultado==='¡Respuesta correcta!', 'resultado-incorrecto': resultado==='Respuesta incorrecta'}">
+          <p>
+            <i *ngIf="resultado==='¡Respuesta correcta!'" class="fa-solid fa-circle-check icon-correct"></i>
+            <i *ngIf="resultado==='Respuesta incorrecta'" class="fa-solid fa-circle-xmark icon-incorrect"></i>
+            {{ resultado }}
+          </p>
         </div>
 
+
         <!-- Opciones de respuesta (4) -->
-        <!-- Reutilizamos la clase .word-list para que se vean en 2 columnas, o la adaptas como prefieras -->
+        <!-- Se añade [ngClass] para marcar la opción seleccionada -->
         <div class="word-list" *ngIf="opciones && !cargandoPregunta">
           <div 
             class="word-item" 
             *ngFor="let opcion of opciones" 
-            (click)="seleccionarOpcion(opcion._id)">
+            (click)="seleccionarOpcion(opcion._id)"
+            [ngClass]="{'selected-word': opcion._id === selectedOptionId}">
             {{ opcion.palabra }}
           </div>
         </div>

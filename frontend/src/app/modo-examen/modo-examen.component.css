@@ -1048,3 +1048,72 @@
   filter: drop-shadow(0 0 5px #cae2fd);
 }
 
+/* Estilos para el feedback del resultado */
+.resultado {
+  text-align: center;
+  margin-bottom: 1rem;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.resultado-correcto {
+  background-color: rgba(0, 255, 0, 0.2);
+  border: 2px solid green;
+}
+
+.resultado-incorrecto {
+  background-color: rgba(255, 0, 0, 0.2);
+  border: 2px solid red;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Estilos para iconos de feedback más llamativos */
+.icon-correct {
+  color: #28a745;             /* Verde brillante */
+  font-size: 2rem;            /* Tamaño grande */
+  animation: pop 0.5s ease-out;
+  text-shadow: 0 0 10px rgba(40, 167, 69, 0.7);
+}
+
+.icon-incorrect {
+  color: #dc3545;             /* Rojo vibrante */
+  font-size: 2rem;
+  animation: shake 0.5s ease;
+  text-shadow: 0 0 10px rgba(220, 53, 69, 0.7);
+}
+
+/* Animación para el icono correcto */
+@keyframes pop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Animación para el icono incorrecto */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
