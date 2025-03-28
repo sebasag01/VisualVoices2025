@@ -36,6 +36,8 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   resultado: string = '';
   cargandoPregunta: boolean = false;
 
+  selectedTool: string = '';
+
   showWebcam: boolean = false;
   selectedOptionId: string = ''; // Nueva propiedad para almacenar la opción seleccionada
 
@@ -106,14 +108,44 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   // ==========================================================
   // MENÚ DE BOTONES (radio buttons) => play / loop / stop / webcam / veloc
   // ==========================================================
+  
   onRadioChange(event: Event): void {
-    const valor = (event.target as HTMLInputElement).value;
+    const input = event.target as HTMLInputElement;
+    const valor = input.value;
     
     const animacionesUrls = this.animaciones.map(a =>
       `${environment.apiUrl}/gltf/animaciones/${a.filename}`
     );
-  
+
     switch (valor) {
+      case 'play':
+        // Forzar reproducción de animación incluso si ya está seleccionado
+        this.animacionService.cargarAnimaciones(animacionesUrls, true, false);
+        break;
+      case 'play2':
+        this.animacionService.cargarAnimaciones(animacionesUrls, true, true);
+        break;
+      case 'stop':
+        if (this.canvasRef) {
+          this.canvasRef.stopLoop(true);
+        }
+        break;
+      case 'webcam':
+        this.toggleWebcam();
+        break;
+      case 'veloc':
+        console.log('Cambiar velocidad (demo)');
+        break;
+    }
+  }
+  
+/*
+  onRadioClick(tool: string): void {
+    const animacionesUrls = this.animaciones.map(a =>
+      `${environment.apiUrl}/gltf/animaciones/${a.filename}`
+    );
+  
+    switch (tool) {
       case 'play':
         this.animacionService.cargarAnimaciones(animacionesUrls, true, false);
         break;
@@ -134,6 +166,7 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
     }
   }
   
+  */
   // ==========================================================
   // WEBCAM
   // ==========================================================

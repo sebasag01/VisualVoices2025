@@ -214,6 +214,7 @@
     color: black;
     text-decoration: none;
     transition: transform 0.2s ease;
+    cursor: pointer;
   }
   .icon-menu-fixed a:hover {
     transform: scale(1.1);
@@ -1116,4 +1117,25 @@
   75% { transform: translateX(-5px); }
   100% { transform: translateX(0); }
 }
+
+/* En modo-examen.component.css */
+.label.selected {
+  background-color: #e0e0e0; /* Color de fondo para indicar selección */
+  border: 2px solid #666; /* Borde para resaltar */
+}
+
+.exam-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-family: 'ChauPhilomene', sans-serif;
+  font-size: 2.5rem;
+  color: #332339; /* Texto en púrpura */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  /*background: linear-gradient(45deg, #d2b4de, #af7ac5); /* Degradado púrpura */
+  padding: 10px 20px;
+  border-radius: 10px;
+  /*border: 2px solid #8e44ad;*/
+  display: inline-block;
+}
+
 

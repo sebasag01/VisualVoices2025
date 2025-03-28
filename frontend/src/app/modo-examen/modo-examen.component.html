@@ -12,12 +12,12 @@
         <!-- Menú de herramientas (Radio Buttons) -->
         <div class="radio-input open" (change)="onRadioChange($event)">
             <!-- Play -->
-          <label class="label label-play">
-            <input type="radio" id="play" name="value-radio" value="play" />
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <path d="M96 52v408l320-204-320-204z" />
-            </svg>
-          </label>
+            <label class="label label-play" [class.selected]="selectedTool === 'play'">
+              <input type="radio" id="play" name="value-radio" value="play" />
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path d="M96 52v408l320-204-320-204z" />
+              </svg>
+            </label>
 
           <!-- Play2 + Stop anidado -->
           <label class="label label-play2">
@@ -71,8 +71,11 @@
         </div>
 
         <!-- Título del modo examen -->
-        <h2 style="text-align: center; margin-bottom: 1rem;">¡¡Ponte a prueba!!</h2>
-
+        <h2 class="exam-title">
+          <i class="fa-solid fa-bolt" style="margin-right: 10px;"></i>
+          ¡¡Ponte a prueba!!
+        </h2>
+        
         <!-- Mensajes de carga y resultado -->
         <!-- Mensajes de carga y resultado -->
         <div *ngIf="cargandoPregunta">Cargando pregunta...</div>

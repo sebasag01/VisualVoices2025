@@ -214,6 +214,7 @@
     color: black;
     text-decoration: none;
     transition: transform 0.2s ease;
+    cursor: pointer;
   }
   .icon-menu-fixed a:hover {
     transform: scale(1.1);
