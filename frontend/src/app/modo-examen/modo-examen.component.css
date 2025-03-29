@@ -1052,6 +1052,7 @@
 /* Estilos para el feedback del resultado */
 .resultado {
   text-align: center;
+  margin-top: 1rem; /* Espacio adicional arriba */
   margin-bottom: 1rem;
   padding: 10px;
   border-radius: 8px;
@@ -1136,6 +1137,28 @@
   border-radius: 10px;
   /*border: 2px solid #8e44ad;*/
   display: inline-block;
+}
+
+/* Clases para marcar la opción en verde o rojo */
+.correct-answer {
+  background: green !important;
+  border: 2px solid darkgreen !important;
+  color: white !important;
+}
+
+.wrong-answer {
+  background: red !important;
+  border: 2px solid darkred !important;
+  color: white !important;
+}
+
+/* Nuevo estilo para el enunciado general debajo del título */
+.enunciado-general {
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-family: 'lexend';
+  color: #332339;
 }
 
 

@@ -39,7 +39,8 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   selectedTool: string = '';
 
   showWebcam: boolean = false;
-  selectedOptionId: string = ''; // Nueva propiedad para almacenar la opción seleccionada
+  // Eliminamos selectedOptionId y usamos optionStatus para almacenar el estado de cada opción:
+  optionStatus: { [key: string]: 'correct' | 'incorrect' } = {};
 
   constructor(
     private examenService: ExamenService,
@@ -62,7 +63,7 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   cargarNuevaPregunta(): void {
     this.cargandoPregunta = true;
     this.resultado = '';
-    this.selectedOptionId = ''; // Reiniciamos la opción seleccionada
+    this.optionStatus = {}; // Reiniciamos el estado de las opciones
 
     this.examenService.generarPregunta().subscribe({
       next: (resp) => {
@@ -72,7 +73,6 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
         this.opciones = resp.opciones;
         this.cargandoPregunta = false;
 
-        // Si deseas cargar las animaciones en CanvasComponent
         if (this.canvasRef) {
           this.canvasRef.stopLoop(false);
           const animacionesUrls = this.animaciones.map(a =>
@@ -92,12 +92,11 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   // EXAMEN: Seleccionar opción
   // ==========================================================
   seleccionarOpcion(opcionId: string): void {
-    this.selectedOptionId = opcionId; // Se guarda la opción seleccionada
     this.examenService.verificarRespuesta(this.questionId, opcionId).subscribe({
       next: (resp) => {
-        const esCorrecta = resp.esCorrecta;
-        this.resultado = esCorrecta ? '¡Respuesta correcta!' : 'Respuesta incorrecta';
-        // Si se desea, se podría reiniciar la selección o cargar otra pregunta tras un tiempo
+        // Actualizamos el estado de la opción clicada según si es correcta o no
+        this.optionStatus[opcionId] = resp.esCorrecta ? 'correct' : 'incorrect';
+        this.resultado = resp.esCorrecta ? '¡Respuesta correcta!' : 'Respuesta incorrecta';
       },
       error: (err) => {
         console.error('Error al verificar respuesta:', err);
@@ -108,7 +107,6 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   // ==========================================================
   // MENÚ DE BOTONES (radio buttons) => play / loop / stop / webcam / veloc
   // ==========================================================
-  
   onRadioChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     const valor = input.value;
@@ -119,7 +117,6 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
 
     switch (valor) {
       case 'play':
-        // Forzar reproducción de animación incluso si ya está seleccionado
         this.animacionService.cargarAnimaciones(animacionesUrls, true, false);
         break;
       case 'play2':
@@ -139,34 +136,6 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
     }
   }
   
-/*
-  onRadioClick(tool: string): void {
-    const animacionesUrls = this.animaciones.map(a =>
-      `${environment.apiUrl}/gltf/animaciones/${a.filename}`
-    );
-  
-    switch (tool) {
-      case 'play':
-        this.animacionService.cargarAnimaciones(animacionesUrls, true, false);
-        break;
-      case 'play2':
-        this.animacionService.cargarAnimaciones(animacionesUrls, true, true);
-        break;
-      case 'stop':
-        if (this.canvasRef) {
-          this.canvasRef.stopLoop(true);
-        }
-        break;
-      case 'webcam':
-        this.toggleWebcam();
-        break;
-      case 'veloc':
-        console.log('Cambiar velocidad (demo)');
-        break;
-    }
-  }
-  
-  */
   // ==========================================================
   // WEBCAM
   // ==========================================================
