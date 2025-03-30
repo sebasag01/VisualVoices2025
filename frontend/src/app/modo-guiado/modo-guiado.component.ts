@@ -31,6 +31,9 @@ import introJs from 'intro.js';
   styleUrls: ['./modo-guiado.component.css'],
 })
 export class ModoGuiadoComponent implements OnInit {
+
+  @ViewChild(CanvasComponent) canvasRef!: CanvasComponent;
+
   // Propiedades específicas del modo guiado
   words: any[] = [];
   currentIndex = 0;
@@ -39,7 +42,6 @@ export class ModoGuiadoComponent implements OnInit {
   maxUnlockedLevel = 1;
   availableLevels = [1, 2, 3];
   totalLevels: number = 4;
-
 
   // Usuario, estadisticas, etc.
   userId: string = '';
@@ -58,8 +60,6 @@ export class ModoGuiadoComponent implements OnInit {
 
   isLoading = false; //Para el estado de carga
 
-
-
   // Cámara
   @ViewChild('videoElement', { static: false }) videoElement!: ElementRef;
   showWebcam = false;
@@ -77,7 +77,7 @@ export class ModoGuiadoComponent implements OnInit {
   ngOnInit(): void {
     // 1) Cargar categoría si lo necesitas en guiado (no siempre es necesario)
     this.cargarCategorias();
-  
+
     // 2) Obtener usuario, nivelActual e índice actual
     this.usuariosService.getAuthenticatedUser().subscribe({
       next: (resp) => {
@@ -86,12 +86,11 @@ export class ModoGuiadoComponent implements OnInit {
         this.nivelActual = resp.usuario.currentLevel || 1;
         this.maxUnlockedLevel = resp.usuario.maxUnlockedLevel || 1;
         this.currentIndex = resp.usuario.currentWordIndex || 0;
-        
+
         console.log(`VALORES INICIALES - Nivel actual: ${this.nivelActual}, Nivel máximo: ${this.maxUnlockedLevel}`);
-  
+
         this.availableLevels = Array.from({ length: this.totalLevels }, (_, i) => i + 1);
 
-        
         // Cargar las palabras de este nivel
         this.cargarPalabrasPorNivel(this.nivelActual);
       },
@@ -144,10 +143,8 @@ export class ModoGuiadoComponent implements OnInit {
   seleccionarPalabra(palabra: any): void {
     if (palabra.animaciones && palabra.animaciones.length > 0) {
       const animacionesUrls = palabra.animaciones.map(
-        (animacion: any) =>
-          `${environment.apiUrl}/gltf/animaciones/${animacion.filename}`
+        (animacion: any) => `${environment.apiUrl}/gltf/animaciones/${animacion.filename}`
       );
-
       this.animacionService.cargarAnimaciones(animacionesUrls, true);
     } else {
       console.warn('No hay animaciones asociadas a esta palabra.');
@@ -250,6 +247,16 @@ export class ModoGuiadoComponent implements OnInit {
 
   // 7. Navegar a la palabra anterior
   prevWord() {
+    // Parar animación actual
+this.canvasRef?.stopLoop(true);
+
+// Desmarcar Play y Loop
+const playRadio = document.getElementById('play') as HTMLInputElement;
+if (playRadio) playRadio.checked = false;
+this.isLooping = false;
+const loopCheckbox = document.getElementById('toggleLoop') as HTMLInputElement;
+if (loopCheckbox) loopCheckbox.checked = false;
+
     if (this.currentIndex > 0) {
       this.currentIndex--;
       this.usuariosService
@@ -267,36 +274,45 @@ export class ModoGuiadoComponent implements OnInit {
   }
 
   // 8. Navegar a la siguiente palabra
-  // 8. Navegar a la siguiente palabra
-nextWord() {
-  // Si NO estamos en la última palabra
-  if (this.currentIndex < this.words.length - 1) {
-    this.currentIndex++;
-    // Actualizamos el índice en la BD
-    this.usuariosService
+  nextWord() {
+    // Parar animación actual
+this.canvasRef?.stopLoop(true);
+
+// Desmarcar Play y Loop
+const playRadio = document.getElementById('play') as HTMLInputElement;
+if (playRadio) playRadio.checked = false;
+this.isLooping = false;
+const loopCheckbox = document.getElementById('toggleLoop') as HTMLInputElement;
+if (loopCheckbox) loopCheckbox.checked = false;
+
+    // Si NO estamos en la última palabra
+    if (this.currentIndex < this.words.length - 1) {
+      this.currentIndex++;
+      // Actualizamos el índice en la BD
+      this.usuariosService
         .updateUserWordIndex(this.userId, this.currentIndex)
         .subscribe({
-        next: (resp: any) => {
-          console.log(
+          next: (resp: any) => {
+            console.log(
               'Índice actualizado en BD:',
               resp.usuario?.currentWordIndex
             );
-  
-        // Actualizar lastWordLearned con la palabra que acabamos de “terminar”
-        // O con la palabra en la que acabamos de entrar, según tu lógica.
-        const lastLearned = this.words[this.currentIndex-1].palabra; 
-        this.usuariosService
-          .updateUserLastWordLearned(this.userId, lastLearned)
-          .subscribe({
-            next: () => console.log('Última palabra actualizada en el usuario'),
-            error: (err: any) => console.error('Error actualizando última palabra:', err)
-          });
-      },
-        error: (err: any) => console.error('Error actualizando índice:', err),
-      });
-  }
-}
 
+            // Actualizar lastWordLearned 
+            const lastLearned = this.words[this.currentIndex - 1].palabra; 
+            this.usuariosService
+              .updateUserLastWordLearned(this.userId, lastLearned)
+              .subscribe({
+                next: () =>
+                  console.log('Última palabra actualizada en el usuario'),
+                error: (err: any) =>
+                  console.error('Error actualizando última palabra:', err),
+              });
+          },
+          error: (err: any) => console.error('Error actualizando índice:', err),
+        });
+    }
+  }
 
   // 9. Saber si estamos en la última palabra
   isLastWord(): boolean {
@@ -305,21 +321,19 @@ nextWord() {
 
   // 10. Avanzar de nivel
   advanceLevel() {
-    // const ultimaPalabraDelNivel = this.words[this.words.length - 1].palabra;
-    // const textoNivel = `Lección ${this.nivelActual}`;
-    // const ultimaPalabraTexto = `${ultimaPalabraDelNivel} `;
-    
     if (this.words.length > 0) {
       const ultimaPalabraDelNivel = this.words[this.words.length - 1].palabra;
-      this.usuariosService.updateUserLastWordLearned(this.userId, ultimaPalabraDelNivel)
-      .subscribe({
+      this.usuariosService
+        .updateUserLastWordLearned(this.userId, ultimaPalabraDelNivel)
+        .subscribe({
           next: () => console.log('Última palabra del nivel anterior guardada'),
-          error: (err: any) => console.error('Error guardando la última palabra:', err)
+          error: (err: any) =>
+            console.error('Error guardando la última palabra:', err),
         });
     }
-  
+
     const newLevel = this.nivelActual + 1;
-  
+
     // Cerrar la sesión de stats actual (ya existente)
     if (this.currentStatsId) {
       this.statsService.endLevel(this.currentStatsId).subscribe({
@@ -330,43 +344,43 @@ nextWord() {
       });
       this.currentStatsId = null;
     }
-  
+
     // Guardamos el valor actual de maxUnlockedLevel antes de la actualización
     const currentMaxLevel = this.maxUnlockedLevel;
-    
+
     // Actualizar nivel en la base de datos
     this.usuariosService.updateUserLevel(this.userId, newLevel).subscribe({
       next: (resp) => {
         console.log('Respuesta completa del servidor:', resp);
         console.log('Nivel actualizado en el servidor:', resp.usuario.currentLevel);
         console.log('Nivel máximo del servidor:', resp.usuario.maxUnlockedLevel);
-        
+
         // Actualizamos nivel actual
         this.nivelActual = resp.usuario.currentLevel;
-        
+
         // IMPORTANTE: Siempre mantenemos el valor más alto entre lo que teníamos y lo que viene del servidor
         this.maxUnlockedLevel = Math.max(currentMaxLevel, resp.usuario.maxUnlockedLevel || 1);
         console.log(`Nivel máximo final: ${this.maxUnlockedLevel}`);
-        
+
         // También aseguramos que el maxUnlockedLevel sea al menos igual al nivel actual
         this.maxUnlockedLevel = Math.max(this.maxUnlockedLevel, this.nivelActual);
         console.log(`Nivel máximo ajustado: ${this.maxUnlockedLevel}`);
-        
+
         this.availableLevels = Array.from({ length: this.totalLevels }, (_, i) => i + 1);
         console.log('Niveles disponibles actualizados:', this.availableLevels);
-  
+
         // Resetear índice a 0 y actualizar palabras
         this.currentIndex = 0;
         this.usuariosService.updateUserWordIndex(this.userId, 0).subscribe({
           next: () => console.log('Índice reseteado a 0'),
           error: (err) => console.error('Error reseteando índice:', err),
         });
-        
+
         // Mostrar pantalla de bienvenida y recargar palabras
         this.showWelcome = true;
         this.showChooseLevel = false;
         this.cargarPalabrasPorNivel(this.nivelActual);
-  
+
         // Iniciar nueva sesión de stats para el nuevo nivel
         this.statsService.startLevel(this.userId, this.nivelActual, 'guiado').subscribe({
           next: (resp2) => {
@@ -387,7 +401,6 @@ nextWord() {
     this.showChooseLevel = true;
   }
 
-  // In your onLevelSelected method, add a CSS class to trigger animation
   onLevelSelected(level: number) {
     const cardElement = document.querySelector('.modo-guiado app-card');
     if (cardElement) {
@@ -395,7 +408,7 @@ nextWord() {
       void (cardElement as HTMLElement).offsetWidth;
       cardElement.classList.add('fade-out');
     }
-    
+
     setTimeout(() => {
       if (this.currentStatsId) {
         this.statsService.endLevel(this.currentStatsId).subscribe({
@@ -404,16 +417,13 @@ nextWord() {
         });
         this.currentStatsId = null;
       }
-      
-      // Actualiza el nivel; el backend preserva maxUnlockedLevel si el nuevo nivel es menor
+
       this.nivelActual = level;
       this.usuariosService.updateUserLevel(this.userId, level).subscribe({
         next: (resp) => {
           console.log('Nivel actualizado en el servidor:', resp.usuario.currentLevel);
-          // Actualiza ambos valores
           this.nivelActual = resp.usuario.currentLevel;
           this.maxUnlockedLevel = resp.usuario.maxUnlockedLevel;
-          // Genera los niveles disponibles según maxUnlockedLevel
           this.availableLevels = Array.from({ length: this.totalLevels }, (_, i) => i + 1);
         },
         error: (err) => console.error('Error actualizando nivel:', err),
@@ -423,9 +433,9 @@ nextWord() {
         next: () => console.log('Reinicio a la primera palabra'),
         error: (err) => console.error('Error reiniciando índice:', err),
       });
-      
+
       this.cargarPalabrasPorNivel(level);
-      
+
       this.statsService.startLevel(this.userId, level, 'guiado').subscribe({
         next: (resp) => {
           this.currentStatsId = resp.statsId;
@@ -436,16 +446,13 @@ nextWord() {
             cardElement.classList.add('fade-in');
           }
         },
-        error: (err) => console.error('Error iniciando stats:', err)
+        error: (err) => console.error('Error iniciando stats:', err),
       });
-      
+
       this.showWelcome = false;
       this.showChooseLevel = false;
     }, 300);
   }
-  
-  
-  
 
   // Getter opcional para el porcentaje de avance
   get progressPercent(): number {
@@ -493,7 +500,6 @@ nextWord() {
   }
 
   startWebcam() {
-    // Verificar que el elemento existe
     if (!this.videoElement) {
       console.error('Elemento de video no encontrado');
       return;
@@ -513,7 +519,6 @@ nextWord() {
   }
 
   stopWebcam() {
-    // Verificar que el elemento existe
     if (!this.videoElement || !this.videoElement.nativeElement) {
       return;
     }
@@ -526,14 +531,13 @@ nextWord() {
     }
     video.srcObject = null;
   }
+
   //cerrar sesion
   logout(): void {
     console.log('[DEBUG] Cerrando sesión desde Modo Libre...');
     this.usuariosService.logout().subscribe({
       next: (response) => {
         console.log('[DEBUG] Respuesta del logout:', response);
-        // Aquí puedes limpiar datos locales si lo necesitas
-        // Por ejemplo, this.usuario = null; si lo tuvieras
         this.router.navigate(['/landing']);
       },
       error: (error) => {
@@ -545,5 +549,98 @@ nextWord() {
 
   volverAModos(): void {
     this.router.navigate(['/modos']);
+  }
+
+  /* =======================================================
+     NUEVAS PROPIEDADES Y MÉTODOS PARA LA BARRA DE HERRAMIENTAS
+     ======================================================= */
+  // Controla si estamos en loop
+  isLooping = false;
+
+  // Controla si el menú de herramientas se abre
+  toolMenuOpen = false;
+
+  // onRadioChange = se dispara al hacer clic en play/webcam/veloc
+  onRadioChange(event: Event) {
+    const valor = (event.target as HTMLInputElement).value;
+
+    // Si no hay palabra en la posición actual, solo permitimos la webcam
+    if (!this.words[this.currentIndex] && valor !== 'webcam') {
+      alert('Primero asegúrate de tener una palabra en pantalla.');
+      return;
+    }
+
+    switch (valor) {
+      case 'play':
+        // Reproducir 1 sola vez
+        this.reproducirAnimacion(false);
+        break;
+      case 'webcam':
+        this.toggleWebcam();
+        break;
+      case 'veloc':
+        this.cambiarVelocidad();
+        break;
+    }
+  }
+
+  // Toggle loop (bucle)
+  onToggleLoop(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (!this.words[this.currentIndex]) {
+      alert('No hay palabra para animar. Selecciona una palabra primero.');
+      (event.target as HTMLInputElement).checked = false;
+      return;
+    }
+
+    if (checked) {
+      this.isLooping = true;
+      this.reproducirAnimacion(true);
+    } else {
+      this.isLooping = false;
+      if (this.animacionService) {
+        // Parar la animación (y volver a pose inicial)
+        this.canvasRef?.stopLoop(true);
+      }
+    }
+  }
+
+  // Reproducir animación: adaptamos la “palabra actual”
+  private reproducirAnimacion(loop: boolean) {
+    const currentWord = this.words[this.currentIndex];
+    if (!currentWord) return;
+
+    if (currentWord.animaciones?.length > 0) {
+      const animacionesUrls = currentWord.animaciones.map((anim: any) =>
+        `${environment.apiUrl}/gltf/animaciones/${anim.filename}`
+      );
+
+      // Llamamos a animacionService
+      this.animacionService.cargarAnimaciones(animacionesUrls, true, loop);
+
+      // (opcional) Marcar como explorada
+      this.usuariosService.explorarPalabraLibre(this.userId, currentWord._id).subscribe({
+        next: (resp) => {
+          console.log('Palabra explorada (modo guiado). totalExploradas:', resp.totalExploradas);
+          this.exploredWordsService.setExploredCount(resp.totalExploradas);
+        },
+        error: (err) => console.error('Error al marcar explorada:', err),
+      });
+
+      if (!loop && this.canvasRef?.animationEnded) {
+        this.canvasRef.animationEnded.subscribe(() => {
+          const playRadio = document.getElementById('play') as HTMLInputElement;
+          if (playRadio) playRadio.checked = false;
+        });
+      }
+      
+
+    } else {
+      console.warn('No hay animaciones en la palabra actual');
+    }
+  }
+
+  private cambiarVelocidad() {
+    console.log('[DEBUG] cambiarVelocidad en modo guiado (demo).');
   }
 }

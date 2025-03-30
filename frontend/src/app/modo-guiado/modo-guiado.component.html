@@ -3,46 +3,88 @@
 <div class="container">
   <div class="content">
     <div class="layout">
-      <div
-        class="image-container"
-        id="avatar-element"
-        [ngClass]="{ 'half-width': showWebcam }"
-      >
+      <div class="image-container" id="avatar-element" [ngClass]="{ 'half-width': showWebcam }">
         <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
-      
 
-       <!-- Botones que solo se mostrarán cuando la cámara esté activa -->
-       <div class="buttons-container" *ngIf="showWebcam">
-        <!-- Botón para la palabra -->
-        <div
-          *ngIf="modo === 'guiado'"
-          class="current-word"
-          (click)="handleWordClick()"
+        <!-- BARRA DE HERRAMIENTAS (radio-buttons) => solo se muestra si hay palabras -->
+        <div 
+          class="radio-input" 
+          [class.open]="toolMenuOpen" 
+          (change)="onRadioChange($event)"
+          *ngIf="words && words.length > 0 && !showWelcome"
         >
-          <p>{{ currentWord }}</p>
-        </div>
+          <!-- Play -->
+          <label class="label label-play">
+            <input type="radio" id="play" name="value-radio" value="play" />
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path d="M96 52v408l320-204-320-204z" />
+            </svg>
+          </label>
 
-        <!-- Botón para desactivar la webcam -->
-        <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
-          Desactivar Webcam
-        </button>
+          <!-- Toggle de “bucle”/”stop” -->
+          <label class="label label-play2">
+            <input
+              type="checkbox"
+              id="toggleLoop"
+              (change)="onToggleLoop($event)"
+            />
+
+            <!-- Icono bucle cuando NO estamos en loop -->
+            <img
+              *ngIf="!isLooping"
+              class="icon-play2"
+              src="assets/play-bucle.svg"
+              alt="Play2"
+            />
+
+            <!-- Icono STOP cuando SÍ estamos en loop -->
+            <svg
+              *ngIf="isLooping"
+              class="icon-stop"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              width="38"
+              height="38"
+            >
+              <path d="M64 64h384v384H64z" />
+            </svg>
+          </label>
+
+          <!-- Webcam -->
+          <label class="label label-webcam">
+            <input type="radio" id="webcam" name="value-radio" value="webcam" />
+            <img class="icon-webcam" src="assets/webcam.svg" alt="Webcam" />
+          </label>
+
+          <!-- Veloc -->
+          <label class="label">
+            <input type="radio" id="veloc" name="value-radio" value="veloc" />
+            <span class="text">Veloc</span>
+          </label>
+        </div>
+        <!-- Fin barra de herramientas -->
+
+
+        <!-- Botones que solo se mostrarán cuando la cámara esté activa -->
+        <div class="buttons-container" *ngIf="showWebcam">
+          <!-- Botón para la palabra -->
+          <div
+            *ngIf="modo === 'guiado'"
+            class="current-word"
+            (click)="handleWordClick()"
+          >
+            <p>{{ currentWord }}</p>
+          </div>
+
+          <!-- Botón para desactivar la webcam -->
+          <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
+            Desactivar Webcam
+          </button>
+        </div>
       </div>
-    </div>
 
       <div class="camera-container" *ngIf="showWebcam">
         <video #videoElement class="mirror-video" autoplay></video>
-
-        <!-- <div
-          *ngIf="modo === 'guiado'"
-          class="current-word"
-          (click)="handleWordClick()"
-        >
-          <p>{{ currentWord }}</p>
-        </div>
-
-        <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
-          Desactivar Webcam
-        </button> -->
       </div>
 
       <div class="button-grid" *ngIf="!showWebcam">

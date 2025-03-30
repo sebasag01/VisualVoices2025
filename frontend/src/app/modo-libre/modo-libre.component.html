@@ -23,35 +23,36 @@
     </label>
 
     <!-- Radio principal PLAY2, con position: relative -->
-    <label class="label label-play2">
-      <!-- Radio para “Play2” -->
-      <input type="radio" id="play2" name="value-radio" value="play2" />
-    
-      
-      <!-- Imagen del "play-bucle.svg" que está en /public => ruta "/play-bucle.svg" -->
-      <img 
-        class="icon-play2" 
-        src="assets/play-bucle.svg" 
-        alt="Play2" 
-      />
-    
-      <!-- STOP superpuesto dentro de Play2 -->
-      <label class="label-stop">
-        <input type="radio" id="stop" name="value-radio" value="stop" />
-    
-        <!-- Icono de stop en SVG -->
-        <svg 
-          class="icon-stop" 
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512" 
-          width="24" 
-          height="24"
-        >
-          <!-- Ejemplo: un cuadrado 64..448 para “stop” -->
-          <path d="M64 64h384v384H64z" />
-        </svg>
-      </label>
-    </label>
+   <!-- Sustituyendo el label-play2 antiguo por un toggle de checkbox -->
+<label class="label label-play2">
+  <!-- Quitar name="value-radio" porque ya no es un radio group -->
+  <input
+    type="checkbox"
+    id="toggleLoop"
+    (change)="onToggleLoop($event)"
+  />
+
+  <!-- Mostrar icono de “bucle” cuando NO estamos en loop -->
+  <img
+    *ngIf="!isLooping"
+    class="icon-play2"
+    src="assets/play-bucle.svg"
+    alt="Play2"
+  />
+
+  <!-- Mostrar icono STOP cuando SÍ estamos en loop -->
+  <svg
+    *ngIf="isLooping"
+    class="icon-stop"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 512 512"
+    width="38"
+    height="38"
+  >
+    <path d="M64 64h384v384H64z" />
+  </svg>
+</label>
+
     
 
 
@@ -92,17 +93,15 @@
         <!-- Aquí va tu contenido habitual del panel derecho -->
         <div class="icon-menu-fixed">
           
-          
-          
-            
-          
-          <a (click)="navigateTo('perfil')" title="Mi Perfil" class="user-icon">
+
+          <a (click)="volverAModos()" title="Modos">
+            <i class="fa-solid fa-home"></i>
+          </a>
+
+          <a (click)="navigateTo('perfil')" title="Mi Perfil">
             <i class="fa-solid fa-user"></i>
           </a>
-          <a (click)="navigateTo('ajustes')" title="Ajustes" class="ajustes-icon">
-            <i class="fa-solid fa-gear"></i>
-          </a>
-          <a (click)="logout()" title="Cerrar Sesión" class="logout-icon">
+          <a (click)="logout()" title="Cerrar Sesión">
             <i class="fa-solid fa-right-from-bracket"></i>
           </a>
         </div>
