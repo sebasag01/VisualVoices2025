@@ -47,6 +47,9 @@ export class ModoLibreComponent implements OnInit, OnDestroy {
   hasClickedWord = false;
   toolMenuOpen = false;
 
+  // Controla si está en loop
+  isLooping = false;
+
   constructor(
     private router: Router,
     private categoriasService: CategoriasService,
@@ -67,7 +70,7 @@ export class ModoLibreComponent implements OnInit, OnDestroy {
 
         this.userId = user.uid;
 
-        // Por ejemplo, iniciar la sesión en modo libre:
+        // Iniciar la sesión en modo libre:
         this.statsService.startMode(user.uid, 'libre').subscribe({
           next: (resp) => {
             this.currentStatsId = resp.statsId;
@@ -102,6 +105,17 @@ export class ModoLibreComponent implements OnInit, OnDestroy {
       this.canvasRef.stopLoop(true); // revertToDefault = true
     }
 
+    // Desmarcar el radio de Play y el checkbox de Loop
+    const playRadio = document.getElementById('play') as HTMLInputElement;
+    if (playRadio) {
+      playRadio.checked = false;
+    }
+    this.isLooping = false;
+    const loopCheckbox = document.getElementById('toggleLoop') as HTMLInputElement;
+    if (loopCheckbox) {
+      loopCheckbox.checked = false;
+    }
+
     // 2) Guardar la palabra
     this.selectedWord = palabra;
 
@@ -113,13 +127,13 @@ export class ModoLibreComponent implements OnInit, OnDestroy {
   }
 
   // **************************************
-  // RADIOS: Play / Play2 / Webcam / Veloc / Stop
+  // RADIOS: Play / Webcam / Veloc
   // **************************************
   onRadioChange(event: Event) {
     const valor = (event.target as HTMLInputElement).value;
 
-    // “stop” no requiere una palabra
-    if (!this.selectedWord && valor !== 'stop') {
+    // Si no hay palabra seleccionada, solo permitimos la webcam
+    if (!this.selectedWord && valor !== 'webcam') {
       alert('Primero selecciona una palabra.');
       return;
     }
@@ -129,22 +143,33 @@ export class ModoLibreComponent implements OnInit, OnDestroy {
         // Reproducir 1 sola vez
         this.reproducirAnimacion(false);
         break;
-      case 'play2':
-        // Reproducir en loop
-        this.reproducirAnimacion(true);
-        break;
       case 'webcam':
         this.toggleWebcam();
         break;
       case 'veloc':
         this.cambiarVelocidad();
         break;
-      case 'stop':
-        // Parar manualmente => pose inicial
-        if (this.canvasRef) {
-          this.canvasRef.stopLoop(true);
-        }
-        break;
+    }
+  }
+
+  // **************************************
+  // Toggle loop/play-bucle
+  // **************************************
+  onToggleLoop(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      if (!this.selectedWord) {
+        alert('Primero selecciona una palabra');
+        (event.target as HTMLInputElement).checked = false;
+        return;
+      }
+      this.isLooping = true;
+      this.reproducirAnimacion(true);
+    } else {
+      this.isLooping = false;
+      if (this.canvasRef) {
+        this.canvasRef.stopLoop(true);
+      }
     }
   }
 
@@ -158,6 +183,22 @@ export class ModoLibreComponent implements OnInit, OnDestroy {
 
       // Llamamos a animacionService con loop
       this.animacionService.cargarAnimaciones(animacionesUrls, true, loop);
+
+      // ----------------------------------------------------
+      // Si NO es loop, deseleccionamos "play" al terminar
+      // (Asumiendo que tu CanvasComponent o animacionService
+      //  tengan alguna forma de avisar cuando la animación
+      //  acaba, por ejemplo "canvasRef.animationEnded.subscribe"
+      //  o un callback. Ajusta a tu caso real.)
+      // ----------------------------------------------------
+      if (!loop && this.canvasRef && this.canvasRef.animationEnded) {
+        this.canvasRef.animationEnded.subscribe(() => {
+          const playRadio = document.getElementById('play') as HTMLInputElement;
+          if (playRadio) {
+            playRadio.checked = false;
+          }
+        });
+      }
 
       // Registrar exploración
       this.usuariosService.explorarPalabraLibre(this.userId, this.selectedWord._id).subscribe({

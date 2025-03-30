@@ -5,8 +5,12 @@
     (animationend)="onAnimationEnd()"
   >
     <ng-container *ngIf="showWelcome; else normalContent">
-      <h2>¡Es hora de jugar!</h2>
-      <p>Completa niveles para avanzar hacia los siguientes</p>
+      <div class="title-container">
+        <h2 class="game-title">¡Es hora de jugar!</h2>
+        <p class="game-subtitle">
+          Completa niveles y avanza hacia los siguientes
+        </p>
+      </div>
 
       <div class="level-buttons-container">
         <button
@@ -16,62 +20,60 @@
           [ngClass]="{ 'disabled-button': lvl > unlockedLevel }"
           class="learn-more"
         >
-          
           <ng-container *ngIf="lvl > unlockedLevel">
             <i class="fa-solid fa-lock"></i> Nivel {{ lvl }}
           </ng-container>
           <ng-container *ngIf="lvl <= unlockedLevel">
             Nivel {{ lvl }}
           </ng-container>
-        
         </button>
       </div>
     </ng-container>
 
-      <!-- <ng-template #secondStep>
-      <ng-container *ngIf="showWelcome && showChooseLevel; else normalContent">
-        <p>Selecciona un nivel:</p>
-        <div *ngFor="let lvl of availableLevels">
-          <button (click)="onLevelSelect(lvl)">Nivel {{ lvl }}</button>
-        </div>
-      </ng-container>
-      </ng-template> -->
+    <ng-template #normalContent>
+      <!-- Contenedor para el botón con la palabra, que se mostrará mucho más arriba -->
+      <!-- <div class="word-button-container">
+        <span class="word-button" (click)="onWordButtonClick()">
+          {{ word || "Cargando..." }}
+        </span>
+      </div> -->
 
-      <ng-template #normalContent>
-        <!-- Contenedor para el botón con la palabra, que se mostrará mucho más arriba -->
-        <div class="word-button-container">
-          <span class="word-button" (click)="onWordButtonClick()">
-            {{ word || "Cargando..." }}
-          </span>
+      <!-- Contenedor para el botón con la palabra -->
+      <div class="word-button-container">
+        <button
+          class="word-button learn-more"
+          (click)="onWordButtonClick()"
+          disabled
+        >
+        <div class="letra-boton">
+          {{ word || "Cargando..." }}
         </div>
+        </button>
+      </div>
 
-        <!-- Explicación dinámica -->
-        <div class="explanation">
-          {{ explanation || "Explicación guiada para cada botón" }}
-        </div>
+      <!-- Explicación dinámica -->
+      <div class="explanation">
+        {{ explanation || "Explicación guiada para cada botón" }}
+      </div>
 
-        <!-- Contenedor para las flechas de navegación, que se mantendrán abajo con separación -->
-        <div class="navigation-arrows">
-          <button class="prev-button" (click)="prevCard()">
+      <!-- Contenedor para las flechas de navegación, que se mantendrán abajo con separación -->
+      <div class="navigation-arrows">
+        <button class="prev-button" (click)="prevCard()">
+          <img src="assets/left-arrow.png" alt="Anterior" class="arrow-icon" />
+        </button>
+        <button class="next-button" (click)="nextCard()">
+          <ng-container *ngIf="nextLabel === 'Siguiente'; else avanzarNivel">
             <img
-              src="assets/left-arrow.png"
-              alt="Anterior"
+              src="assets/right-arrow.png"
+              alt="Siguiente"
               class="arrow-icon"
             />
-          </button>
-          <button class="next-button" (click)="nextCard()">
-            <ng-container *ngIf="nextLabel === 'Siguiente'; else avanzarNivel">
-              <img
-                src="assets/right-arrow.png"
-                alt="Siguiente"
-                class="arrow-icon"
-              />
-            </ng-container>
-            <ng-template #avanzarNivel>
-              {{ nextLabel }}
-            </ng-template>
-          </button>
-        </div>
-      </ng-template>
+          </ng-container>
+          <ng-template #avanzarNivel>
+            {{ nextLabel }}
+          </ng-template>
+        </button>
+      </div>
+    </ng-template>
   </div>
 </div>

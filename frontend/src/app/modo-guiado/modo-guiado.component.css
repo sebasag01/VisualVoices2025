@@ -42,7 +42,8 @@
 
 /* AVATAR */
 .image-container {
-  width: calc(100% - 35vw); /* Toma el 65% del espacio de la pantalla */
+  position: relative;
+  width: calc(100% - 35vw);
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -53,28 +54,25 @@
 
 /* CÁMARA */
 .camera-container {
-  width: 35vw; /* Ocupa el 35% del ancho de la pantalla */
-  height: 100vh; /* Ocupa toda la altura */
+  width: 35vw;
+  height: 100vh;
   display: flex;
-  justify-content: center; /* Centra el video dentro del contenedor */
-  align-items: center; /* Asegura que el video se mantenga bien centrado */
+  justify-content: center;
+  align-items: center;
   background-color: #fff8d4;
 }
 
 /* VIDEO */
 .mirror-video {
-  width: 100%; /* Que ocupe todo el contenedor de la cámara */
-  height: 100%; /* Que ocupe toda la altura */
-  object-fit: cover; /* Se ajusta sin deformarse */
-  transform: scaleX(-1); /* Modo espejo */
-  border: none; /* Sin bordes */
-  border-radius: 0; /* Sin bordes redondeados */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  border: none;
+  border-radius: 0;
 }
 
-
-
 /* PALABRA EN MODO CÁMARA */
-
 .current-word {
   margin-top: 10px;
   background-color: rgba(255, 255, 255, 0.8);
@@ -91,7 +89,6 @@
 } */
 
 /* BOTÓN DESACTIVAR WEBCAM */
-
 .small-disable-webcam-btn {
   margin-top: 10px;
   padding: 5px 10px;
@@ -103,7 +100,6 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
 .small-disable-webcam-btn:hover {
   background-color: #e60000;
 }
@@ -122,7 +118,6 @@
 }
 
 /*ICONOS MENÚ DERECHO*/
-
 .icon-menu-fixed {
   position: fixed;
   top: 20px;
@@ -134,7 +129,6 @@
   padding: 0;
   z-index: 1000;
 }
-
 .icon-menu-fixed a {
   color: black;
   text-decoration: none;
@@ -146,7 +140,6 @@
 }
 
 /* BOTÓN DE PRUEBATE */
-
 .small-webcam-btn {
   padding: 5px 10px;
   font-size: 1rem;
@@ -159,13 +152,11 @@
   color: rgb(0, 0, 0);
   transition: background-color 0.3s ease;
 }
-
 .small-webcam-btn:hover {
   background-color: #35a0c7;
 }
 
 /* CUADRO MODO GUIADO */
-
 .modo-guiado {
   display: flex;
   flex-direction: column;
@@ -174,20 +165,17 @@
   height: 100%;
 }
 
-
 .buttons-container {
   position: absolute;
-  bottom: 10px; /* Mueve los botones hacia la parte inferior */
-  left: 50%; /* Centra los botones horizontalmente */
-  transform: translateX(-50%); /* Ajusta la alineación exacta para que estén centrados */
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
   display: flex;
   justify-content: center;
-  gap: 10px; /* Espaciado entre los botones */
-  z-index: 10; /* Asegura que los botones estén por encima de otros elementos */
+  gap: 10px;
+  z-index: 10;
 }
-
-/* Ajustar el margen de los botones */
 .small-disable-webcam-btn,
 .current-word {
   margin: 0;
@@ -198,15 +186,168 @@
   opacity: 0;
   transition: opacity 0.3s ease-out;
 }
-
 .fade-in {
   opacity: 1;
   transition: opacity 0.3s ease-in;
 }
-
 /* Make sure the app-card has an initial state */
 app-card {
   opacity: 1;
   transition: opacity 0.3s ease;
   width: 100%;
+}
+
+/* ==========================================
+   AÑADIMOS AQUÍ LOS ESTILOS DE LA BARRA 
+   DE HERRAMIENTAS "radio-input" DE MODO LIBRE
+   ==========================================*/
+
+/* Radio-botones flotantes (menú de la izquierda) */
+.radio-input {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%) translateX(0); /* 👈 Elimina el desborde hacia la derecha */
+  transition: transform 0.4s ease;
+  width: 100px;
+  min-height: 300px;
+  padding: 10px;
+  border-radius: 10px 0px 0px 10px;
+  background-color: black;
+  z-index: 10; /* puede ser 10-99 según lo que necesites */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.radio-input.open {
+  transform: translateY(-50%) translateX(0);
+}
+.radio-input input {
+  display: none;
+}
+
+/* Cada label */
+.radio-input .label {
+  width: 83px;
+  height: 80px;
+  background: linear-gradient(to bottom, #333333, rgb(36, 35, 35));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: all 0.1s linear;
+  border-top: 1px solid #4e4d4d;
+  background-color: #333333;
+  position: relative;
+  cursor: pointer;
+  box-shadow: none;
+}
+.label:first-child {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+.label:last-child {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.label:has(input[type="radio"]:checked) {
+  box-shadow: none;
+  background: linear-gradient(to bottom, #1d1d1d, #1d1d1d);
+  border-top: none;
+}
+.label::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 103%;
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(
+    to bottom,
+    transparent 10%,
+    transparent,
+    transparent 90%
+  );
+  transition: all 0.1s linear;
+  z-index: -1;
+}
+.label:has(input[type="radio"]:checked)::before {
+  background: linear-gradient(
+    to bottom,
+    transparent 10%,
+    #cae2fd63,
+    transparent 90%
+  );
+}
+.label .text {
+  color: white;
+  font-size: 15px;
+  line-height: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  transition: all 0.1s linear;
+  text-shadow: -1px -1px 1px rgba(224, 224, 224, 0.1),
+    0px 2px 3px rgba(0, 0, 0, 0.3);
+}
+.label input[type="radio"]:checked + .text {
+  color: rgb(202, 226, 253);
+  text-shadow: 0px 0px 12px #cae2fd;
+}
+.label .icon {
+  width: 32px;
+  height: 32px;
+  fill: #ffffff;
+  transition: fill 0.2s, filter 0.2s;
+}
+.label:has(input[type="radio"]:checked) .icon {
+  fill: rgb(202, 226, 253);
+  filter: drop-shadow(0 0 6px #cae2fd);
+}
+
+/* Icono play-bucle */
+.icon-play2 {
+  fill: #fff;
+  transition: fill 0.2s, filter 0.2s;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+}
+.label-play2 {
+  position: relative;
+}
+
+/* STOP superpuesto (en modo-libre) — no se usa aquí,
+   pero lo dejamos por si prefieres luego anidarlo */
+/* .label-stop { ... } */
+
+/* Icon STOP suelto */
+.icon-stop {
+  fill: #ff0000;
+  transition: fill 0.2s, filter 0.2s;
+  cursor: pointer;
+}
+
+/* Webcam label */
+.label-webcam {
+  width: 130px;
+  height: 80px;
+  position: relative;
+  background: linear-gradient(to bottom, #333, #242323);
+}
+.label-webcam input[type="radio"] {
+  display: none;
+}
+.icon-webcam {
+  display: block;
+  width: 40px;
+  height: auto;
+  margin: 0 auto;
+  transition: filter 0.2s;
+}
+.label-webcam:has(input[type="radio"]:checked) .icon-webcam {
+  filter: drop-shadow(0 0 5px #cae2fd);
 }

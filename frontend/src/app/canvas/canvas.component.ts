@@ -1,4 +1,13 @@
-import { Component, ElementRef, AfterViewInit, ViewChild, Input, OnDestroy } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  AfterViewInit,
+  ViewChild,
+  Input,
+  OnDestroy,
+  Output,            // <--- AÑADIDO
+  EventEmitter       // <--- AÑADIDO
+} from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
@@ -20,6 +29,9 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   @Input() animationUrls: string[] = [];
   @Input() showResetButton: boolean = false;
+
+  // NUEVO: emisor para avisar de que la animación ha terminado (una sola vez)
+  @Output() animationEnded = new EventEmitter<void>();  // <--- AÑADIDO
 
   private renderer!: THREE.WebGLRenderer;
   private scene!: THREE.Scene;
@@ -46,9 +58,6 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     // Nos suscribimos al BehaviorSubject que emite { animaciones, loop }
     this.animacionSubscription = this.animacionService.animaciones$.subscribe(
       (data: AnimationData) => {
-        // data.animaciones => array de URLs
-        // data.loop => true (repetir) / false (una sola vez)
-        
         if (data.animaciones.length > 0) {
           const permitido = this.animacionService.permitirReproduccion();
           console.log('Recibida petición de animación:', data, '¿permitido?', permitido);
@@ -121,22 +130,12 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     light.position.set(10, 10, 10);
     this.scene.add(light);
 
-
-
-
-
-
-
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
     this.scene.add(hemiLight);
 
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
     dirLight.position.set(10, 20, 10);
     this.scene.add(dirLight);
-
-
-
-
   }
 
   private addControls(): void {
@@ -151,7 +150,6 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   // --------------------------------------------------
   private cargarAnimacionesDinamicas(animaciones: string[], loop: boolean): void {
     // 1) Detenemos animación previa, pero sin recargar la pose
-    //    (Porque luego mostraremos las nuevas)
     this.stopLoop(false);
 
     if (!this.animacionService.permitirReproduccion()) {
@@ -225,6 +223,9 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
           clearInterval(this.poseInterval);
           this.poseInterval = null;
           console.log('Animación completada (una sola vez).');
+
+          // NUEVO: Emitir evento de final de animación
+          this.animationEnded.emit();  // <--- AÑADIDO
         }
       }
     }, 120);
@@ -235,12 +236,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   /**
    * Detener la animación secuencial actual.
    * @param revertToDefault Si es true, limpiamos y recargamos la pose inicial.
-   *                        Si es false, solo paramos el intervalo (pensado
-   *                        para luego reproducir otra animación sin ver
-   *                        el avatar desaparezca).
    */
   public stopLoop(revertToDefault: boolean): void {
-    // 1) Parar el intervalo
     if (this.poseInterval) {
       clearInterval(this.poseInterval);
       this.poseInterval = null;
@@ -248,16 +245,15 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     console.log('Animación detenida. revertToDefault:', revertToDefault);
 
     if (revertToDefault) {
-      // 2) Limpiar el canvas (quita avatar) y recargar pose inicial
+      // Limpiar el canvas (quita avatar) y recargar pose inicial
       this.limpiarCanvas();
-      this.loadDefaultPose(true); // Forzamos la pose, ignore hayAnimaciones
+      this.loadDefaultPose(true);
     }
   }
 
   // --------------------------------------------------
   // POSE INICIAL
   // --------------------------------------------------
-  /** Cargar la pose inicial o “modelo por defecto”. */
   private loadDefaultPose(force = false): void {
     // Si no forzamos y hay animaciones, no cargamos la pose
     if (!force && this.animacionService.hayAnimacionesActivas()) {
