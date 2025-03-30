@@ -66,7 +66,7 @@
 
 
         <!-- Botones que solo se mostrarán cuando la cámara esté activa -->
-        <div class="buttons-container" *ngIf="showWebcam">
+        <div *ngIf="showWebcam">
           <!-- Botón para la palabra -->
           <div
             *ngIf="modo === 'guiado'"
@@ -81,7 +81,9 @@
         <!-- <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
           Desactivar Webcam
         </button> -->
-      </div>
+
+          </div>
+
     </div>
 
       <div class="camera-container" *ngIf="showWebcam">

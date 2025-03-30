@@ -44,7 +44,7 @@
 
 .layout {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: stretch;
   width: 100vw;
   height: 100vh;
@@ -237,25 +237,51 @@ button:active,
 }
 
 /* Estilos para la cámara */
-.half-width {
+/* .half-width {
   width: 50% !important;
-}
-.camera-container {
-  width: 50%;
-  height: 100vh;
+} */
+  /* Contenedor de la cámara */
+  .camera-container {
+    width: 35vw; /* Ocupa el 35% del ancho de la pantalla */
+    height: 100vh; /* Ocupa toda la altura */
+    display: flex;
+    justify-content: center; /* Centra el video dentro del contenedor */
+    align-items: center; /* Asegura que el video se mantenga bien centrado */
+    background-color: #fff8d4;
+  }
+  
+  /* VIDEO */
+  .mirror-video {
+    width: 100%; /* Que ocupe todo el contenedor de la cámara */
+    height: 100%; /* Que ocupe toda la altura */
+    object-fit: cover; /* Se ajusta sin deformarse */
+    transform: scaleX(-1); /* Modo espejo */
+    border: none; /* Sin bordes */
+    border-radius: 0; /* Sin bordes redondeados */
+  }
+
+.selected-word-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  background-color: #fff8d4;
-}
-.mirror-video {
-  width: 90%;
-  height: 80vh;
-  object-fit: cover;
-  transform: scaleX(-1);
-  border: 2px solid #000;
-  border-radius: 10px;
+  align-items: center;
+  width: auto; /* Se adapta al contenido */
+  max-width: 80%; /* Evita que sea demasiado ancho */
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: "Lexend", sans-serif;
+  background-color: #41b8d5; /* Azul llamativo */
+  color: black;
+  border: 3px solid black;
+  border-radius: 12px;
+  box-shadow: 0.1em 0.1em;
+  transition: all 0.2s ease-in-out;
+  font-size: 1.5rem; 
+  padding: 0.5em 1em; /* Ajustamos el padding */
+  text-align: center;
 }
 
 /* search-bar.css */
