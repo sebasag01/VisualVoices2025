@@ -193,4 +193,9 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  volverAModos(): void {
+    this.router.navigate(['/modos']);
+  }
+
 }

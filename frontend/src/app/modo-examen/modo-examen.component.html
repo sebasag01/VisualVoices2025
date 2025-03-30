@@ -59,12 +59,13 @@
         
         <!-- Iconos de perfil, ajustes, logout -->
         <div class="icon-menu-fixed">
+          <a (click)="volverAModos()" title="Modos">
+            <i class="fa-solid fa-home"></i>
+          </a>
           <a (click)="navigateTo('perfil')" title="Mi Perfil" class="user-icon">
             <i class="fa-solid fa-user"></i>
           </a>
-          <a (click)="navigateTo('ajustes')" title="Ajustes" class="ajustes-icon">
-            <i class="fa-solid fa-gear"></i>
-          </a>
+          
           <a (click)="logout()" title="Cerrar Sesión" class="logout-icon">
             <i class="fa-solid fa-right-from-bracket"></i>
           </a>
