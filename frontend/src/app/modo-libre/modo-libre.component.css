@@ -47,14 +47,16 @@
   
   .layout {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: stretch;
     width: 100vw;
     height: 100vh;
   }
   
   
-  
+  .image-container, .camera-container {
+    flex: 0 0 35%; 
+  }
   
   .button-grid {
     flex: 0 0 35%;
@@ -236,26 +238,59 @@
   
   /* Contenedor de la cámara */
   .camera-container {
-    width: 50%;
-    height: 100vh; /* o el alto que prefieras */
+    width: 35vw; /* Ocupa el 35% del ancho de la pantalla */
+    height: 100vh; /* Ocupa toda la altura */
     display: flex;
-    flex-direction: column;  /* Organiza en columna: video arriba, botón abajo */
-    align-items: center;
-    justify-content: center;
+    justify-content: center; /* Centra el video dentro del contenedor */
+    align-items: center; /* Asegura que el video se mantenga bien centrado */
     background-color: #fff8d4;
   }
   
-  /* El video en modo espejo */
+  /* VIDEO */
   .mirror-video {
-    width: 90%;
-    height: 80vh;       /* Aumenta la altura para que el video sea más largo */
-    object-fit: cover;  /* Se asegura de que el video se recorte y llene el área */
+    width: 100%; /* Que ocupe todo el contenedor de la cámara */
+    height: 100%; /* Que ocupe toda la altura */
+    object-fit: cover; /* Se ajusta sin deformarse */
     transform: scaleX(-1); /* Modo espejo */
-    border: 2px solid #000;
-    border-radius: 10px;
+    border: none; /* Sin bordes */
+    border-radius: 0; /* Sin bordes redondeados */
+  }
+  
+  .selected-word-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto; /* Se adapta al contenido */
+    max-width: 80%; /* Evita que sea demasiado ancho */
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: "Lexend", sans-serif;
+    background-color: #41b8d5; /* Azul llamativo */
+    color: black;
+    border: 3px solid black;
+    border-radius: 12px;
+    box-shadow: 0.1em 0.1em;
+    transition: all 0.2s ease-in-out;
+    font-size: 1.5rem; 
+    padding: 0.5em 1em; /* Ajustamos el padding */
+    text-align: center;
+  }
+  
+  /* Ajuste para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .selected-word-container {
+      font-size: 1.5rem;
+      padding: 0.4em 0.8em;
+    }
   }
   
   
+  
+
   /* Nueva clase para un botón de desactivar webcam más pequeño */
   .small-disable-webcam-btn {
     margin-top: 10px;         /* Espacio entre el video y el botón */
@@ -390,7 +425,7 @@
   }
   /* Panel derecho */
   .right-panel {
-    position: relative; /* Muy importante */
+    position: relative; 
     flex: 0 0 35%;
     background-color: #f4a940;
     padding: 20px;
