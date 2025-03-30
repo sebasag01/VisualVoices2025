@@ -66,7 +66,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   gap: 25px;
   width: 50%;
   height: 85vh;
@@ -100,10 +100,10 @@
 
 .mode-title {
   display: flex;
-  align-items: center; 
-  gap: 15px; 
+  align-items: center;
+  gap: 15px;
   width: 100%;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
 }
 
 .mode-title h2 {
@@ -112,7 +112,7 @@
   font-family: "ChauPhilomene", sans-serif;
   margin: 0;
   display: flex;
-  align-items: center; 
+  align-items: center;
 }
 
 .mode-title h2 img {
@@ -127,15 +127,15 @@
   font-family: "ChauPhilomene", sans-serif;
   margin: 0;
   color: black;
-  flex: 1; 
-  white-space: nowrap; 
+  flex: 1;
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 
 .mode-stats {
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   width: 100%;
   gap: 10px;
   flex-wrap: wrap;
@@ -250,7 +250,6 @@
   overflow-y: auto;
 }
 
-
 .progress-ring {
   width: 80px;
   height: 80px;
@@ -274,12 +273,7 @@
   dominant-baseline: middle;
   fill: black;
   font-family: "ChauPhilomene", sans-serif;
-
 }
-
-
-
-
 
 @keyframes typing {
   from {
@@ -299,15 +293,14 @@
 .animation {
   font: bold 20px Consolas, Monaco, monospace;
   font-family: "Lexend", sans-serif;
-  border-right: .1em solid black;
-  width: 13.20ch;
+  border-right: 0.1em solid black;
+  width: 13.2ch;
   margin: 0.7em 0.7em;
   white-space: nowrap;
   overflow: hidden;
-  animation: typing 5s steps(13, end) infinite, 
-            blink-caret .5s step-end infinite alternate;
+  animation: typing 5s steps(13, end) infinite,
+    blink-caret 0.5s step-end infinite alternate;
 }
-
 
 @keyframes blink-star {
   50% {
@@ -324,7 +317,173 @@
 .star {
   font-size: 24px;
   color: gold;
-  /* animation: blink-star 2s infinite alternate; */
+}
+
+.texto-desarrollo {
+  font-size: 24px;
+  color: black;
+  margin: 0;
+  font-family: "ChauPhilomene", sans-serif;
+  font-size: 1.5rem;
+}
+
+.stat-ratate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg {
+  padding: 20px;
+  border-radius: 10px;
+  --base-color: #8fd4e3;
+  margin-left: -80px;
+}
+
+.loader {
+  width: 60px;
+  height: 40px;
+  position: relative;
+  display: inline-block;
+  background-color: transparent; 
+}
+
+.loader::before {
+  content: "";
+  left: 0;
+  top: 0;
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: black;
+  background-image: radial-gradient(
+      circle 8px at 18px 18px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 18px 0px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 0px 18px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 36px 18px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 18px 36px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 30px 5px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 30px 5px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 30px 30px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 5px 30px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 5px 5px,
+      var(--base-color) 100%,
+      transparent 0
+    );
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  animation: rotationBack 3s linear infinite;
+}
+
+.loader::after {
+  content: "";
+  left: 35px;
+  top: 15px;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: black;
+  background-image: radial-gradient(
+      circle 5px at 12px 12px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 12px 0px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 0px 12px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 24px 12px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 12px 24px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 20px 3px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 20px 3px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 20px 20px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 3px 20px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 3px 3px,
+      var(--base-color) 100%,
+      transparent 0
+    );
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  animation: rotationBack 4s linear infinite reverse;
+}
+
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(-360deg);
+  }
 }
 
 /* Contenedor para centrar y separar los botones */

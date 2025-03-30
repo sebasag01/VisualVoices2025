@@ -1,26 +1,39 @@
 <app-header></app-header>
 
-
-
-
 <div class="container">
   <div class="content">
     <div class="layout">
       <!-- Contenedor del avatar a la izquierda -->
-      <div class="image-container" id="avatar-element" [ngClass]="{'libre-half-width': showWebcam}">
+      <div
+        class="image-container"
+        id="avatar-element"
+        [ngClass]="{ 'libre-half-width': showWebcam }"
+      >
+        <!-- Mostrar palabra seleccionada SOLO cuando la cámara está activada -->
+        <div class="selected-word-container" *ngIf="showWebcam && selectedWord">
+          {{ selectedWord.palabra }}
+        </div>
         <app-canvas [animationUrls]="currentAnimationUrls"></app-canvas>
-         <!-- Menú de herramientas (ahora en el lado izquierdo) -->
+        <!-- Menú de herramientas (ahora en el lado izquierdo) -->
         <!-- tools-menu -->
 
-  <!-- NUEVA ESTRUCTURA RADIO-BUTTONS -->
-  <div class="radio-input" [class.open]="toolMenuOpen" (change)="onRadioChange($event)">
-    <!-- Play -->
-    <label class="label label-play">
-      <input type="radio" id="play" name="value-radio" value="play" />
-      <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-        <path d="M96 52v408l320-204-320-204z" />
-      </svg>
-    </label>
+        <!-- NUEVA ESTRUCTURA RADIO-BUTTONS -->
+        <div
+          class="radio-input"
+          [class.open]="toolMenuOpen"
+          (change)="onRadioChange($event)"
+        >
+          <!-- Play -->
+          <label class="label label-play">
+            <input type="radio" id="play" name="value-radio" value="play" />
+            <svg
+              class="icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+            >
+              <path d="M96 52v408l320-204-320-204z" />
+            </svg>
+          </label>
 
     <!-- Radio principal PLAY2, con position: relative -->
    <!-- Sustituyendo el label-play2 antiguo por un toggle de checkbox -->
@@ -56,36 +69,29 @@
     
 
 
-    <!-- Webcam, aquí conservamos la funcionalidad de togglear la cámara -->
-    <!-- Radio para la webcam -->
-<label class="label label-webcam">
-  <input type="radio" id="webcam" name="value-radio" value="webcam" />
-  
-  <!-- Tu imagen “webcam.svg” desde /public => ruta "/webcam.svg" -->
-  <img class="icon-webcam" src="assets/webcam.svg" alt="Webcam" />
-</label>
+          <!-- Webcam, aquí conservamos la funcionalidad de togglear la cámara -->
+          <!-- Radio para la webcam -->
+          <label class="label label-webcam">
+            <input type="radio" id="webcam" name="value-radio" value="webcam" />
 
+            <!-- Tu imagen “webcam.svg” desde /public => ruta "/webcam.svg" -->
+            <img class="icon-webcam" src="assets/webcam.svg" alt="Webcam" />
+          </label>
 
-    <!-- Velocidad (Speed) -->
-    <label class="label">
-      <input type="radio" id="veloc" name="value-radio" value="veloc" />
-      <span class="text">Veloc</span>
-    </label>
-  </div>
+          <!-- Velocidad (Speed) -->
+          <label class="label">
+            <input type="radio" id="veloc" name="value-radio" value="veloc" />
+            <span class="text">Veloc</span>
+          </label>
+        </div>
+      </div>
 
-
-        
-</div>
-
-
-      
-      
       <!-- Contenedor de la cámara, se muestra solo cuando showWebcam es true -->
-      <div class="camera-container libre-full-right" *ngIf="showWebcam">
+      <div class="camera-container" *ngIf="showWebcam">
         <video #videoElement class="mirror-video" autoplay></video>
-        <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
+        <!-- <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
           Desactivar Webcam
-        </button>
+        </button> -->
       </div>
 
       <!-- Panel derecho (contenido original) se muestra solo cuando la cámara está desactivada -->
@@ -106,28 +112,39 @@
           </a>
         </div>
 
-        <div class="search-bar" id="search-container" (click)="toggleDropdown($event)">
-          <input 
-            type="text" 
-            placeholder="Busca cualquier palabra o categoría" 
-            id="search-input" 
-            [(ngModel)]="searchText" 
-            (input)="onSearchInput()" 
-            (focus)="onInputFocus()" 
+        <div
+          class="search-bar"
+          id="search-container"
+          (click)="toggleDropdown($event)"
+        >
+          <input
+            type="text"
+            placeholder="Busca cualquier palabra o categoría"
+            id="search-input"
+            [(ngModel)]="searchText"
+            (input)="onSearchInput()"
+            (focus)="onInputFocus()"
           />
           <button id="search-btn" title="Buscar" (click)="performSearch()">
             <span class="lupa"></span>
           </button>
         </div>
-        <div class="multi-select-dropdown" [class.open]="isOpen" (click)="$event.stopPropagation()">
+        <div
+          class="multi-select-dropdown"
+          [class.open]="isOpen"
+          (click)="$event.stopPropagation()"
+        >
           <div class="dropdown-content">
             <!-- Recorremos las categorías que pasan el filtro de texto -->
-            <label class="dropdown-item" *ngFor="let cat of filteredCategoriesBySearch">
-              <input 
-                type="checkbox" 
-                [value]="cat._id" 
-                (change)="onCheckboxChange($event, cat)" 
-                [checked]="selectedCategoryIds.includes(cat._id)" 
+            <label
+              class="dropdown-item"
+              *ngFor="let cat of filteredCategoriesBySearch"
+            >
+              <input
+                type="checkbox"
+                [value]="cat._id"
+                (change)="onCheckboxChange($event, cat)"
+                [checked]="selectedCategoryIds.includes(cat._id)"
               />
               {{ cat.nombre }}
             </label>
@@ -135,47 +152,51 @@
         </div>
 
         <!-- LISTA DE CATEGORÍAS (vista 1) con estilo de Cards -->
-<div class="category-grid" *ngIf="!selectedCategory">
-  <div class="card" *ngFor="let cat of filteredCategories" (click)="onCategoryClick(cat)">
-    <div class="card-details">
-      <!-- Título de la categoría -->
-      <p class="text-title">{{ cat.nombre }}</p>
-      <!-- Pequeño texto de ejemplo: primeras palabras -->
-      <p class="text-body">{{ getPrimerasPalabras(cat) }}</p>
+        <div class="category-grid" *ngIf="!selectedCategory">
+          <div
+            class="card"
+            *ngFor="let cat of filteredCategories"
+            (click)="onCategoryClick(cat)"
+          >
+            <div class="card-details">
+              <!-- Título de la categoría -->
+              <p class="text-title">{{ cat.nombre }}</p>
+              <!-- Pequeño texto de ejemplo: primeras palabras -->
+              <p class="text-body">{{ getPrimerasPalabras(cat) }}</p>
+            </div>
+            <!-- Botón dentro de la card -->
+            <button class="card-button">Más info</button>
+          </div>
+        </div>
+
+        <!-- LISTA DE PALABRAS (vista 2) -->
+        <!-- LISTA DE PALABRAS (vista 2) -->
+        <div class="word-list" *ngIf="selectedCategory">
+          <!-- Botón para volver a la lista de categorías -->
+          <div class="back-button" (click)="volverAListaCategorias()">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Volver</span>
+          </div>
+
+          <h3>{{ selectedCategory.nombre }}</h3>
+
+          <div
+            class="word-item"
+            *ngFor="let palabra of palabrasDeCategoriaSeleccionada"
+            (click)="seleccionarPalabra(palabra)"
+            [ngClass]="{
+              'selected-word': selectedWord?.palabra === palabra.palabra
+            }"
+          >
+            <!-- Nombre de la palabra -->
+            <div class="word-title">{{ palabra.palabra }}</div>
+          </div>
+        </div>
+      </div>
+      <!-- fin right-panel -->
     </div>
-    <!-- Botón dentro de la card -->
-    <button class="card-button">
-      Más info
-    </button>
+    <!-- fin layout -->
   </div>
+  <!-- fin content -->
 </div>
-
-        <!-- LISTA DE PALABRAS (vista 2) -->
-        <!-- LISTA DE PALABRAS (vista 2) -->
-<div class="word-list" *ngIf="selectedCategory">
-  <!-- Botón para volver a la lista de categorías -->
-  <div class="back-button" (click)="volverAListaCategorias()">
-    <i class="fa-solid fa-arrow-left"></i> 
-    <span>Volver</span>
-  </div>
-
-  <h3>{{ selectedCategory.nombre }}</h3>
-
-  <div
-    class="word-item"
-    *ngFor="let palabra of palabrasDeCategoriaSeleccionada"
-    (click)="seleccionarPalabra(palabra)"
-    [ngClass]="{'selected-word': selectedWord?.palabra === palabra.palabra}"
-  >
-    <!-- Nombre de la palabra -->
-    <div class="word-title">{{ palabra.palabra }}</div>
-  </div>
-</div>
-
-
-
-      </div><!-- fin right-panel -->
-
-    </div><!-- fin layout -->
-  </div><!-- fin content -->
-</div><!-- fin container -->
+<!-- fin container -->

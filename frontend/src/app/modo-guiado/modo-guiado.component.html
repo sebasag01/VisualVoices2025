@@ -71,17 +71,18 @@
           <div
             *ngIf="modo === 'guiado'"
             class="current-word"
+          [ngClass]="{ 'small-word': showWebcam }"
             (click)="handleWordClick()"
           >
             <p>{{ currentWord }}</p>
           </div>
 
-          <!-- Botón para desactivar la webcam -->
-          <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
-            Desactivar Webcam
-          </button>
-        </div>
+        <!-- Botón para desactivar la webcam -->
+        <!-- <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
+          Desactivar Webcam
+        </button> -->
       </div>
+    </div>
 
       <div class="camera-container" *ngIf="showWebcam">
         <video #videoElement class="mirror-video" autoplay></video>

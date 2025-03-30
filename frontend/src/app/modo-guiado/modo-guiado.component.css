@@ -73,16 +73,71 @@
 }
 
 /* PALABRA EN MODO CÁMARA */
-.current-word {
-  margin-top: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 2rem;
-  font-weight: bold;
-  text-align: center;
-  cursor: pointer;
+
+/* Contenedor del avatar */
+.image-container {
+  position: relative; /* Permite posicionar elementos hijos de forma absoluta */
+  width: calc(100% - 35vw); /* El avatar ocupa el 65% */
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
 }
+
+.current-word {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #41b8d5; /* Azul llamativo */
+  padding: 0.5em 1em;
+  border-radius: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: "Lexend", sans-serif;
+  border: 3px solid black;
+  box-shadow: 3px 3px black;
+  color:black;
+  z-index: 10;
+  
+  /* 🔹 CENTRADO TOTAL */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 1; /* Evita que el texto se desplace por padding */
+  min-height: 50px; /* Evita que el botón sea demasiado pequeño */
+  min-width: 120px; /* Para que no se deforme */
+}
+
+/* 🔹 Ajustes cuando la cámara está activa */
+.small-word {
+  font-size: 1.8rem;  /* Tamaño más adecuado */
+  padding: 10px 20px;
+  min-width: 140px;
+  min-height: 60px;
+}
+
+/* 🔹 Ajuste adicional para asegurar que el <p> no tenga márgenes */
+.current-word p {
+  margin: 0;
+  padding: 0;
+}
+
+
+
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+  .current-word {
+    font-size: 2rem;
+    padding: 0.4em 0.8em;
+    max-width: 70%;
+  }
+}
+
 
 /* .half-width {
   width: 50% !important;

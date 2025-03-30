@@ -50,6 +50,10 @@
   height: 100vh;
 }
 
+.image-container, .camera-container {
+  flex: 0 0 35%; 
+}
+
 .button-grid {
   flex: 0 0 35%;
   background-color: #f4a940;
