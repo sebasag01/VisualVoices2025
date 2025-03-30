@@ -326,3 +326,30 @@
   color: gold;
   /* animation: blink-star 2s infinite alternate; */
 }
+
+/* Contenedor para centrar y separar los botones */
+.buttons-group {
+  display: flex;              /* Para colocarlos uno al lado del otro */
+  gap: 20px;                  /* Espacio horizontal entre botones */
+  justify-content: center;    /* Centrar en el eje horizontal */
+  margin-top: 1rem;           /* Espacio superior */
+}
+
+/* Aplicar el estilo de .next-turn-btn / .small-webcam-btn */
+.buttons-group button {
+  padding: 5px 10px;              /* Mismo padding */
+  font-size: 1rem;                /* Mismo tamaño de letra */
+  font-family: "Lexend", sans-serif;
+  width: auto;
+  height: auto;
+  border: 2px solid black;
+  border-radius: 12px;            /* Bordes redondeados */
+  background-color: #41b8d5;      /* Color de fondo */
+  color: rgb(0, 0, 0);            /* Color de texto */
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+.buttons-group button:hover {
+  background-color: #35a0c7;      /* Color en hover */
+}
+

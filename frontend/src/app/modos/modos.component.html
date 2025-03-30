@@ -166,8 +166,9 @@
 
           <!-- MODO EXAMEN: RÉTATE -->
           <ng-container *ngSwitchCase="'examen'">
-            <div class="stat-box">
-              <p>Disponible próximamente...</p>
+            <div class="buttons-group">
+              <button (click)="navigateToMode('/examen')">Modo Individual</button>
+              <button (click)="navigateToMode('/versus')">Modo Versus</button>
             </div>
           </ng-container>
         </ng-container>

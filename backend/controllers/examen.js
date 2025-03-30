@@ -71,6 +71,7 @@ const generarPregunta = async (req, res) => {
     return res.json({
       ok: true,
       questionId: examQ._id,      // Para que el front luego verifique
+      correctAnswerId: palabraCorrecta._id,  // Añade esta línea
       animaciones: palabraCorrecta.animaciones, // La animacion a reproducir
       opciones: todasLasOpciones.map(opc => ({
         _id: opc._id,

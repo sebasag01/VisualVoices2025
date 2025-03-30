@@ -1,0 +1,603 @@
+@font-face {
+  font-family: "lexend";
+  src: url("../../assets/fonts/lexend.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ChauPhilomene";
+  src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Evita scroll global */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Previene scroll en ambas direcciones */
+  width: 100%;
+  height: 100%;
+}
+
+/* Contenedor principal */
+.container {
+  overflow: hidden; /* Previene scroll dentro del contenedor */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 80vh;
+  background-color: #fff8d4;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.content {
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff8d4;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Layout principal */
+.layout {
+  display: flex;
+  justify-content: flex-start; /* Alinea a la izquierda */
+  align-items: stretch;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Contenedor izquierdo: Avatar o Video */
+.image-container {
+  position: relative;
+  width: calc(100% - 35vw); /* 65% del espacio */
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Contenedor derecho: Cámara */
+.camera-container {
+  width: 35vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff8d4;
+}
+
+/* Estilo del video en modo espejo */
+.mirror-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  border: none;
+  border-radius: 0;
+}
+
+/* Palabra mostrada mientras la cámara está activa */
+.current-word {
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* Botón de terminar/desactivar webcam */
+.small-disable-webcam-btn {
+  margin-top: 10px;
+  padding: 5px 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  background-color: #ff4d4d;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.small-disable-webcam-btn:hover {
+  background-color: #e60000;
+}
+
+/* Panel derecho con las 4 opciones */
+.right-panel {
+  position: relative;
+  flex: 0 0 35%;
+  background-color: #f4a940;
+  padding: 20px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow-y: auto;
+  box-sizing: border-box;
+  
+}
+
+.versus-wrapper {
+  margin-top: 5rem; /* Ajusta según cuánto quieras bajarlo */
+}
+
+
+/* “Pruébate” y otros iconos menús */
+.icon-menu-fixed {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 15px;
+  font-size: 30px;
+  background: none;
+  padding: 0;
+  z-index: 1000;
+}
+.icon-menu-fixed a {
+  color: black;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+.icon-menu-fixed a:hover {
+  transform: scale(1.1);
+}
+
+/* Botón "Pruébate" */
+.small-webcam-btn {
+  padding: 5px 10px;
+  font-size: 1rem;
+  font-family: "Lexend", sans-serif;
+  width: auto;
+  height: auto;
+  border: 2px solid black;
+  border-radius: 12px;
+  background-color: #41b8d5;
+  color: rgb(0, 0, 0);
+  transition: background-color 0.3s ease;
+}
+.small-webcam-btn:hover {
+  background-color: #35a0c7;
+}
+
+/* Pantalla de inicio: Botón "Empezar" */
+.start-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+.start-button {
+  margin-left: 3rem; /* <-- Añade un margen para separarlo de los inputs */
+  margin-top: 1.5rem; /* <-- Añade un margen para separarlo de los inputs */
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  font-family: "Lexend", sans-serif;
+  border: 2px solid black;
+  border-radius: 12px;
+  background-color: #41b8d5;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+.start-button:hover {
+  transform: scale(1.05);
+  background-color: #35a0c7;
+}
+
+/* Barra de herramientas (Radio Buttons) lateral */
+.radio-input {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) translateX(100%);
+  transition: transform 0.4s ease;
+  width: 100px;
+  min-height: 300px;
+  padding: 10px;
+  border-radius: 10px 0 0 10px;
+  background-color: black;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.radio-input.open {
+  transform: translateY(-50%) translateX(0);
+}
+.radio-input input {
+  display: none;
+}
+.radio-input .label {
+  width: 83px;
+  height: 80px;
+  background: linear-gradient(to bottom, #333, #242323);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: all 0.1s linear;
+  border-top: 1px solid #4e4d4d;
+  position: relative;
+  cursor: pointer;
+  box-shadow: none;
+}
+.label:first-child {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+.label:last-child {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.label:has(input[type="radio"]:checked) {
+  background: linear-gradient(to bottom, #1d1d1d, #1d1d1d);
+  border-top: none;
+}
+.label::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 103%;
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(to bottom, transparent 10%, transparent, transparent 90%);
+  transition: all 0.1s linear;
+  z-index: -1;
+}
+.label:has(input[type="radio"]:checked)::before {
+  background: linear-gradient(to bottom, transparent 10%, #cae2fd63, transparent 90%);
+}
+.label .icon {
+  width: 32px;
+  height: 32px;
+  fill: #ffffff;
+  transition: fill 0.2s, filter 0.2s;
+}
+.label:has(input[type="radio"]:checked) .icon {
+  fill: rgb(202, 226, 253);
+  filter: drop-shadow(0 0 6px #cae2fd);
+}
+.label .text {
+  color: white;
+  font-size: 15px;
+  line-height: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-shadow: -1px -1px 1px rgba(224,224,224,0.1), 0px 2px 3px rgba(0,0,0,0.3);
+}
+
+/* "Play2" + "Stop" anidado */
+.label-play2 {
+  position: relative;
+}
+.label-play2 .icon-play2 {
+  fill: #fff;
+  transition: fill 0.2s, filter 0.2s;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+}
+.label-play2:has(input[type="radio"]:checked) .icon-play2 {
+  fill: rgb(202, 226, 253);
+  filter: drop-shadow(0 0 5px #cae2fd);
+}
+.label-stop {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  cursor: pointer;
+  padding: 5px;
+}
+.label-stop input[type="radio"] {
+  display: none;
+}
+.icon-stop {
+  fill: #ff0000;
+  transition: fill 0.2s, filter 0.2s;
+  cursor: pointer;
+}
+.label-stop:has(input[type="radio"]:checked) .icon-stop {
+  fill: #ff0000;
+  filter: drop-shadow(0 0 5px #cae2fd);
+}
+
+/* "Webcam" radio-button */
+.label-webcam {
+  width: 130px;
+  height: 80px;
+  position: relative;
+  background: linear-gradient(to bottom, #333, #242323);
+}
+.label-webcam input[type="radio"] {
+  display: none;
+}
+.icon-webcam {
+  display: block;
+  width: 40px;
+  height: auto;
+  margin: 0 auto;
+  transition: filter 0.2s;
+}
+.label-webcam:has(input[type="radio"]:checked) .icon-webcam {
+  filter: drop-shadow(0 0 5px #cae2fd);
+}
+
+/* Top-right container: palabra actual + botón "Terminar de grabar" */
+.top-right-container {
+  position: absolute;
+  top: 20px;
+  right: 200px; /* Ajustar según necesites */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  z-index: 999;
+}
+.top-right-container .current-word {
+  margin: 0;
+}
+.top-right-container .small-disable-webcam-btn {
+  margin: 0;
+}
+
+/* Efecto hover en botones .btn-small (opcional) */
+.btn-small:hover {
+  transform: scale(1.1);
+  box-shadow: 5px 15px 15px rgba(0,0,0,0.3);
+}
+.btn-small:active {
+  transform: scale(0.95);
+  box-shadow: none;
+}
+
+/* ANIMACIÓN FEEDBACK: "¡Respuesta correcta!" "Respuesta incorrecta" */
+
+/* Contenedor de las opciones (4) */
+.word-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-top: 30px;
+}
+
+/* Botones de cada palabra */
+.word-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 500;
+  color: #000000;
+  background: #35a0c7;
+  cursor: pointer;
+  box-shadow: transparent;
+  border: 2px solid #000000;
+  transition: 0.5s ease;
+  user-select: none;
+  text-shadow: none;
+}
+.word-item:hover,
+.word-item:focus {
+  color: #000000;
+  background: #008cff;
+  border: 1px solid #000000;
+}
+/* Correct/incorrect feedback */
+.correct-answer {
+  background: green !important;
+  border: 2px solid darkgreen !important;
+  color: white !important;
+}
+.wrong-answer {
+  background: red !important;
+  border: 2px solid darkred !important;
+  color: white !important;
+}
+
+/* Bloque de feedback final */
+.resultado {
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  animation: fadeIn 0.5s ease-out;
+}
+.resultado-correcto {
+  background-color: rgba(0, 255, 0, 0.2);
+  border: 2px solid green;
+}
+.resultado-incorrecto {
+  background-color: rgba(255, 0, 0, 0.2);
+  border: 2px solid red;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Iconos de "check" y "x" grandes */
+.icon-correct {
+  color: #28a745;
+  font-size: 2rem;
+  animation: pop 0.5s ease-out;
+  text-shadow: 0 0 10px rgba(40,167,69,0.7);
+}
+.icon-incorrect {
+  color: #dc3545;
+  font-size: 2rem;
+  animation: shake 0.5s ease;
+  text-shadow: 0 0 10px rgba(220,53,69,0.7);
+}
+
+/* Animación "pop" */
+@keyframes pop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Animación "shake" */
+@keyframes shake {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(-5px); }
+  50%  { transform: translateX(5px); }
+  75%  { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+/* Títulos */
+.exam-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-family: 'ChauPhilomene', sans-serif;
+  font-size: 2.5rem;
+  color: #332339;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  padding: 10px 20px;
+  border-radius: 10px;
+  display: block; /* Change from inline-block to block */
+  margin-left: auto; /* Add this */
+  margin-right: auto; /* Add this */
+  width: fit-content; /* Add this to make it center properly */
+}
+
+/* Subtítulo/enunciado */
+.enunciado-general {
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-family: 'lexend';
+  color: #332339;
+}
+
+.turn-announce-container {
+  width: 100vw;
+  height: 100vh;
+  background-color: white; /* o #fff8d4, si prefieres */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.turn-announce-container h1 {
+  font-size: 3rem;
+  font-family: "Lexend", sans-serif;
+  color: #333;
+}
+
+.players-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.players-form label {
+  font-family: "Lexend", sans-serif;
+  font-size: 1.2rem;
+}
+.players-form input {
+  font-size: 1.2rem;
+  margin-left: 1rem;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 2px solid #aaa;
+  outline: none;
+}
+
+.scoreboard {
+  display: flex;
+  flex-direction: column; /* o row, según prefieras */
+  gap: 1rem;
+  margin-top: 1.5rem; /* un poco de espacio */
+  align-items: center; /* para centrar en horizontal */
+}
+
+.player-score {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* espacio entre nombre y círculos */
+}
+
+.player-name {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* Círculos base */
+.circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #ccc; /* color "empty" */
+  border: 2px solid #333;
+  display: inline-block;
+}
+
+/* Círculo acierto */
+.circle.hit {
+  background-color: green;
+}
+
+/* Círculo error */
+.circle.miss {
+  background-color: red;
+}
+
+/* Si quieres un color distinto para empty */
+.circle.empty {
+  background-color: #fff;
+}
+
+
+.next-turn-btn {
+  padding: 5px 10px;              /* Menos padding para que sea pequeño */
+  font-size: 1rem;                /* Fuente un poco más pequeña */
+  font-family: "Lexend", sans-serif;
+  width: auto;
+  height: auto;
+  border: 2px solid black;
+  border-radius: 12px;            /* Bordes redondeados */
+  background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
+  color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
+  transition: background-color 0.3s ease;
+  z-index: 999;
+
+}
+
+.next-turn-btn:hover {
+  background-color: #35a0c7;      /* Cambio de color en hover */
+}
+
