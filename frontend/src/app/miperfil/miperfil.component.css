@@ -4,7 +4,6 @@
   font-weight: normal;
   font-style: normal;
 }
-/* Importar la fuente personalizada desde la carpeta public */
 @font-face {
   font-family: "ChauPhilomene";
   src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
@@ -12,42 +11,6 @@
   font-style: normal;
 }
 
-
-.logo-fixed {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  text-align: left;
-  z-index: 100;
-}
-.logo {
-  width: 50px;
-  height: auto;
-  margin-right: 10px;
-}
-.logo-text {
-  font-family: "ChauPhilomene", sans-serif;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #000;
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-}
-.visual {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-.voices {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-top: 2px;
-}
-
-/* Fijar los iconos del menú en la parte superior derecha */
 .icon-menu-fixed {
   position: fixed;
   top: 20px;
@@ -56,17 +19,16 @@
   gap: 20px;
   font-size: 30px;
   z-index: 1000;
+  cursor: pointer;
+
 }
 
-
-
-
-.icon-perfil
-{
+.icon-perfil {
   z-index: 1000;
-
 }
-
+.logout-icon {
+  z-index: 999;
+}
 
 .icon-menu-fixed a {
   color: black;
@@ -76,51 +38,10 @@
 .icon-menu-fixed a:hover {
   transform: scale(1.1);
 }
-/* Panel general */
-.settings-panel {
-  width: 100%;
-  background-color: #f5f5d6;
-  padding: 20px;
-  display: flex;
-  flex-direction: column; /* Coloca cada .cuadrofondo en bloques verticales */
-  align-items: flex-start; /* Alinea los bloques a la izquierda */
-}
-
-/* Cada bloque .cuadrofondo */
-.cuadrofondo {
-  width: 440px; /* Ancho más pequeño */
-  min-height: 50px;
-  background-color: #cacac089;
-  padding: 20px;
-  border-radius: 8px;
-  position: relative;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  margin-left: 20px;
-  margin-top: 20px; /* Separación vertical entre un bloque y otro */
-}
-
-.settings-box {
-  min-height: 410px; /* Aumenta este valor según lo que necesites */
-  display: flex;
-  flex-direction: column;
-  gap: 30px; /* Espacio entre los elementos internos */
-  padding: 20px; /* Asegura que haya espacio interno */
-}
-
-/* Botón de cerrar */
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: #000;
-}
 
 /* Asegurar que el body y html ocupen toda la pantalla sin scroll */
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -132,7 +53,6 @@ body, html {
   overflow: hidden; /* Elimina el scroll */
 }
 
-
 .profile-container {
   display: flex;
   justify-content: flex-start; /* Alinea a la izquierda */
@@ -142,168 +62,16 @@ body, html {
   padding: 20px;
   box-sizing: border-box;
   background-color: #f5f5d6;
-}
-
-
-/* Ajustar la tarjeta */
-.profile-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  background-color: #cacac089;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px; /* Limita el tamaño máximo */
-  text-align: center;
-  box-sizing: border-box; /* Añadido para manejar el tamaño de los elementos correctamente */
-  overflow: hidden; /* Añadido para evitar desbordes */
-}
-
-
-
-
-.profile-picture {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 2px solid #ccc;
-  overflow: hidden;
-}
-
-.profile-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.upload-label {
   cursor: pointer;
+
 }
 
-.upload-icon {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  background-color: #e63946;
-  color: #fff;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.upload-icon:hover {
-  background-color: #d62839;
-}
-
-.profile-info {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.editable-field {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.editable-field label {
-  font-weight: bold;
-  width: 140px;
-}
-
-.editable-field input {
-  border: 1px solid #ccc;
-  padding: 5px;
-  border-radius: 4px;
-}
-
-.editable-field button {
-  background-color: #5dade2;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.editable-field button:hover {
-  background-color: #3498db;
-}
-
-
-
-
-
-
-
-
-
-
-
-.profile-info h1 {
-  font-size: 1.1rem;
-  margin: 0 0 8px;
-}
-
-.profile-info p {
-  margin: 3px 0;
-  font-size: 0.9rem;
-  color: #333;
-}
-
-/* Ajustes */
-.setting-item {
-  margin-bottom: 10px;
-  font-family: "Lexend", sans-serif;
-}
-
-.setting-item label {
-  display: inline-block;
-  width: 140px;
-  font-weight: bold;
-  margin-right: 8px;
-}
-
-.setting-item span,
-.setting-item input {
-  font-size: 0.9rem;
-}
-
-.setting-item button {
-  margin-left: 8px;
-  background-color: #5dade2;
-  color: #fff;
-  border: none;
-  padding: 4px 8px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.setting-item button:hover {
-  background-color: #3498db;
-}
-
-.logout-icon{
-  z-index: 999;
-}
-
-
-/* From Uiverse.io by andrew-demchenk0 */ 
 .card {
   --main-color: #fff;
   --submain-color: #ccc;
   --bg-color: #000;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   position: relative;
   width: 300px;
   height: 384px;
@@ -334,16 +102,14 @@ body, html {
   justify-content: center;
   align-items: center;
   top: calc(50% - 57px);
-  border-radius: 50%;  /* Hace que sea un círculo */
-
+  border-radius: 50%; /* Hace que sea un círculo */
 }
 
 .card__avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover; /* Ajusta la imagen para que cubra el área circular */
-  border: 5px solid black;  /* Añade un borde negro alrededor de la imagen */
-
+  border: 5px solid black; /* Añade un borde negro alrededor de la imagen */
 }
 
 .card__avatar svg {
@@ -393,3 +159,313 @@ body, html {
   background: var(--bg-color);
   color: var(--main-color);
 }
+
+.card__wrapper {
+  display: flex;
+  gap: 10px; /* Espacio entre los botones */
+  margin-top: 15px;
+}
+
+.card__btn {
+  width: 120px; /* Aumenta el tamaño del botón */
+  height: 40px; /* Aumenta la altura */
+  border: 2px solid var(--main-color);
+  border-radius: 6px; /* Bordes más redondeados */
+  font-weight: 700;
+  font-size: 13px; /* Aumenta el tamaño del texto */
+  color: var(--main-color);
+  background: var(--bg-color);
+  text-transform: uppercase;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.card__btn-solid {
+  background: var(--main-color);
+  color: var(--bg-color);
+}
+
+.card__btn:hover {
+  background: var(--main-color);
+  color: var(--bg-color);
+}
+
+.card__btn-solid:hover {
+  background: var(--bg-color);
+  color: var(--main-color);
+}
+
+.card__btn i {
+  margin-right: 5px; /* Espacio entre el icono y el texto */
+  font-size: 14px; /* Tamaño del icono */
+  vertical-align: middle;
+}
+
+/* Modal - Fondo */
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro y semitransparente */
+  justify-content: center;
+  align-items: center;
+  display: flex; /* Asegúrate de usar display flex para centrarlo */
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Contenido del modal */
+.modal-content {
+  background-color: #f2c464; /* Color de fondo cambiado */
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  width: 300px;
+  font-family: 'Chauphilomene', sans-serif; /* Estilo de la fuente */
+}
+
+/* Botón de cerrar (X) */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* Para la animación de aparición */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Estilos para los inputs y el formulario */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  color: #333;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+/* Los placeholder dentro de los inputs */
+.form-group input::placeholder {
+  color: rgba(0, 0, 0, 0.5); /* Gris translúcido */
+  font-weight: normal;
+}
+
+/* Al hacer focus en los inputs */
+.form-group input:focus {
+  border-color: #4caf50;
+  background-color: #ffffff; /* Cambiar fondo cuando se hace focus */
+}
+
+/* Estilos para el botón de enviar */
+.btn-submit {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background-color: #45a049;
+}
+
+/* Estilos para el mensaje de error */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.estadisticas-container {
+  display: flex; /* Coloca las dos secciones en línea */
+  justify-content: center; /* Centra en la pantalla */
+  align-items: center; /* Alinea verticalmente */
+  gap: 50px; /* Espacio entre los bloques */
+  height: 100vh; /* Para centrar en toda la pantalla */
+}
+
+
+/* Estilo para estadisticas1 */
+.estatisticas1 {
+  margin-left: 100px;
+  width: 520px; /* Aumentado el tamaño */
+  height: 500px; /* Aumentado el tamaño */
+  color: white;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 5px;
+  overflow: visible;
+  font-size: 2.5em; 
+}
+
+.estatisticas1 .item {
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5em; 
+  border: 4px solid black; /* Borde negro */
+
+}
+
+.item:hover {
+  transform: scale(1.2);
+  transition: all 350ms ease-in-out;
+}
+
+.item svg {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 7px;
+}
+
+/* .item--1 {
+  background: #c7c7ff;
+}
+
+.item--2 {
+  background: #ffd8be;
+}
+
+.item--3 {
+  background: #a9ecbf;
+}
+
+.item--4 {
+  background: #f3bbe1;
+} */
+
+.item--1, .item--2, .item--3, .item--4 {
+  background: rgba(242, 196, 100, 0.8); /* Color con transparencia */
+  color: black; /* Texto negro */
+}
+
+.quantity {
+  font-size: 25px;
+  font-weight: 600;
+  font-family: "Chauphilomene", sans-serif; /* Cambia la fuente a Chau Philomene */
+
+  
+}
+
+.text {
+  /* font-size: 12px; */
+  font-family: "Chauphilomene", sans-serif; /* Cambia la fuente a Chau Philomene */
+  font-weight: 600;
+  font-size: 0.3em; 
+}
+
+/* .text--1 {
+  color: rgba(149, 149, 255, 1);
+}
+
+.text--2 {
+  color: rgba(252, 161, 71, 1);
+}
+
+.text--3 {
+  color: rgba(66, 193, 110, 1);
+}
+
+.text--4 {
+  color: rgba(220, 91, 183, 1);
+} */
+
+/* Estilo para estadisticas2 */
+.estadisticas2 {
+  margin-left: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  flex-direction: column;
+
+}
+
+.stats-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 180px; /* Aumentar el ancho de las tarjetas */
+  height: 180px; /* Aumentar la altura de las tarjetas */
+  border-radius: 20px;
+  /* background-color: rgb(255, 255, 255); */
+  padding: 15px;
+  /* box-shadow: 20px 20px 60px #e6e6e6, -20px -20px 60px #f3f3f3; */
+  font-size: 2.5em; /* Aumenta el tamaño del texto */
+  background-color: #41b8d5; /* Color de fondo */
+  border: 4px solid black; /* Borde negro */
+  color: black; /* Texto blanco para contraste */
+  font-family: "Chauphilomene";
+
+}
+
+.stats-wrapper:hover {
+  transform: scale(1.2);
+  transition: all 350ms ease-in-out;
+}
+
+
+.item, .stats-wrapper, .item svg, .item span {
+  cursor: pointer;
+}
+
+
+
+.heading {
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.bottom-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bottom-wrapper .star {
+  width: 30px;
+  fill: gold;
+}
+
+.bottom-wrapper .tag {
+  width: 27px;
+  fill: rgb(141, 214, 32);
+}
+
+.bottom-wrapper .thumb {
+  width: 27px;
+  fill: blueviolet;
+}
+
+.bottom-wrapper p {
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
