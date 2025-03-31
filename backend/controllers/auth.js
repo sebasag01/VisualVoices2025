@@ -51,7 +51,7 @@ const login = async (req, res = response) => {
     // - maxAge define cuánto tiempo será válida la cookie
     res.cookie('token', token, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: cookieExpiry,
     });
@@ -79,7 +79,7 @@ const logout = (req, res) => {
   console.log('[DEBUG] Cerrando sesión, eliminando cookie...');
   res.clearCookie('token', {
     httpOnly: true,
-    secure: false, // Cambiar a true en producción con HTTPS
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
   });
   res.json({
