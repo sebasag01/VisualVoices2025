@@ -35,39 +35,36 @@
             </svg>
           </label>
 
-    <!-- Radio principal PLAY2, con position: relative -->
-   <!-- Sustituyendo el label-play2 antiguo por un toggle de checkbox -->
-<label class="label label-play2">
-  <!-- Quitar name="value-radio" porque ya no es un radio group -->
-  <input
-    type="checkbox"
-    id="toggleLoop"
-    (change)="onToggleLoop($event)"
-  />
+          <!-- Radio principal PLAY2, con position: relative -->
+          <!-- Sustituyendo el label-play2 antiguo por un toggle de checkbox -->
+          <label class="label label-play2">
+            <!-- Quitar name="value-radio" porque ya no es un radio group -->
+            <input
+              type="checkbox"
+              id="toggleLoop"
+              (change)="onToggleLoop($event)"
+            />
 
-  <!-- Mostrar icono de “bucle” cuando NO estamos en loop -->
-  <img
-    *ngIf="!isLooping"
-    class="icon-play2"
-    src="assets/play-bucle.svg"
-    alt="Play2"
-  />
+            <!-- Mostrar icono de “bucle” cuando NO estamos en loop -->
+            <img
+              *ngIf="!isLooping"
+              class="icon-play2"
+              src="assets/play-bucle.svg"
+              alt="Play2"
+            />
 
-  <!-- Mostrar icono STOP cuando SÍ estamos en loop -->
-  <svg
-    *ngIf="isLooping"
-    class="icon-stop"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 512 512"
-    width="38"
-    height="38"
-  >
-    <path d="M64 64h384v384H64z" />
-  </svg>
-</label>
-
-    
-
+            <!-- Mostrar icono STOP cuando SÍ estamos en loop -->
+            <svg
+              *ngIf="isLooping"
+              class="icon-stop"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              width="38"
+              height="38"
+            >
+              <path d="M64 64h384v384H64z" />
+            </svg>
+          </label>
 
           <!-- Webcam, aquí conservamos la funcionalidad de togglear la cámara -->
           <!-- Radio para la webcam -->
@@ -98,8 +95,6 @@
       <div class="right-panel" *ngIf="!showWebcam">
         <!-- Aquí va tu contenido habitual del panel derecho -->
         <div class="icon-menu-fixed">
-          
-
           <a (click)="volverAModos()" title="Modos">
             <i class="fa-solid fa-home"></i>
           </a>
@@ -152,20 +147,20 @@
         </div>
 
         <!-- LISTA DE CATEGORÍAS (vista 1) con estilo de Cards -->
+        <!-- NUEVA VISTA DE CATEGORÍAS CON LA CARD DE LIBRO -->
         <div class="category-grid" *ngIf="!selectedCategory">
           <div
-            class="card"
+            class="book"
             *ngFor="let cat of filteredCategories"
             (click)="onCategoryClick(cat)"
           >
-            <div class="card-details">
-              <!-- Título de la categoría -->
-              <p class="text-title">{{ cat.nombre }}</p>
-              <!-- Pequeño texto de ejemplo: primeras palabras -->
-              <p class="text-body">{{ getPrimerasPalabras(cat) }}</p>
+            <!-- Contenedor con las palabras dentro de la categoría -->
+            <p class="category-words">{{ getPrimerasPalabras(cat) }}</p>
+            
+            <!-- Tapa del libro con el nombre de la categoría -->
+            <div class="cover">
+              <p class="category-name">{{ cat.nombre }}</p>
             </div>
-            <!-- Botón dentro de la card -->
-            <button class="card-button">Más info</button>
           </div>
         </div>
 
