@@ -93,14 +93,14 @@
           <button 
             *ngIf="!isRecording"
             (click)="startRecording()"
-            class="small-disable-webcam-btn"
+            class="record-btn"
           >
             Empezar a grabar
           </button>
           <button 
             *ngIf="isRecording"
             (click)="terminarGrabacion()"
-            class="small-disable-webcam-btn"
+            class="stop-recording-btn"
           >
             Terminar de grabar
           </button>
@@ -195,6 +195,7 @@
               {{ resultado }}
             </p>
           </div>
+          
 
         </div> <!-- Fin .versus-wrapper -->
       
@@ -202,5 +203,13 @@
 
     </div><!-- Fin layout -->
   </div><!-- Fin PANTALLA 3: playing -->
+  <!-- Overlay para anunciar al ganador -->
+  <div *ngIf="uiState === 'finPartida'" class="winner-overlay">
+    <div class="winner-message">
+      <h1>¡Felicidades {{ ganador }} has ganado!</h1>
+      <p>La partida ha terminado.</p>
+      <button (click)="volverAModos()">Volver a Modos</button>
+    </div>
+  </div>
 
 </div><!-- Fin container -->

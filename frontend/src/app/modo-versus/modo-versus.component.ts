@@ -11,6 +11,8 @@ import { CanvasComponent } from '../canvas/canvas.component';
 
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
+import confetti from 'canvas-confetti';
+
 
 @Component({
   selector: 'app-modo-versus',
@@ -42,7 +44,8 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   signerName: string = '';
   guesserName: string = '';
 
-  uiState: 'nombres' | 'turnAnnounce' | 'playing' = 'nombres';
+  uiState: 'nombres' | 'turnAnnounce' | 'playing' | 'finPartida' = 'nombres';
+  ganador: string = '';
 
 
   public currentWord: string = 'Cargando...';
@@ -398,70 +401,78 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   private checkForWinner(): boolean {
     const p1Hits = this.player1Score.filter(s => s === 'hit').length;
     const p2Hits = this.player2Score.filter(s => s === 'hit').length;
-    
-    const p1ShotsUsed = this.player1Index; 
-    const p2ShotsUsed = this.player2Index; 
+    const p1ShotsUsed = this.player1Index;
+    const p2ShotsUsed = this.player2Index;
   
-    // 1) fase normal => compruebo inalcanzable
     if (!this.isSuddenDeath) {
       const p1ShotsLeft = 3 - p1ShotsUsed;
       const p2ShotsLeft = 3 - p2ShotsUsed;
   
-      // 1A) P1 inalcanzable
+      // Si un jugador tiene una ventaja imposible de alcanzar con los tiros restantes:
       if ((p1Hits - p2Hits) > p2ShotsLeft) {
-        alert(`${this.player1Name} gana la partida, inalcanzable!`);
-        this.endGame(); 
+        this.ganador = this.player1Name;
+        this.uiState = 'finPartida';
+        this.triggerConfetti();
         return true;
       }
-      // 1B) P2 inalcanzable
       if ((p2Hits - p1Hits) > p1ShotsLeft) {
-        alert(`${this.player2Name} gana la partida, inalcanzable!`);
-        this.endGame();
+        this.ganador = this.player2Name;
+        this.uiState = 'finPartida';
+        this.triggerConfetti();
         return true;
       }
   
-      // 1C) Se han jugado los 3 tiros cada uno
+      // Si ambos han usado sus 3 tiros y están empatados, se activa la fase de muerte súbita.
+      if (p1ShotsUsed === 3 && p2ShotsUsed === 3 && p1Hits === p2Hits) {
+        this.isSuddenDeath = true;
+        // Aquí podrías opcionalmente mostrar un breve mensaje en pantalla (por ejemplo, en el overlay o en otro elemento)
+        return false;
+      }
+  
+      // Si ambos han usado sus 3 tiros y hay diferencia (aunque esto ya se habría capturado arriba), se declara ganador.
       if (p1ShotsUsed === 3 && p2ShotsUsed === 3) {
         if (p1Hits > p2Hits) {
-          alert(`${this.player1Name} gana la partida!`);
-          this.endGame();
+          this.ganador = this.player1Name;
+          this.uiState = 'finPartida';
+          this.triggerConfetti();
           return true;
         } else if (p2Hits > p1Hits) {
-          alert(`${this.player2Name} gana la partida!`);
-          this.endGame();
+          this.ganador = this.player2Name;
+          this.uiState = 'finPartida';
+          this.triggerConfetti();
           return true;
-        } else {
-          // == EMPATE => activamos muerte súbita
-          alert('¡Empate! Entramos en muerte súbita...');
-          this.isSuddenDeath = true;
-          return false; // no hay ganador aún
         }
       }
     } else {
-      // 2) FASE MUERTE SÚBITA:
-      // Queremos ver si ambos han hecho la misma cantidad de disparos extra
-      // (Ej: p1ShotsUsed = 4, p2ShotsUsed = 4 => completaron 1 "ronda" en muerte súbita)
+      // Fase de muerte súbita: en cada ronda, si ambos han disparado el mismo número de veces y uno tiene más aciertos, ese jugador gana.
       if (p1ShotsUsed > 3 && p2ShotsUsed > 3 && p1ShotsUsed === p2ShotsUsed) {
         if (p1Hits > p2Hits) {
-          alert(`${this.player1Name} anota en muerte súbita y gana!`);
-          this.endGame();
+          this.ganador = this.player1Name;
+          this.uiState = 'finPartida';
+          this.triggerConfetti();
           return true;
         } else if (p2Hits > p1Hits) {
-          alert(`${this.player2Name} anota en muerte súbita y gana!`);
-          this.endGame();
+          this.ganador = this.player2Name;
+          this.uiState = 'finPartida';
+          this.triggerConfetti();
           return true;
-        } else {
-          // Ambos fallaron o ambos acertaron => Siguen empatados => otra ronda
-          alert('Misma ronda en muerte súbita => siguen empatados, siguiente tiro...');
-          // no hay ganador, siguen
-          return false;
         }
+        // Si siguen empatados, no se hace nada y se espera la siguiente ronda.
+        return false;
       }
     }
-  
-    // Si llegamos aquí => no hay ganador todavía
     return false;
   }
+
+
+  private triggerConfetti(): void {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  }
+  
   
   /**
    * endGame: Limpia o navega a otra ruta. Por ejemplo:
