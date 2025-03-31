@@ -51,7 +51,7 @@
         ></video>
 
         <!-- Menú de herramientas (Radio Buttons) -->
-        <div class="radio-input open" (change)="onRadioChange($event)">
+        <div class="radio-input open" *ngIf="!showRecordedVideo" (change)="onRadioChange($event)">
           <!-- Play -->
           <label class="label label-play" [class.selected]="selectedTool === 'play'">
             <input type="radio" id="play" name="value-radio" value="play" />

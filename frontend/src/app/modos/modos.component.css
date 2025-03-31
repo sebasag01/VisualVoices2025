@@ -487,28 +487,129 @@
 }
 
 /* Contenedor para centrar y separar los botones */
+/* Reemplaza el .buttons-group button existente con estos estilos */
+
+/* Contenedor para centrar y separar los botones */
 .buttons-group {
-  display: flex;              /* Para colocarlos uno al lado del otro */
-  gap: 20px;                  /* Espacio horizontal entre botones */
-  justify-content: center;    /* Centrar en el eje horizontal */
-  margin-top: 1rem;           /* Espacio superior */
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin-top: 1rem;
+  width: 100%;
 }
 
-/* Aplicar el estilo de .next-turn-btn / .small-webcam-btn */
+/* Estilos base compartidos */
 .buttons-group button {
-  padding: 5px 10px;              /* Mismo padding */
-  font-size: 1rem;                /* Mismo tamaño de letra */
-  font-family: "Lexend", sans-serif;
-  width: auto;
-  height: auto;
-  border: 2px solid black;
-  border-radius: 12px;            /* Bordes redondeados */
-  background-color: #41b8d5;      /* Color de fondo */
-  color: rgb(0, 0, 0);            /* Color de texto */
-  transition: background-color 0.3s ease;
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  font-family: "ChauPhilomene", sans-serif;
+  border: 3px solid black;
+  border-radius: 12px;
+  color: rgb(0, 0, 0);
+  transition: all 0.3s ease;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
-.buttons-group button:hover {
-  background-color: #35a0c7;      /* Color en hover */
+
+/* Botón Modo Individual */
+.buttons-group button:first-child {
+  background-color: #41b8d5;
+}
+
+.buttons-group button:first-child::before {
+  content: "\f007"; /* Icono de usuario individual de FontAwesome */
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  margin-right: 10px;
+  font-size: 1.1rem;
+}
+
+.buttons-group button:first-child:hover {
+  background-color: #35a0c7;
+  transform: translateY(-3px);
+}
+
+/* Botón Modo Versus con imagen personalizada */
+.buttons-group button:last-child {
+  background-color: #ff7b54;
+  padding-left: 15px; /* Ajuste para imagen personalizada */
+}
+
+.buttons-group button:last-child::before {
+  content: "";
+  background-image: url('frontend\src\assets\icono_versus2.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  display: inline-block;
+  background-color: inherit; /* This will inherit the button's background color */
+}
+
+.buttons-group button:last-child:hover {
+  background-color: #e86642;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(255, 123, 84, 0.4), 
+              0 0 5px 2px rgba(255, 69, 0, 0.3);
+}
+
+/* Efecto al hacer click */
+.buttons-group button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Efecto de llamas para el botón Versus */
+.buttons-group button:last-child::after {
+  content: "";
+  position: absolute;
+  width: 140%;
+  height: 15px;
+  bottom: -5px;
+  left: -20%;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    #ff6b0080 20%,
+    #ff4500 30%,
+    #ff7800 40%,
+    #ffce00 50%,
+    #ff7800 60%,
+    #ff4500 70%,
+    #ff6b0080 80%,
+    transparent 100%
+  );
+  clip-path: polygon(
+    0% 100%, 10% 60%, 15% 80%, 20% 40%, 25% 70%, 30% 45%, 
+    35% 75%, 40% 30%, 45% 65%, 50% 15%, 55% 65%, 60% 30%, 
+    65% 75%, 70% 45%, 75% 70%, 80% 40%, 85% 80%, 90% 60%, 100% 100%
+  );
+  animation: flames 1.5s infinite alternate;
+}
+
+@keyframes flames {
+  0% {
+    transform: scaleY(1) translateY(0);
+    filter: brightness(1);
+  }
+  100% {
+    transform: scaleY(1.2) translateY(-2px);
+    filter: brightness(1.2);
+  }
+}
+
+/* Añadir brillo alrededor del botón Versus al hacer hover */
+.buttons-group button:last-child:hover {
+  background-color: #e86642;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(255, 123, 84, 0.4), 
+              0 0 5px 2px rgba(255, 69, 0, 0.3);
 }
 
