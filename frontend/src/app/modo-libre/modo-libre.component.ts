@@ -301,16 +301,29 @@ export class ModoLibreComponent implements OnInit, OnDestroy {
   // **************************************
   get filteredCategoriesBySearch(): any[] {
     if (!this.searchText) return this.categorias;
-
+  
     const lowerSearch = this.searchText.toLowerCase();
-    return this.categorias.filter(cat => {
-      const catMatches = cat.nombre.toLowerCase().includes(lowerSearch);
-      const wordMatches = cat.palabras?.some((p: any) =>
+  
+    // Si estamos en vista 2 (hay categoría seleccionada)
+    if (this.selectedCategory) {
+      return this.selectedCategory.palabras.filter((p: any) =>
         p.palabra.toLowerCase().includes(lowerSearch)
       );
-      return catMatches || wordMatches;
+    }
+    
+    
+    // Si estamos en vista 1 (no hay categoría seleccionada)
+    const categoriasFiltradas = this.categorias.filter(cat => {
+      const catMatch = cat.nombre.toLowerCase().includes(lowerSearch);
+      const palabraMatch = cat.palabras?.some((p: any) =>
+        p.palabra.toLowerCase().includes(lowerSearch)
+      );
+      return catMatch || palabraMatch;
     });
+  
+    return categoriasFiltradas;
   }
+  
 
   onSearchInput(): void {}
   onInputFocus(): void {
@@ -425,5 +438,15 @@ export class ModoLibreComponent implements OnInit, OnDestroy {
         alert('Error al cerrar sesión.');
       },
     });
+  }
+  get filteredWordsInSelectedCategory(): any[] {
+    if (!this.searchText || this.searchText.trim() === '') {
+      return this.palabrasDeCategoriaSeleccionada;
+    }
+  
+    const lowerSearch = this.searchText.toLowerCase();
+    return this.palabrasDeCategoriaSeleccionada.filter(p =>
+      p.palabra.toLowerCase().includes(lowerSearch)
+    );
   }
 }
