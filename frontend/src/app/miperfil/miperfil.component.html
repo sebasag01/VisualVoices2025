@@ -385,8 +385,23 @@
     </div>
   </div>
 
+  <ngx-charts-bar-horizontal
+  [view]="view"
+  [scheme]="colorScheme"
+  [results]="single"
+  [gradient]="gradient"
+  [xAxis]="showXAxis"
+  [yAxis]="showYAxis"
+  [legend]="showLegend"
+  [showXAxisLabel]="showXAxisLabel"
+  [showYAxisLabel]="showYAxisLabel"
+  [xAxisLabel]="xAxisLabel"
+  [yAxisLabel]="yAxisLabel">
+</ngx-charts-bar-horizontal>
+
+
   <!-- From Uiverse.io by kushalyadavweb -->
-  <div class="estadisticas-container">
+  <!-- <div class="estadisticas-container">
     <div class="estatisticas1">
       <div class="item item--1">
         <svg
@@ -452,9 +467,8 @@
         <span class="quantity"> 30+ </span>
         <span class="text text--4"> Niveles completados </span>
       </div>
-    </div>
+    </div>-->
 
-    <!-- From Uiverse.io by vinodjangid07 -->
     <div class="estadisticas2">
       <div class="stats-wrapper">
         <p class="heading">Nota media</p>
@@ -525,5 +539,5 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
+  </div> 
+

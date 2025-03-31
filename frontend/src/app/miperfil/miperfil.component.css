@@ -470,3 +470,11 @@ html {
   font-weight: 700;
 }
 
+
+ngx-charts-bar-horizontal {
+  margin-left: 20px; /* Ajusta el valor según lo que necesites */
+  font-family: "Chauphilomene";
+  font-size: 30px !important;
+
+}
+
