@@ -35,39 +35,36 @@
             </svg>
           </label>
 
-    <!-- Radio principal PLAY2, con position: relative -->
-   <!-- Sustituyendo el label-play2 antiguo por un toggle de checkbox -->
-<label class="label label-play2">
-  <!-- Quitar name="value-radio" porque ya no es un radio group -->
-  <input
-    type="checkbox"
-    id="toggleLoop"
-    (change)="onToggleLoop($event)"
-  />
+          <!-- Radio principal PLAY2, con position: relative -->
+          <!-- Sustituyendo el label-play2 antiguo por un toggle de checkbox -->
+          <label class="label label-play2">
+            <!-- Quitar name="value-radio" porque ya no es un radio group -->
+            <input
+              type="checkbox"
+              id="toggleLoop"
+              (change)="onToggleLoop($event)"
+            />
 
-  <!-- Mostrar icono de “bucle” cuando NO estamos en loop -->
-  <img
-    *ngIf="!isLooping"
-    class="icon-play2"
-    src="assets/play-bucle.svg"
-    alt="Play2"
-  />
+            <!-- Mostrar icono de “bucle” cuando NO estamos en loop -->
+            <img
+              *ngIf="!isLooping"
+              class="icon-play2"
+              src="assets/play-bucle.svg"
+              alt="Play2"
+            />
 
-  <!-- Mostrar icono STOP cuando SÍ estamos en loop -->
-  <svg
-    *ngIf="isLooping"
-    class="icon-stop"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 512 512"
-    width="38"
-    height="38"
-  >
-    <path d="M64 64h384v384H64z" />
-  </svg>
-</label>
-
-    
-
+            <!-- Mostrar icono STOP cuando SÍ estamos en loop -->
+            <svg
+              *ngIf="isLooping"
+              class="icon-stop"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              width="38"
+              height="38"
+            >
+              <path d="M64 64h384v384H64z" />
+            </svg>
+          </label>
 
           <!-- Webcam, aquí conservamos la funcionalidad de togglear la cámara -->
           <!-- Radio para la webcam -->
@@ -98,8 +95,6 @@
       <div class="right-panel" *ngIf="!showWebcam">
         <!-- Aquí va tu contenido habitual del panel derecho -->
         <div class="icon-menu-fixed">
-          
-
           <a (click)="volverAModos()" title="Modos">
             <i class="fa-solid fa-home"></i>
           </a>
@@ -164,6 +159,62 @@
     <button class="card-button">Más info</button>
   </div>
 </div>
+        <div
+          class="search-bar"
+          id="search-container"
+          (click)="toggleDropdown($event)"
+        >
+          <input
+            type="text"
+            placeholder="Busca cualquier palabra o categoría"
+            id="search-input"
+            [(ngModel)]="searchText"
+            (input)="onSearchInput()"
+            (focus)="onInputFocus()"
+          />
+          <button id="search-btn" title="Buscar" (click)="performSearch()">
+            <span class="lupa"></span>
+          </button>
+        </div>
+        <div
+          class="multi-select-dropdown"
+          [class.open]="isOpen"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="dropdown-content">
+            <!-- Recorremos las categorías que pasan el filtro de texto -->
+            <label
+              class="dropdown-item"
+              *ngFor="let cat of filteredCategoriesBySearch"
+            >
+              <input
+                type="checkbox"
+                [value]="cat._id"
+                (change)="onCheckboxChange($event, cat)"
+                [checked]="selectedCategoryIds.includes(cat._id)"
+              />
+              {{ cat.nombre }}
+            </label>
+          </div>
+        </div>
+
+        <!-- LISTA DE CATEGORÍAS (vista 1) con estilo de Cards -->
+        <!-- NUEVA VISTA DE CATEGORÍAS CON LA CARD DE LIBRO -->
+        <div class="category-grid" *ngIf="!selectedCategory">
+          <div
+            class="book"
+            *ngFor="let cat of filteredCategories"
+            (click)="onCategoryClick(cat)"
+          >
+            <!-- Contenedor con las palabras dentro de la categoría -->
+            <p class="category-words">{{ getPrimerasPalabras(cat) }}</p>
+            
+            <!-- Tapa del libro con el nombre de la categoría -->
+            <div class="cover">
+              <p class="category-name">{{ cat.nombre }}</p>
+            </div>
+          </div>
+        </div>
 
 <!-- LISTA DE PALABRAS (vista 2) -->
 <div class="word-list" *ngIf="selectedCategory">

@@ -395,6 +395,16 @@ button:active,
 }
 
 /* VISTA 1 DE CATEGORÍAS */
+/* .category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  justify-items: center;
+  align-items: center;
+  margin: 10px auto;
+} */
+
+/* GRID DE CATEGORÍAS */
 .category-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -403,6 +413,66 @@ button:active,
   align-items: center;
   margin: 10px auto;
 }
+
+/* ESTILO DEL LIBRO */
+.book {
+  position: relative;
+  border-radius: 10px;
+  width: 220px; /* Ajustado para ser más cuadrado */
+  height: 220px; /* Mismo valor que el ancho */
+  background-color: #71d1e9;
+  box-shadow: 1px 1px 12px #000;
+  perspective: 2000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  cursor: pointer;
+  flex-direction: column; /* Asegura que los elementos internos estén en columna */
+
+}
+
+/* CONTENIDO DE LA CATEGORÍA (palabras dentro del libro) */
+.category-words {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px;
+  font-family: "Lexend", sans-serif; /* Aplica la fuente */
+
+}
+
+/* ESTILO DE LA PORTADA */
+.cover {
+  top: 0;
+  position: absolute;
+  background-color: #41b8d5;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.5s;
+  transform-origin: 0;
+  /* box-shadow: 1px 1px 12px #000; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* TEXTO DEL NOMBRE DE LA CATEGORÍA */
+.category-name {
+  font-size: 20px;
+  font-weight: bolder;
+  font-family: "Lexend", sans-serif; /* Aplica la fuente */
+
+}
+
+/* ANIMACIÓN DEL LIBRO AL HACER HOVER */
+.book:hover .cover {
+  transition: all 0.5s;
+  transform: rotateY(-80deg);
+}
+
 
 .card {
   width: 190px;
