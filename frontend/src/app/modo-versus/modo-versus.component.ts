@@ -47,6 +47,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   uiState: 'nombres' | 'turnAnnounce' | 'playing' | 'finPartida' = 'nombres';
   ganador: string = '';
 
+  usedWords: string[] = [];
 
   public currentWord: string = 'Cargando...';
   public showRecordedVideo: boolean = false;
@@ -118,11 +119,13 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     // Pasamos a la pantalla "TurnAnnounce"
     this.uiState = 'turnAnnounce';
 
+    this.iniciarModo();   // <<--- se ejecuta aquí
+
     // Esperar 2s (o 5s) y luego "playing"
     setTimeout(() => {
       this.uiState = 'playing';
       this.iniciarModo(); // Enciende la webcam y carga la pregunta
-    }, 2000);
+    }, 2500);
   }
   
 
@@ -218,7 +221,15 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
         const correctId = resp.correctAnswerId;
         const correctOption = this.opciones.find(o => o._id === correctId);
         if (correctOption) {
-          this.currentWord = correctOption.palabra;
+          if (this.usedWords.includes(correctOption.palabra)) {
+            console.warn('Palabra repetida, cargando otra pregunta...');
+            this.cargarNuevaPregunta();
+            return;
+          }else {
+            this.currentWord = correctOption.palabra;
+            this.usedWords.push(correctOption.palabra);
+
+          }
         } else {
           this.currentWord = 'Cargando...';
           console.warn('Opción correcta no encontrada');
@@ -245,28 +256,22 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   // ======================================================
   seleccionarOpcion(opcionId: string): void {
     // El GUESSER elige la opción => scoreboard para guesser
-    // Verificamos
     this.examenService.verificarRespuesta(this.questionId, opcionId).subscribe({
       next: (resp) => {
-
         this.optionStatus[opcionId] = resp.esCorrecta ? 'correct' : 'incorrect';
-
         this.resultado = resp.esCorrecta ? '¡Respuesta correcta!' : 'Respuesta incorrecta';
-
+  
         // Actualizar scoreboard AL GUESSER
         if (this.guesserName === this.player1Name) {
           this.player1Score[this.player1Index] = resp.esCorrecta ? 'hit' : 'miss';
-          if (this.player1Index < 2) this.player1Index++;
+          this.player1Index++; // Incrementar DESPUÉS de actualizar el score
         } else {
           this.player2Score[this.player2Index] = resp.esCorrecta ? 'hit' : 'miss';
-          if (this.player2Index < 2) this.player2Index++;
+          this.player2Index++; // Incrementar DESPUÉS de actualizar el score
         }
-        // Comprobar si hay ganador
-        if (this.checkForWinner()) {
-          // Si checkForWinner() detectó ganador y llamó a endGame(),
-          // puedes retornar para no hacer más
-          return;
-        }
+        
+        // Comprobar si hay ganador después de actualizar índices
+        this.checkForWinner();
       },
       error: (err) => {/* ... */}
     });
@@ -370,6 +375,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   }
 
   volverAModos(): void {
+    this.usedWords = [];
     this.router.navigate(['/modos']);
   }
 
@@ -401,42 +407,70 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   private checkForWinner(): boolean {
     const p1Hits = this.player1Score.filter(s => s === 'hit').length;
     const p2Hits = this.player2Score.filter(s => s === 'hit').length;
-    const p1ShotsUsed = this.player1Index;
-    const p2ShotsUsed = this.player2Index;
-  
+    
+    // Si no estamos en muerte súbita
     if (!this.isSuddenDeath) {
-      const p1ShotsLeft = 3 - p1ShotsUsed;
-      const p2ShotsLeft = 3 - p2ShotsUsed;
-  
-      // Si un jugador tiene una ventaja imposible de alcanzar con los tiros restantes:
-      if ((p1Hits - p2Hits) > p2ShotsLeft) {
-        this.ganador = this.player1Name;
-        this.uiState = 'finPartida';
-        this.triggerConfetti();
-        return true;
-      }
-      if ((p2Hits - p1Hits) > p1ShotsLeft) {
-        this.ganador = this.player2Name;
-        this.uiState = 'finPartida';
-        this.triggerConfetti();
-        return true;
-      }
-  
-      // Si ambos han usado sus 3 tiros y están empatados, se activa la fase de muerte súbita.
-      if (p1ShotsUsed === 3 && p2ShotsUsed === 3 && p1Hits === p2Hits) {
-        this.isSuddenDeath = true;
-        // Aquí podrías opcionalmente mostrar un breve mensaje en pantalla (por ejemplo, en el overlay o en otro elemento)
-        return false;
-      }
-  
-      // Si ambos han usado sus 3 tiros y hay diferencia (aunque esto ya se habría capturado arriba), se declara ganador.
-      if (p1ShotsUsed === 3 && p2ShotsUsed === 3) {
+      // Verificar si ambos jugadores han completado sus 3 turnos
+      const p1Complete = this.player1Index === 3;
+      const p2Complete = this.player2Index === 3;
+      
+      // Caso 1: Si ambos han completado sus turnos
+      if (p1Complete && p2Complete) {
         if (p1Hits > p2Hits) {
           this.ganador = this.player1Name;
           this.uiState = 'finPartida';
           this.triggerConfetti();
           return true;
         } else if (p2Hits > p1Hits) {
+          this.ganador = this.player2Name;
+          this.uiState = 'finPartida';
+          this.triggerConfetti();
+          return true;
+        } else {
+          // Empate: activar muerte súbita
+          this.isSuddenDeath = true;
+          console.log('¡Muerte súbita activada después de empate!');
+          return false;
+        }
+      }
+      
+      // Caso 2: Si uno ha completado sus turnos pero el otro no
+      if (p1Complete && !p2Complete) {
+        // Solo declaramos ganador al player1 si es matemáticamente imposible para player2 alcanzarlo
+        const p2PossibleHits = p2Hits + (3 - this.player2Index);
+        if (p1Hits > p2PossibleHits) {
+          this.ganador = this.player1Name;
+          this.uiState = 'finPartida';
+          this.triggerConfetti();
+          return true;
+        }
+      }
+      
+      if (p2Complete && !p1Complete) {
+        // Solo declaramos ganador al player2 si es matemáticamente imposible para player1 alcanzarlo
+        const p1PossibleHits = p1Hits + (3 - this.player1Index);
+        if (p2Hits > p1PossibleHits) {
+          this.ganador = this.player2Name;
+          this.uiState = 'finPartida';
+          this.triggerConfetti();
+          return true;
+        }
+      }
+      
+      // Caso 3: Ninguno ha completado sus turnos
+      // Comprobamos si matemáticamente es imposible para uno alcanzar al otro
+      if (!p1Complete && !p2Complete) {
+        const p1PossibleHits = p1Hits + (3 - this.player1Index);
+        const p2PossibleHits = p2Hits + (3 - this.player2Index);
+        
+        if (p1Hits > p2PossibleHits) {
+          this.ganador = this.player1Name;
+          this.uiState = 'finPartida';
+          this.triggerConfetti();
+          return true;
+        }
+        
+        if (p2Hits > p1PossibleHits) {
           this.ganador = this.player2Name;
           this.uiState = 'finPartida';
           this.triggerConfetti();
@@ -444,8 +478,9 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
         }
       }
     } else {
-      // Fase de muerte súbita: en cada ronda, si ambos han disparado el mismo número de veces y uno tiene más aciertos, ese jugador gana.
-      if (p1ShotsUsed > 3 && p2ShotsUsed > 3 && p1ShotsUsed === p2ShotsUsed) {
+      // En muerte súbita:
+      // Solo comprobamos ganador cuando ambos han tirado el mismo número de veces
+      if (this.player1Index === this.player2Index) {
         if (p1Hits > p2Hits) {
           this.ganador = this.player1Name;
           this.uiState = 'finPartida';
@@ -457,10 +492,10 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
           this.triggerConfetti();
           return true;
         }
-        // Si siguen empatados, no se hace nada y se espera la siguiente ronda.
-        return false;
+        // Si están empatados, continúa la muerte súbita
       }
     }
+    
     return false;
   }
 
