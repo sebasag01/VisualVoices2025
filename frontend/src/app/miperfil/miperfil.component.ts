@@ -5,15 +5,39 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';  // ✅ Importado FormsModule para usar ngModel
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 
 @Component({
   selector: 'app-miperfil',
   templateUrl: './miperfil.component.html',
   styleUrls: ['./miperfil.component.css'],
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, CommonModule, FormsModule] // ✅ Agregado FormsModule
+  imports: [HeaderComponent, FooterComponent, CommonModule, FormsModule, NgxChartsModule] // ✅ Agregado FormsModule
 })
 export class MiperfilComponent implements OnInit {
+  single = [
+    { "name": "Usuarios", "value": 40632 },
+    { "name": "Palabras", "value": 50000 },
+    { "name": "Tiempo de uso", "value": 36745 },
+    { "name": "Niveles", "value": 36240 },
+    // { "name": "Spain", "value": 33000 },
+    // { "name": "Italy", "value": 35800 }
+  ];
+
+  // Configuración de la gráfica
+  view: [number, number] = [900, 500]; // Tamaño de la gráfica
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  xAxisLabel = '';
+  showYAxisLabel = true;
+  yAxisLabel = '';
+
+  colorScheme = 'vivid'; // O puedes usar 'cool', 'cooldown', 'flame', etc.
+
   userData: any = {}; // Ahora es un objeto genérico
 
   isEditing: Record<string, boolean> = {
