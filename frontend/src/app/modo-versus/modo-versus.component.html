@@ -5,6 +5,19 @@
   <!-- PANTALLA 1: Formulario para ingresar nombres de jugadores + Botón Empezar -->
   <div *ngIf="uiState === 'nombres'" class="start-container">
 
+    <!-- Ícono Home fijo -->
+    <div class="icon-menu-fixed">
+      <a (click)="volverAModos()" title="Modos">
+        <i class="fa-solid fa-home"></i>
+      </a>
+      <a (click)="navigateTo('perfil')" title="Mi Perfil">
+        <i class="fa-solid fa-user"></i>
+      </a>
+      <a (click)="logout()" title="Cerrar Sesión">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </a>
+    </div>
+
     <div class="players-form">
       <h3>Jugadores</h3>
 
@@ -116,6 +129,12 @@
         <div class="icon-menu-fixed">
           <a (click)="volverAModos()" title="Modos">
             <i class="fa-solid fa-home"></i>
+          </a>
+          <a (click)="navigateTo('perfil')" title="Mi Perfil">
+            <i class="fa-solid fa-user"></i>
+          </a>
+          <a (click)="logout()" title="Cerrar Sesión">
+            <i class="fa-solid fa-right-from-bracket"></i>
           </a>
         </div>
       
