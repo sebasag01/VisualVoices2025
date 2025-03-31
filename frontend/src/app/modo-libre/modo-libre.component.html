@@ -112,86 +112,85 @@
           </a>
         </div>
 
-        <div
-          class="search-bar"
-          id="search-container"
-          (click)="toggleDropdown($event)"
-        >
-          <input
-            type="text"
-            placeholder="Busca cualquier palabra o categoría"
-            id="search-input"
-            [(ngModel)]="searchText"
-            (input)="onSearchInput()"
-            (focus)="onInputFocus()"
-          />
-          <button id="search-btn" title="Buscar" (click)="performSearch()">
-            <span class="lupa"></span>
-          </button>
-        </div>
-        <div
-          class="multi-select-dropdown"
-          [class.open]="isOpen"
-          (click)="$event.stopPropagation()"
-        >
-          <div class="dropdown-content">
-            <!-- Recorremos las categorías que pasan el filtro de texto -->
-            <label
-              class="dropdown-item"
-              *ngFor="let cat of filteredCategoriesBySearch"
-            >
-              <input
-                type="checkbox"
-                [value]="cat._id"
-                (change)="onCheckboxChange($event, cat)"
-                [checked]="selectedCategoryIds.includes(cat._id)"
-              />
-              {{ cat.nombre }}
-            </label>
+        <div class="search-wrapper" (click)="toggleDropdown($event)">
+          <div class="search-bar">
+            <input
+              type="text"
+              placeholder="Busca cualquier palabra o categoría"
+              id="search-input"
+              [(ngModel)]="searchText"
+              (input)="onSearchInput()"
+              (focus)="onInputFocus()"
+            />
+            <span class="search-icon">🔍</span>
           </div>
-        </div>
-
-        <!-- LISTA DE CATEGORÍAS (vista 1) con estilo de Cards -->
-        <div class="category-grid" *ngIf="!selectedCategory">
+        
+          <!-- Selector desplegable -->
           <div
-            class="card"
-            *ngFor="let cat of filteredCategories"
-            (click)="onCategoryClick(cat)"
+            class="multi-select-dropdown"
+            [class.open]="isOpen"
+            (click)="$event.stopPropagation()"
           >
-            <div class="card-details">
-              <!-- Título de la categoría -->
-              <p class="text-title">{{ cat.nombre }}</p>
-              <!-- Pequeño texto de ejemplo: primeras palabras -->
-              <p class="text-body">{{ getPrimerasPalabras(cat) }}</p>
+            <div class="dropdown-content">
+              <label
+                class="dropdown-item"
+                *ngFor="let cat of filteredCategoriesBySearch"
+              >
+                <input
+                  type="checkbox"
+                  [value]="cat._id"
+                  (change)="onCheckboxChange($event, cat)"
+                  [checked]="selectedCategoryIds.includes(cat._id)"
+                />
+                {{ cat.nombre }}
+              </label>
             </div>
-            <!-- Botón dentro de la card -->
-            <button class="card-button">Más info</button>
           </div>
         </div>
+        
+      
 
-        <!-- LISTA DE PALABRAS (vista 2) -->
-        <!-- LISTA DE PALABRAS (vista 2) -->
-        <div class="word-list" *ngIf="selectedCategory">
-          <!-- Botón para volver a la lista de categorías -->
-          <div class="back-button" (click)="volverAListaCategorias()">
-            <i class="fa-solid fa-arrow-left"></i>
-            <span>Volver</span>
-          </div>
+        <!-- LISTA DE CATEGORÍAS (vista 1) -->
+<div class="category-grid" *ngIf="!selectedCategory">
+  <div
+    class="card"
+    *ngFor="let cat of filteredCategoriesBySearch"
+    (click)="onCategoryClick(cat)"
+  >
+    <div class="card-details">
+      <p class="text-title">{{ cat.nombre }}</p>
+      <p class="text-body">{{ getPrimerasPalabras(cat) }}</p>
+    </div>
+    <button class="card-button">Más info</button>
+  </div>
+</div>
 
-          <h3>{{ selectedCategory.nombre }}</h3>
+<!-- LISTA DE PALABRAS (vista 2) -->
+<div class="word-list" *ngIf="selectedCategory">
+  <div class="title-row">
+    <div class="back-button" (click)="volverAListaCategorias()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </div>
+    <h3>{{ selectedCategory.nombre }}</h3>
+  </div>
 
-          <div
-            class="word-item"
-            *ngFor="let palabra of palabrasDeCategoriaSeleccionada"
-            (click)="seleccionarPalabra(palabra)"
-            [ngClass]="{
-              'selected-word': selectedWord?.palabra === palabra.palabra
-            }"
-          >
-            <!-- Nombre de la palabra -->
-            <div class="word-title">{{ palabra.palabra }}</div>
-          </div>
-        </div>
+  <div class="word-buttons">
+    <div
+      class="word-item"
+      *ngFor="let palabra of filteredWordsInSelectedCategory"
+      (click)="seleccionarPalabra(palabra)"
+      [ngClass]="{
+        'selected-word': selectedWord?.palabra === palabra.palabra
+      }"
+    >
+      <div class="word-title">{{ palabra.palabra }}</div>
+    </div>
+  </div>
+  
+  
+</div>
+
+        
       </div>
       <!-- fin right-panel -->
     </div>
