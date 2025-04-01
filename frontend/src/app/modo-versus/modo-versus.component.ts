@@ -73,6 +73,10 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   mediaRecorder!: MediaRecorder;
   currentTurnName: string = '';
 
+  isLooping = false;
+
+
+
   private isSuddenDeath = false; 
 
 
@@ -291,7 +295,13 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     switch (valor) {
       case 'play':
         this.animacionService.cargarAnimaciones(animUrls, true, false);
-        break;
+  this.selectedTool = 'play';
+
+  // Deseleccionar automáticamente cuando acabe (3 segundos aprox)
+  setTimeout(() => {
+    this.deseleccionarRadio();
+  }, 4000); // SEGUNDOS QUE DURA LA ANIMACIÓN PARA DESELECCIONAR EL PLAY
+  break;
       case 'play2':
         this.animacionService.cargarAnimaciones(animUrls, true, true);
         break;
@@ -308,7 +318,12 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
         break;
     }
   }
-
+  deseleccionarRadio(): void {
+    const radios = document.querySelectorAll('input[name="value-radio"]') as NodeListOf<HTMLInputElement>;
+    radios.forEach(radio => radio.checked = false);
+    this.selectedTool = '';
+  }
+  
   // ======================================================
   // Reproducir animación al hacer click en la palabra
   // ======================================================
@@ -520,5 +535,23 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   }
   
   
-
+  onToggleLoop(event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+  
+    if (checked) {
+      this.isLooping = true;
+      this.reproducirAnimacion(true);  // con bucle
+    } else {
+      this.isLooping = false;
+      this.canvasRef?.stopLoop(true);  // parar animación
+    }
+  }
+  private reproducirAnimacion(loop: boolean): void {
+    const animacionesUrls = this.animaciones.map(a =>
+      `${environment.apiUrl}/gltf/animaciones/${a.filename}`
+    );
+  
+    this.animacionService.cargarAnimaciones(animacionesUrls, true, loop);
+  }
+    
 }

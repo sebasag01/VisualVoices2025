@@ -351,9 +351,11 @@ html, body {
   height: 80px;
   position: relative;
   background: linear-gradient(to bottom, #333, #242323);
+  pointer-events: none
 }
 .label-webcam input[type="radio"] {
   display: none;
+  pointer-events: none
 }
 .icon-webcam {
   display: block;
@@ -361,6 +363,7 @@ html, body {
   height: auto;
   margin: 0 auto;
   transition: filter 0.2s;
+  pointer-events: none
 }
 .label-webcam:has(input[type="radio"]:checked) .icon-webcam {
   filter: drop-shadow(0 0 5px #cae2fd);
