@@ -23,6 +23,7 @@
 }
 .h3{
   font-family: "ChauPhilomene";
+  color:#000;
 }
 /* Asegurar que .content ocupe toda la pantalla */
 .content {
@@ -130,16 +131,29 @@ button:active,
   gap: 5px;
   margin-bottom: 15px;
   cursor: pointer;
+
+  /* Mantener el tamaño pero hacer líneas más gruesas */
   font-size: 1.1rem;
-  color: black;
-  border: 2px solid black;
-  padding: 6px 12px;
-  border-radius: 8px;
+  font-weight: bold; /* Hace que el icono y el texto se vean más gruesos */
+  /* border: 4px solid black;  */
+  padding: 6px 12px; 
+  /* border-radius: 8px; */
+
+  /* Mantener estilos */
   width: fit-content;
-  background-color: transparent; /* un tono claro */
+  background-color: transparent;
   transition: background-color 0.3s ease;
-  cursor: pointer;
 }
+.back-button:hover {
+  transform: scale(1.03); /* Efecto ligero al pasar el mouse */
+}
+
+.back-button i {
+  font-size: 1.1rem; /* Mantener tamaño */
+  font-weight: 1300; /* Hace que el icono sea más grueso */
+  transform: scale(1.5); /* Aumenta grosor sin cambiar el tamaño */
+}
+
 
 
 
@@ -245,6 +259,7 @@ button:active,
   height: 100%;
 }
 .title-row {
+  color:black;
   display: flex;
   align-items: center;
   justify-content: space-between; /* 👈 Esto separa el botón y el título */
@@ -490,33 +505,39 @@ button:active,
   justify-content: center;
   align-items: center;
   padding: 6px 12px;
-  text-transform: uppercase;
-  border-radius: 18px;
-  font-size: 24px;
-  font-family: "Lexend", sans-serif;
+   font-weight: 900;
+   font-size: 24px;
+   font-family: "Lexend", sans-serif;
   background-color: #41b8d5;
   color: black;
-  border: 4px solid black;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  border: 3px solid black; /* Igual que el otro botón */
+  border-radius: 0.4em; /* Ajustado para coincidir */
+  box-shadow: 0.1em 0.1em;
   cursor: pointer;
-  user-select: none;
+  text-transform: uppercase;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   min-width: 50px;
   min-height: 90px;
-  text-align: center;
 }
-
 
 .word-item:hover,
 .word-item:focus {
-  background-color: #35a0c7;
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.2em 0.2em;
 }
 
-/* Estado seleccionado: scale + color gris */
+.word-item:active {
+  transform: translate(0.05em, 0.05em);
+  box-shadow: 0.05em 0.05em;
+}
+
+/* Estado seleccionado */
 .word-item.selected-word {
   transform: scale(1.10);
   background-color: #b19cd9;
   border-color: black;
 }
+
 
 .word-title {
   font-weight: bold;

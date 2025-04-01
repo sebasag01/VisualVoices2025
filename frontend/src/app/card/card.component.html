@@ -31,13 +31,6 @@
     </ng-container>
 
     <ng-template #normalContent>
-      <!-- Contenedor para el botón con la palabra, que se mostrará mucho más arriba -->
-      <!-- <div class="word-button-container">
-        <span class="word-button" (click)="onWordButtonClick()">
-          {{ word || "Cargando..." }}
-        </span>
-      </div> -->
-
       <!-- Contenedor para el botón con la palabra -->
       <div class="word-button-container">
         <button
@@ -45,9 +38,9 @@
           (click)="onWordButtonClick()"
           disabled
         >
-        <div class="letra-boton">
-          {{ word || "Cargando..." }}
-        </div>
+          <div class="letra-boton">
+            {{ word || "Cargando..." }}
+          </div>
         </button>
       </div>
 

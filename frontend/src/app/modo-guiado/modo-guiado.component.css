@@ -170,6 +170,8 @@
   justify-content: flex-start;
   overflow-y: auto;
   box-sizing: border-box;
+  position: relative; /* 👈 Hace que los hijos con position absolute se posicionen dentro */
+
 }
 
 /*ICONOS MENÚ DERECHO*/
@@ -406,3 +408,62 @@ app-card {
 .label-webcam:has(input[type="radio"]:checked) .icon-webcam {
   filter: drop-shadow(0 0 5px #cae2fd);
 }
+
+
+.back-button {
+  position: absolute;
+  top: 10px; /* Ajusta la posición dentro de .button-grid */
+  left: 10px;
+  margin-top:10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-size: 1.51rem;
+  color: black;
+  /* border: 3px solid black; */
+  padding: 8px 12px;
+  /* border-radius: 8px; */
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+  z-index: 10; /* Asegura que esté encima de otros elementos */
+}
+
+
+.back-button i {
+  font-weight: 900;
+  transform: scale(1.3);
+}
+
+.back-button:hover {
+  transform: scale(1.03); /* Efecto ligero al pasar el mouse */
+}
+
+
+
+/* .back-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 15px;
+  cursor: pointer;
+
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: 4px solid black; 
+  padding: 6px 12px; 
+  border-radius: 8px;
+
+  width: fit-content;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+.back-button:hover {
+  transform: scale(1.03); 
+}
+
+.back-button i {
+  font-size: 1.1rem; 
+  font-weight: 1300; 
+  transform: scale(1.5); 
+} */
