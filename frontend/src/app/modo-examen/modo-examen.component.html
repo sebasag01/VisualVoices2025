@@ -70,11 +70,8 @@
       </div> 
       
       <!-- Contenedor de la cámara, se muestra solo si showWebcam es true -->
-      <div class="camera-container libre-full-right" *ngIf="showWebcam">
+      <div class="camera-container" *ngIf="showWebcam">
         <video #videoElement class="mirror-video" autoplay></video>
-        <button (click)="toggleWebcam()" class="small-disable-webcam-btn">
-          Desactivar Webcam
-        </button>
       </div>
 
       <!-- Panel derecho con las opciones de examen -->
