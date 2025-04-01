@@ -60,7 +60,7 @@
           [src]="recordedVideoUrl"
           controls
           autoplay
-          style="width: 100%; height: 100%; object-fit: contain;"
+          style="width: 100%; height: 100%; object-fit: cover; display: block;"
         ></video>
 
         <!-- Menú de herramientas (Radio Buttons) -->
@@ -73,23 +73,46 @@
             </svg>
           </label>
 
-          <!-- Play2 + Stop anidado -->
-          <label class="label label-play2">
-            <input type="radio" id="play2" name="value-radio" value="play2" />
-            <img class="icon-play2" src="assets/play-bucle.svg" alt="Play2" />
-            <label class="label-stop">
-              <input type="radio" id="stop" name="value-radio" value="stop" />
-              <svg class="icon-stop" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                <path d="M64 64h384v384H64z" />
-              </svg>
-            </label>
-          </label>
+          <!-- Toggle de “bucle”/”stop” -->
+<label class="label label-play2">
+  <input
+    type="checkbox"
+    id="toggleLoop"
+    (change)="onToggleLoop($event)"
+  />
 
-          <!-- Webcam -->
-          <label class="label label-webcam">
-            <input type="radio" id="webcam" name="value-radio" value="webcam" />
-            <img class="icon-webcam" src="assets/webcam.svg" alt="Webcam" />
-          </label>
+  <!-- Icono bucle cuando NO estamos en loop -->
+  <img
+    *ngIf="!isLooping"
+    class="icon-play2"
+    src="assets/play-bucle.svg"
+    alt="Play2"
+  />
+
+  <!-- Icono STOP cuando SÍ estamos en loop -->
+  <svg
+    *ngIf="isLooping"
+    class="icon-stop"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 512 512"
+    width="38"
+    height="38"
+  >
+    <path d="M64 64h384v384H64z" />
+  </svg>
+</label>
+
+
+          <!-- Webcam (deshabilitado en modo versus) -->
+<label 
+class="label label-webcam" 
+style="opacity: 0.3; pointer-events: none;" 
+title="No disponible"
+>
+<input type="radio" disabled />
+<img class="icon-webcam" src="assets/webcam.svg" alt="Webcam (No disponible)" />
+</label>
+
 
           <!-- Velocidad (Speed) -->
           <label class="label">

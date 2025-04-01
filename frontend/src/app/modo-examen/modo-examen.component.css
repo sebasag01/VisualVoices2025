@@ -252,24 +252,28 @@
   
   /* Contenedor de la cámara */
   .camera-container {
-    width: 50%;
-    height: 100vh; /* o el alto que prefieras */
+    width: 35vw;
+    height: 100vh;
     display: flex;
-    flex-direction: column;  /* Organiza en columna: video arriba, botón abajo */
-    align-items: center;
     justify-content: center;
+    align-items: center;
     background-color: #fff8d4;
   }
-  
-  /* El video en modo espejo */
-  .mirror-video {
-    width: 90%;
-    height: 80vh;       /* Aumenta la altura para que el video sea más largo */
-    object-fit: cover;  /* Se asegura de que el video se recorte y llene el área */
-    transform: scaleX(-1); /* Modo espejo */
-    border: 2px solid #000;
-    border-radius: 10px;
+
+   .camera-container {
+    flex: 0 0 35%; 
   }
+  
+  /* Estilo del video en modo espejo */
+  .mirror-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    border: none;
+    border-radius: 0;
+  }
+  
   
   
   /* Nueva clase para un botón de desactivar webcam más pequeño */
@@ -1184,4 +1188,7 @@
   color: black;
 }
 
+.label-webcam:has(input[type="checkbox"]:checked) .icon-webcam {
+  filter: drop-shadow(0 0 5px #cae2fd);
+}
 

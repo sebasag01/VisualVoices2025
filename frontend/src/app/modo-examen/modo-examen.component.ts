@@ -38,6 +38,8 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
 
   selectedTool: string = '';
 
+  isLooping = false;
+
   showWebcam: boolean = false;
   // Eliminamos selectedOptionId y usamos optionStatus para almacenar el estado de cada opción:
   optionStatus: { [key: string]: 'correct' | 'incorrect' } = {};
@@ -65,6 +67,12 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
     this.resultado = '';
     this.optionStatus = {}; // Reiniciamos el estado de las opciones
 
+    // Deseleccionar todos los radio buttons
+const radios = document.querySelectorAll('input[name="value-radio"]') as NodeListOf<HTMLInputElement>;
+radios.forEach(r => r.checked = false);
+this.isLooping = false; // Asegura que se detiene cualquier loop anterior
+
+
     this.examenService.generarPregunta().subscribe({
       next: (resp) => {
         // Resp => { questionId, animaciones, opciones }
@@ -79,6 +87,17 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
             `${environment.apiUrl}/gltf/animaciones/${a.filename}`
           );
           this.animacionService.cargarAnimaciones(animacionesUrls, true, false);
+          if (this.canvasRef?.animationEnded) {
+            this.canvasRef.animationEnded.subscribe(() => {
+              // Deseleccionar todos los radio buttons
+              const radios = document.querySelectorAll('input[name="value-radio"]') as NodeListOf<HTMLInputElement>;
+              radios.forEach(r => r.checked = false);
+          
+              // Además, si estás en modo bucle, detenemos también
+              this.isLooping = false;
+            });
+          }
+          
         }
       },
       error: (err) => {
@@ -197,5 +216,25 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   volverAModos(): void {
     this.router.navigate(['/modos']);
   }
+  private reproducirAnimacion(loop: boolean): void {
+    const animacionesUrls = this.animaciones.map(a =>
+      `${environment.apiUrl}/gltf/animaciones/${a.filename}`
+    );
+  
+    this.animacionService.cargarAnimaciones(animacionesUrls, true, loop);
+  }
+  
 
+  onToggleLoop(event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+  
+    if (checked) {
+      this.isLooping = true;
+      this.reproducirAnimacion(true);  // con bucle
+    } else {
+      this.isLooping = false;
+      this.canvasRef?.stopLoop(true);  // parar animación
+    }
+  }
+  
 }
