@@ -20,16 +20,16 @@
 }
 
 h2 {
-  margin-bottom: 50px; 
+  margin-bottom: 50px;
   font-family: "Lexend", sans-serif;
   color: black;
 }
 
 div > button.tutorial-btn {
-  display: block; 
-  width: 80%; 
-  margin: 10px auto; 
-  text-align: center; 
+  display: block;
+  width: 80%;
+  margin: 10px auto;
+  text-align: center;
 }
 
 .card {
@@ -38,37 +38,37 @@ div > button.tutorial-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; 
+  justify-content: flex-start;
   background-color: transparent;
   box-shadow: none;
-  animation: slide-in 0.3s ease-in-out; 
+  animation: slide-in 0.3s ease-in-out;
   --cui-card-border-width: 0;
   --cui-card-border-color: transparent;
   border: none !important;
   border-width: 0 !important;
   border-color: transparent !important;
-  padding-top: 20px; 
+  padding-top: 20px;
 }
 
 .tutorial-btn {
-  padding: 5px 10px; 
-  font-size: 1rem; 
+  padding: 5px 10px;
+  font-size: 1rem;
   font-family: "Lexend", sans-serif;
   width: auto;
   height: auto;
   border: 2px solid black;
   border-radius: 12px;
-  background-color: #41b8d5; 
-  color: rgb(0, 0, 0); 
+  background-color: #41b8d5;
+  color: rgb(0, 0, 0);
   transition: background-color 0.3s ease;
 }
 
 .tutorial-btn:hover {
-  background-color: #35a0c7; 
+  background-color: #35a0c7;
 }
 
 .card-leaving {
-  animation: slide-out 0.3s ease-in-out forwards; 
+  animation: slide-out 0.3s ease-in-out forwards;
 }
 
 .explanation {
@@ -77,49 +77,15 @@ div > button.tutorial-btn {
   font-family: "Lexend", sans-serif;
   padding: 10px;
   border-radius: 10px;
-  margin-top: 40px; 
-  margin-bottom: 80px; 
+  margin-top: 40px;
+  margin-bottom: 80px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-grow: 1; 
+  flex-grow: 1;
 }
-/* 
-.word-button-container {
-  margin-top: 20px; 
-  position: relative; 
-  margin-bottom: 40px;
-  width: 100%; 
-  display: flex; 
-  justify-content: center; 
-  align-items: flex-start; 
-}
-
-
-
-.word-navigation-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.word-button {
-  background: none; 
-  padding: 0; 
-  font-size: 3rem; 
-  font-weight: bold;
-  cursor: pointer; 
-  font-family: "Lexend", sans-serif;
-  color: black;
-}
-
-.word-button:hover {
-  background: none;
-  transform: none;
-} */
 
 /* Estilizar la palabra como un botón */
 .word-button {
@@ -172,11 +138,9 @@ div > button.tutorial-btn {
   box-shadow: none !important;
 }
 
-.letra-boton{
+.letra-boton {
   font-size: 40px !important;
-
 }
-
 
 /* .word-button:hover {
   background-color: #35a0c7;
@@ -189,11 +153,10 @@ div > button.tutorial-btn {
   box-shadow: 0.05em 0.05em;
 } */
 
-
 .repeat-button {
-  position: absolute; 
+  position: absolute;
   bottom: -10px;
-  right: -35px; 
+  right: -35px;
   width: 40px;
   height: 40px;
   background-color: transparent;
@@ -219,15 +182,15 @@ div > button.tutorial-btn {
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: auto; 
-  padding-bottom: 30px; 
+  margin-top: auto;
+  padding-bottom: 30px;
 }
 
 .prev-button,
 .next-button {
   background-color: transparent;
   cursor: pointer;
-  margin: 0 20px; 
+  margin: 0 20px;
 }
 
 .arrow-icon {
@@ -238,7 +201,7 @@ div > button.tutorial-btn {
 
 .level-buttons-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); 
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   justify-items: center;
   width: 100%;
@@ -246,14 +209,14 @@ div > button.tutorial-btn {
 }
 
 button.learn-more {
-  width: 100%; 
-  max-width: 200px; 
-  padding: 1.5em 2.5em; 
+  width: 100%;
+  max-width: 200px;
+  padding: 1.5em 2.5em;
   font-size: 18px;
 }
 
 button {
-  background-color: #41b8d5; 
+  background-color: #41b8d5;
   font-family: "Lexend", sans-serif;
   padding: 0.6em 1.3em;
   font-weight: 900;
@@ -275,15 +238,15 @@ button:active {
 }
 
 .learn-more:disabled {
-  background-color: #d3d3d3; 
+  background-color: #d3d3d3;
   color: black;
-  cursor: default; 
-  opacity: 1; 
+  cursor: default;
+  opacity: 1;
 }
 
 .disabled-button {
-  background-color: #d3d3d3; 
-  color: #555; 
+  background-color: #d3d3d3;
+  color: #555;
 }
 
 @keyframes slide-in {
@@ -308,20 +271,19 @@ button:active {
   }
 }
 
-
 .title-container {
   text-align: center;
-  margin-bottom: 30px; 
-  animation: fadeIn 1s ease-in-out; 
+  margin-bottom: 30px;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .game-title {
   font-family: "ChauPhilomene", sans-serif;
-  font-size: 2.5rem; 
+  font-size: 2.5rem;
   font-weight: bold;
-  color: black; 
-  text-transform: uppercase; 
-  letter-spacing: 2px; 
+  color: black;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 .game-subtitle {
@@ -332,15 +294,3 @@ button:active {
   border-radius: 8px;
   display: inline-block;
 }
-
-/* @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-} */
-

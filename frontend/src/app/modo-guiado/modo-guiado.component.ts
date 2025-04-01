@@ -401,6 +401,12 @@ if (loopCheckbox) loopCheckbox.checked = false;
     this.showChooseLevel = true;
   }
 
+  volverANiveles(): void {
+    // Aquí defines la navegación para volver a la vista de niveles
+    this.showWelcome = true; // Esto oculta la card y muestra la pantalla de selección de niveles
+  }
+  
+
   onLevelSelected(level: number) {
     const cardElement = document.querySelector('.modo-guiado app-card');
     if (cardElement) {

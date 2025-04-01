@@ -91,11 +91,11 @@
       </div>
 
       <div class="button-grid" *ngIf="!showWebcam">
-        <div class="icon-menu-fixed">
-          <!-- <button (click)="toggleWebcam()" class="small-webcam-btn">
-            Pruébate
-          </button> -->
+        <div *ngIf="!showWelcome" class="back-button" (click)="volverANiveles()">
+          <i class="fa-solid fa-arrow-left"></i>
+        </div>
 
+        <div class="icon-menu-fixed">
           <a (click)="volverAModos()" title="Modos">
             <i class="fa-solid fa-home"></i>
           </a>
@@ -107,6 +107,8 @@
             <i class="fa-solid fa-right-from-bracket"></i>
           </a>
         </div>
+
+        
 
         <div class="modo-guiado" id="modo-guiado-container">
           <app-card
