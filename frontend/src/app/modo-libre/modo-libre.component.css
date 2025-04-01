@@ -793,6 +793,7 @@ button:active,
   margin: 0 auto;
   transition: filter 0.2s;
 }
-.label-webcam:has(input[type="radio"]:checked) .icon-webcam {
+.label-webcam:has(input[type="checkbox"]:checked) .icon-webcam {
   filter: drop-shadow(0 0 5px #cae2fd);
 }
+

@@ -143,9 +143,7 @@ export class ModoLibreComponent implements OnInit, OnDestroy {
         // Reproducir 1 sola vez
         this.reproducirAnimacion(false);
         break;
-      case 'webcam':
-        this.toggleWebcam();
-        break;
+      
       case 'veloc':
         this.cambiarVelocidad();
         break;

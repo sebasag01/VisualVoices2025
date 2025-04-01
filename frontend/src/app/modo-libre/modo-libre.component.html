@@ -69,11 +69,15 @@
           <!-- Webcam, aquí conservamos la funcionalidad de togglear la cámara -->
           <!-- Radio para la webcam -->
           <label class="label label-webcam">
-            <input type="radio" id="webcam" name="value-radio" value="webcam" />
-
-            <!-- Tu imagen “webcam.svg” desde /public => ruta "/webcam.svg" -->
+            <input
+              type="checkbox"
+              id="toggleWebcam"
+              [checked]="showWebcam"
+              (change)="toggleWebcam()"
+            />
             <img class="icon-webcam" src="assets/webcam.svg" alt="Webcam" />
           </label>
+          
 
           <!-- Velocidad (Speed) -->
           <label class="label">
