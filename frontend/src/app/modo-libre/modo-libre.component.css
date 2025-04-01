@@ -439,6 +439,7 @@ button:active,
   transition: 0.5s ease-out;
   overflow: visible;
   cursor: pointer;
+  font-family: "Lexend", sans-serif;
 }
 
 .card-details {
@@ -456,6 +457,8 @@ button:active,
 
 .text-body {
   color: rgb(134, 134, 134);
+  font-family: "Lexend", sans-serif;
+
 }
 
 .card-button {

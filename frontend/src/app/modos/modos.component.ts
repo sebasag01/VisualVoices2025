@@ -92,19 +92,19 @@ export class ModosComponent implements OnInit, OnDestroy {
         console.log('DEBUG: isNewUser type:', typeof user.isNewUser);
         this.userId = user.uid; // Asignar el ID del usuario
 
-        if (user.isnewuser) {
-          // 1) Lanza el tutorial
-          console.log('isNewUser = true, mostrando tutorial...');
-          this.iniciarTutorialParaNuevoUsuario();
+        // if (user.isnewuser) {
+        //   // 1) Lanza el tutorial
+        //   console.log('isNewUser = true, mostrando tutorial...');
+        //   this.iniciarTutorialParaNuevoUsuario();
 
-          // 2) Marca en la BD que ya no es nuevo (para no repetir)
-          this.usuariosService.updateFirstTime(user.uid, false).subscribe({
-            next: () => console.log('Marcado como isNewUser=false'),
-            error: (err) => console.error('Error actualizando isNewUser:', err),
-          });
-        } else {
-          console.log('isNewUser = false, no muestro tutorial');
-        }
+        //   // 2) Marca en la BD que ya no es nuevo (para no repetir)
+        //   this.usuariosService.updateFirstTime(user.uid, false).subscribe({
+        //     next: () => console.log('Marcado como isNewUser=false'),
+        //     error: (err) => console.error('Error actualizando isNewUser:', err),
+        //   });
+        // } else {
+        //   console.log('isNewUser = false, no muestro tutorial');
+        // }
 
         // Modo GUIADO
         this.isNewUserInGuidedMode =

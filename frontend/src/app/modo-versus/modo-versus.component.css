@@ -83,16 +83,43 @@ html, body {
   border-radius: 0;
 }
 
-/* Palabra mostrada mientras la cámara está activa */
 .current-word {
-  margin-top: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 2rem;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #41b8d5; /* Azul llamativo */
+  padding: 0.5em 1em;
+  border-radius: 12px;
   font-weight: bold;
+  text-transform: uppercase;
+  font-family: "Lexend", sans-serif;
+  border: 3px solid black;
+  box-shadow: 3px 3px black;
+  color:black;
+  z-index: 10;
+  
+  /* 🔹 CENTRADO TOTAL */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  cursor: pointer;
+  line-height: 1; /* Evita que el texto se desplace por padding */
+  min-height: 50px; /* Evita que el botón sea demasiado pequeño */
+  min-width: 120px; /* Para que no se deforme */
+}
+
+/* 🔹 Ajustes cuando la cámara está activa */
+.small-word {
+  font-size: 1.8rem;  /* Tamaño más adecuado */
+  padding: 10px 20px;
+  min-width: 140px;
+  min-height: 60px;
+}
+
+/* 🔹 Ajuste adicional para asegurar que el <p> no tenga márgenes */
+.current-word p {
+  margin: 0;
+  padding: 0;
 }
 
 /* Botón de terminar/desactivar webcam */
@@ -184,16 +211,18 @@ html, body {
   padding: 15px 30px;
   font-size: 1.5rem;
   font-family: "Lexend", sans-serif;
-  border: 2px solid black;
-  border-radius: 12px;
+  border: 3px solid black;
+  border-radius: 0.4em;
   background-color: #41b8d5;
   color: rgb(0, 0, 0);
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.3s ease;
+  font-weight: bold;
+  
 }
 .start-button:hover {
-  transform: scale(1.05);
-  background-color: #35a0c7;
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.2em 0.2em;
 }
 
 /* Barra de herramientas (Radio Buttons) lateral */
@@ -341,7 +370,7 @@ html, body {
 .top-right-container {
   position: absolute;
   top: 20px;
-  right: 200px; /* Ajustar según necesites */
+  right: 30px; 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -382,34 +411,36 @@ html, body {
   align-items: center;
   padding: 10px 20px;
   text-transform: uppercase;
-  border-radius: 8px;
+  border-radius: 0.4em;
   font-size: 17px;
   font-weight: 500;
   color: #000000;
   background: #35a0c7;
   cursor: pointer;
   box-shadow: transparent;
-  border: 2px solid #000000;
+  border: 3px solid #000000;
   transition: 0.5s ease;
   user-select: none;
   text-shadow: none;
+  font-weight: bold;
 }
 .word-item:hover,
 .word-item:focus {
-  color: #000000;
-  background: #008cff;
-  border: 1px solid #000000;
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.2em 0.2em;
 }
+
+
 /* Correct/incorrect feedback */
 .correct-answer {
   background: green !important;
-  border: 2px solid darkgreen !important;
-  color: white !important;
+  /* border: 2px solid darkgreen !important; */
+  color: black !important;
 }
 .wrong-answer {
   background: red !important;
-  border: 2px solid darkred !important;
-  color: white !important;
+  /* border: 2px solid darkred !important; */
+  color: black !important;
 }
 
 /* Bloque de feedback final */
@@ -484,7 +515,7 @@ html, body {
   margin-bottom: 1rem;
   font-family: 'ChauPhilomene', sans-serif;
   font-size: 2.5rem;
-  color: #332339;
+  color: black;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
   padding: 10px 20px;
   border-radius: 10px;
@@ -500,7 +531,7 @@ html, body {
   text-align: center;
   margin-bottom: 1rem;
   font-family: 'lexend';
-  color: #332339;
+  color: black;
 }
 
 .turn-announce-container {
@@ -533,7 +564,7 @@ html, body {
   margin-left: 1rem;
   padding: 4px 8px;
   border-radius: 8px;
-  border: 2px solid #aaa;
+  border: 2px solid black;
   outline: none;
 }
 
@@ -554,6 +585,7 @@ html, body {
 .player-name {
   font-weight: bold;
   font-size: 1.2rem;
+  color:black;
 }
 
 /* Círculos base */
@@ -588,46 +620,55 @@ html, body {
   font-family: "Lexend", sans-serif;
   width: auto;
   height: auto;
-  border: 2px solid black;
-  border-radius: 12px;            /* Bordes redondeados */
-  background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
+  border: 3px solid black;
+  border-radius: 0.4em;            /* Bordes redondeados */
+  background-color: white;      /* Color de fondo que combina con los otros botones */
   color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
   transition: background-color 0.3s ease;
   z-index: 999;
+  cursor: pointer;
+  font-weight: bold;
 
 }
 
 .next-turn-btn:hover {
-  background-color: #35a0c7;      /* Cambio de color en hover */
-}
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.2em 0.2em;}
 
 
 /* Botón para Empezar a grabar (verde) */
 .record-btn {
+  margin-top: 90px;;
   padding: 5px 10px;              /* Menos padding para que sea pequeño */
   font-size: 1rem; 
   background-color: #28a745; /* o el verde que prefieras */
-  color: #ffffff;
+  color: black;
   transition: background-color 0.3s ease;
-  border: 2px solid black;
+  border: 3px solid black;
   border-radius: 12px;
+  font-weight: bold;
+  margin-right: 1px;;
 }
 .record-btn:hover {
-  background-color: #218838;
-}
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.2em 0.2em;}
 
 /* Botón para Terminar de grabar (rojo) */
 .stop-recording-btn {
+  margin-top: 90px;;
   padding: 5px 10px;              /* Menos padding para que sea pequeño */
   font-size: 1rem; 
   background-color: #ff4d4d;
-  color: #ffffff;
+  color: black;
   transition: background-color 0.3s ease;
-  border: 2px solid black;
+  border: 3px solid black;
   border-radius: 12px;
+  font-weight: bold;
+  margin-right: 1px;;
 }
 .stop-recording-btn:hover {
-  background-color: #e60000;
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.2em 0.2em;
 }
 
 /* Overlay de anuncio final */
