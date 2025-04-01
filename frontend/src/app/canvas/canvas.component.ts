@@ -274,7 +274,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
             this.avatar.position.sub(center);
 
             this.avatar.scale.set(1.5, 1.5, 1.5);
-            this.avatar.position.y -= 1.1;
+            this.avatar.position.y -= 0.52;
             this.scene.add(this.avatar);
 
             URL.revokeObjectURL(url);

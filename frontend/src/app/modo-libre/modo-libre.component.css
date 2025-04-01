@@ -208,24 +208,33 @@ button:active,
 
 /* MENÚ DERECHO */
 .icon-menu-fixed {
+  position: fixed;
+  top: 20px;
+  right: 20px;
   display: flex;
-  justify-content: flex-end; /* Alinea a la derecha */
-  gap: 20px;
+  gap: 15px;
   font-size: 30px;
-  padding: 10px;
-  margin-bottom: 10px;
-  width: 100%;
-  box-sizing: border-box;
-  cursor: pointer;
+  z-index: 1000;
+  background: none;
+  padding: 0;
 }
 
 .icon-menu-fixed a {
   color: black;
   text-decoration: none;
   transition: transform 0.2s ease;
+  cursor: pointer;
 }
+
 .icon-menu-fixed a:hover {
   transform: scale(1.1);
+}
+
+/* Add this to ensure the search bar layout isn't affected */
+.search-wrapper {
+  margin-top: 50px; /* Add some spacing at the top */
+  position: relative;
+  width: 100%;
 }
 
 .modo-guiado {

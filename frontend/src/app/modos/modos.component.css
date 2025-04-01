@@ -68,10 +68,10 @@
   justify-content: center;
   align-items: center;
   gap: 25px;
-  width: 50%;
+  width: 40%;
   height: 85vh;
   max-width: 700px;
-  margin-right: 80px;
+  margin-right: 95px;
 }
 
 /* CARD DE MODO */
@@ -79,7 +79,7 @@
 .mode-card {
   background-color: #8fd4e3;
   padding: 30px;
-  min-height: 220px;
+  min-height: 210px;
   width: 100%;
   max-width: 650px;
   display: flex;
