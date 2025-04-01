@@ -51,10 +51,10 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   private cargarAnimacionHola(): void {
     // 1er bloque
-    const primerBloque = ['padre_0.gltf','padre_1.gltf','padre_2.gltf'];
+    const primerBloque = ['hola_0.gltf','hola_1.gltf','hola_2.gltf'];
   
     // 2do bloque
-    const segundoBloque = Array.from({ length: 13 }, (_, i) => `padre_${i+3}.gltf`);
+    const segundoBloque = Array.from({ length: 14 }, (_, i) => `hola_${i+3}.gltf`);
   
     // Combinar los dos arrays
     const bloquesCombinados = [...primerBloque, ...segundoBloque];
