@@ -153,9 +153,8 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* Lo mueve hacia abajo */
-  align-items: flex-end; /* Lo mueve hacia la derecha */
+  align-items: flex-end; /* Lo mueve hacia   la derecha */
   padding-right: 50px; /* Ajusta la distancia hacia la derecha */
-  padding-top: 50px; /* Ajusta la distancia hacia abajo */
 }
 
 .canvas-section {
