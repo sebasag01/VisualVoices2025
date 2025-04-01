@@ -1184,4 +1184,7 @@
   color: black;
 }
 
+.label-webcam:has(input[type="checkbox"]:checked) .icon-webcam {
+  filter: drop-shadow(0 0 5px #cae2fd);
+}
 
