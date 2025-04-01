@@ -51,10 +51,17 @@
           </label>
 
           <!-- Webcam -->
-          <label class="label label-webcam">
-            <input type="radio" id="webcam" name="value-radio" value="webcam" />
-            <img class="icon-webcam" src="assets/webcam.svg" alt="Webcam" />
-          </label>
+          <!-- Webcam -->
+<label class="label label-webcam">
+  <input
+    type="checkbox"
+    id="toggleWebcam"
+    [checked]="showWebcam"
+    (change)="toggleWebcam()"
+  />
+  <img class="icon-webcam" src="assets/webcam.svg" alt="Webcam" />
+</label>
+
 
           <!-- Veloc -->
           <label class="label">
