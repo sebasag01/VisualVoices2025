@@ -19,6 +19,7 @@ export class RegistroComponent {
   passwordFieldType: string = 'password'; // Controla si el campo es 'password' o 'text'
   passwordMismatch: boolean = false; // Variable para indicar que las contraseñas no coinciden
   showPasswordHint: boolean = false; // Controla la visibilidad del hint
+  emailAlreadyExists: boolean = false; // Añadimos esta variable
 
   @Output() toggleLogin = new EventEmitter<void>();  
 
@@ -30,7 +31,10 @@ export class RegistroComponent {
   }
 
   registerUser() {
-
+    // Reiniciar estados de error
+    this.passwordMismatch = false;
+    this.emailAlreadyExists = false;
+  
     // Validar que las contraseñas coincidan antes de enviar
     if (this.user.password !== this.user.repeatPassword) {
       this.passwordMismatch = true;
@@ -38,7 +42,7 @@ export class RegistroComponent {
     } else {
       this.passwordMismatch = false;
     }
-
+  
     console.log('Datos enviados:', this.user); // Log para verificar los datos
     this.usuariosService.register(this.user).subscribe({
       next: (response) => {
@@ -47,8 +51,14 @@ export class RegistroComponent {
         this.router.navigate(['/modos']); // Redirigir a la página 'home'
       },
       error: (error) => {
-        console.error('Error en el registro:', error);
-        this.toastr.error('Error al registrar usuario', 'Error');
+        console.log('Error en registro:', error); // Añade este log para depuración
+        
+        // Corregimos la condición para detectar correctamente el mensaje de error
+        if (error.error && error.error.msg === 'El correo ya está registrado') {
+          this.emailAlreadyExists = true;
+        } else {
+          
+        }
       },
     });
   }

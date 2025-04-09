@@ -8,6 +8,10 @@
     class="input-field"
     required
   />
+  <!-- Mensaje de error para email duplicado -->
+  <div *ngIf="emailAlreadyExists" class="error-message" style="color: red; margin: 5px 0;">
+    Este correo electrónico ya está registrado.
+  </div>
 <!-- Hint de contraseña que se mostrará al enfocar el input -->
   <div *ngIf="showPasswordHint" class="password-hint" [ngStyle]="{'color': isPasswordValid() ? 'green' : 'gray'}" style="font-size: 0.9em; margin-bottom: 5px;">
     La contraseña debe tener entre 8 y 12 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (!&#64;#$%^&*())
