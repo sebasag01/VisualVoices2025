@@ -5,14 +5,20 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http'
 
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { ChartData, ChartOptions, ChartType } from 'chart.js';
+
 @Component({
   selector: 'app-admin-estadisticas',
   standalone: true,
-  imports: [CommonModule, FormsModule,HttpClientModule],
+  imports: [CommonModule, FormsModule,HttpClientModule,BaseChartDirective   ],
+  providers: [
+    provideCharts(withDefaultRegisterables())
+  ],
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./admin.component.scss'], // Usa el mismo estilo que en admin
   template: `
-  <div class="container mt-3">
+    <div class="container mt-3">
     <h2>Estadísticas del Modo Guiado</h2>
 
     <div *ngIf="errorMensaje" class="alert alert-danger" role="alert">
@@ -22,6 +28,7 @@ import { HttpClientModule } from '@angular/common/http'
       Cargando estadísticas...
     </div>
 
+    <!-- TABLA 1: Distribución de Usuarios por Nivel -->
     <div class="card" *ngIf="!cargando && datosEstadisticas">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h3>Distribución de Usuarios por Nivel</h3>
@@ -44,6 +51,7 @@ import { HttpClientModule } from '@angular/common/http'
       </div>
     </div>
 
+    <!-- TABLA 2: Tiempo en Cada Nivel -->
     <div class="card" *ngIf="!cargando && datosEstadisticas">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h3>Tiempo en Cada Nivel (ms)</h3>
@@ -69,7 +77,25 @@ import { HttpClientModule } from '@angular/common/http'
         </table>
       </div>
     </div>
+
+    <!-- TABLA 3: Sesiones diarias y duración promedio -->
+    <div class="card mt-3">
+        <div class="card-header">
+          <h3>Sesiones diarias y duración promedio (ejemplo estático)</h3>
+        </div>
+        <div class="card-body">
+          <canvas
+            baseChart
+            [data]="barChartData"
+            [options]="barChartOptions"
+            [type]="barChartType"
+          >
+          </canvas>
+        </div>
+      </div>
+
   </div>
+
   `,
 })
 export class AdminEstadisticasComponent implements OnInit {
@@ -77,9 +103,27 @@ export class AdminEstadisticasComponent implements OnInit {
     cargando = false;
     errorMensaje: string | null = null;
   
+    // EJEMPLO: configuración de un gráfico de barras
+    public barChartType: 'bar' = 'bar';
+
+    public barChartOptions: ChartOptions<'bar'> = {
+      responsive: true
+    };
+    public barChartData: ChartData<'bar'> = {
+      labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+      datasets: [
+        { data: [5, 7, 3, 10, 8], label: 'Sesiones diarias' },
+        { data: [3, 2.5, 1.8, 4, 4.2], label: 'Duración promedio (min)' }
+      ]
+    };
+
+
     constructor(private http: HttpClient) {} // inyectamos HttpClient
   
     ngOnInit(): void {
+        
+
+      
         this.cargando = true;
         const url = `${environment.apiUrl}/stats/estadisticas`;
         console.log('[DEBUG] Llamando a estadísticas en:', url);
