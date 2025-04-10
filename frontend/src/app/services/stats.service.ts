@@ -34,5 +34,12 @@ export class StatsService {
     return this.http.get(`${this.statsUrl}/libre-total/${userId}`, { withCredentials: true });
   }
 
+  getSesionesDiarias(): Observable<any> {
+    return this.http.get(`${this.statsUrl}/sesiones-diarias`, { withCredentials: true });
+  }
+
+  getProporcionUsuarios(): Observable<any> {
+    return this.http.get(`${this.statsUrl}/proporcion-usuarios`, { withCredentials: true });
+  }
 
 }

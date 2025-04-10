@@ -16,7 +16,7 @@ const login = async (req, res = response) => {
   try {
     // Buscamos en la base de datos el usuario que coincida con el email
     // Solo obtenemos el campo 'password' y 'rol' por motivos de seguridad y eficiencia
-    const usuarioBD = await Usuario.findOne({ email }, 'password rol');
+    const usuarioBD = await Usuario.findOne({ email }, 'password rol isnewuser');
 
     // Verificamos si el usuario existe
     if (!usuarioBD) {
@@ -35,6 +35,13 @@ const login = async (req, res = response) => {
         msg: 'Usuario o contraseña incorrectos',
         token: ''
       });
+    }
+
+    // Si el usuario es "nuevo", es decir, isnewuser es true,
+    // actualizamos el campo a false para marcar que ha iniciado sesión nuevamente.
+    if (usuarioBD.isnewuser) {
+      // Actualizamos el campo isnewuser a false
+      await Usuario.findByIdAndUpdate(usuarioBD._id, { isnewuser: false });
     }
 
     // Si las credenciales son válidas, generamos el token JWT

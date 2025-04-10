@@ -225,6 +225,81 @@ const getTiempoTotalLibre = async (req, res) => {
   }
 };
 
+const getSesionesDiarias = async (req, res) => {
+  try {
+    // Agrupar por día (usando $dateToString para formatear la fecha)
+    const resultados = await Stats.aggregate([
+      {
+        $match: { endTime: { $exists: true } }  // Solo sesiones finalizadas
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$startTime" } },
+          sesiones: { $sum: 1 },
+          duracionPromedio: { $avg: { $divide: ["$durationMs", 1000] } }
+        }
+      },
+      {
+        $sort: { _id: 1 }  // Ordenar cronológicamente
+      }
+    ]);
+
+    res.json({ ok: true, data: resultados });
+  } catch (error) {
+    console.error("Error obteniendo sesiones diarias:", error);
+    res.status(500).json({ ok: false, msg: "Error al obtener sesiones diarias" });
+  }
+};
+
+// Función para obtener la proporción de usuarios nuevos vs recurrentes
+const getProporcionUsuarios = async (req, res) => {
+  try {
+    // Agregación para contar usuarios nuevos y recurrentes
+    const resultados = await Usuario.aggregate([
+      {
+        $group: {
+          _id: "$isnewuser",
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+    
+    // Inicializar contadores
+    let nuevos = 0;
+    let recurrentes = 0;
+    let total = 0;
+    
+    // Procesar resultados
+    resultados.forEach(resultado => {
+      if (resultado._id === true) {
+        nuevos = resultado.count;
+      } else {
+        recurrentes = resultado.count;
+      }
+    });
+    
+    total = nuevos + recurrentes;
+    
+    // Calcular porcentajes
+    const porcentajeNuevos = total > 0 ? (nuevos / total) * 100 : 0;
+    const porcentajeRecurrentes = total > 0 ? (recurrentes / total) * 100 : 0;
+    
+    res.json({
+      ok: true,
+      data: {
+        nuevos,
+        recurrentes,
+        total,
+        porcentajeNuevos,
+        porcentajeRecurrentes
+      }
+    });
+  } catch (error) {
+    console.error("Error obteniendo proporción de usuarios:", error);
+    res.status(500).json({ ok: false, msg: "Error al obtener proporción de usuarios" });
+  }
+};
+
 module.exports = {
   startLevel,
   endLevel,
@@ -232,6 +307,8 @@ module.exports = {
   getEstadisticasGenerales,
   getTiempoTotalLibre,
   endMode,
-  startMode
+  startMode,
+  getSesionesDiarias,
+  getProporcionUsuarios
 };
 

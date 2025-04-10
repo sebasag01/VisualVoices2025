@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { startLevel, endLevel, tiemposPorNivel, getEstadisticasGenerales,getTiempoTotalLibre, endMode, startMode } = require('../controllers/stats');
+const { startLevel, endLevel, tiemposPorNivel, getEstadisticasGenerales,getTiempoTotalLibre, endMode, startMode, getSesionesDiarias, getProporcionUsuarios} = require('../controllers/stats');
 const { validarJWT } = require('../middleware/validar-jwt');
 const { tieneRol } = require('../middleware/validar-rol');
 
@@ -19,6 +19,12 @@ router.get('/estadisticas', [
 ], getEstadisticasGenerales);
 
 router.get('/libre-total/:userId', validarJWT, getTiempoTotalLibre);
+router.get('/sesiones-diarias',validarJWT, getSesionesDiarias);
+
+router.get('/proporcion-usuarios', [
+  validarJWT,
+  tieneRol('ROL_ADMIN'),
+], getProporcionUsuarios);
 
 
 module.exports = router;

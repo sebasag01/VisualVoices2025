@@ -351,7 +351,8 @@ export class ModosComponent implements OnInit, OnDestroy {
       skipLabel: 'Saltar',
       doneLabel: 'Hecho',
     });
-
+    
+    /*
     intro.oncomplete(() => {
       console.log(
         '[DEBUG] Tutorial completado, actualizando isNewUser a false...'
@@ -361,8 +362,9 @@ export class ModosComponent implements OnInit, OnDestroy {
         error: (err) => console.error('Error actualizando isNewUser:', err),
       });
     });
-
+    */
     // También puedes manejar onexit en caso de que el usuario cierre el tutorial
+    /*
     intro.onexit(() => {
       console.log('[DEBUG] Tutorial salido, actualizando isNewUser a false...');
       this.usuariosService.updateFirstTime(this.userId, false).subscribe({
@@ -370,6 +372,8 @@ export class ModosComponent implements OnInit, OnDestroy {
         error: (err) => console.error('Error actualizando isNewUser:', err),
       });
     });
+    */
+
 
     // Dar un breve delay para asegurarnos de que el DOM está renderizado
     setTimeout(() => {
