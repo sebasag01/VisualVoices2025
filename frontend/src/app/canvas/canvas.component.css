@@ -6,7 +6,7 @@
     align-items: center;
     position: relative;
     z-index: 0;
-    max-width: 1000px;  /* Aumenta este valor para mayor anchura */
+    max-width: 1000px;
     margin-top: 10px;
 }
 
@@ -16,14 +16,8 @@
     display: block;
     position: relative;
     z-index: 0;
-    max-width: 1000px;   /* Aumenta este valor para que el canvas sea más ancho */
+    max-width: 1000px;
     max-height: 800px;
+    border: 2px solid #ffffff;
+    box-sizing: border-box;
 }
-
-.reset-btn {
-    position: absolute;
-    top: 10px;   /* Ajusta según necesites */
-    right: 10px; /* Ajusta según necesites */
-    z-index: 9999;
-  }
-  
