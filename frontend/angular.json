@@ -32,11 +32,12 @@
               "node_modules/@coreui/coreui/scss/coreui.scss",
               "src/scss/styles.scss",
               "node_modules/intro.js/minified/introjs.min.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
-
-
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/intro.js/introjs.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/intro.js/intro.js"
+            ]
           },
           "configurations": {
             "production": {

@@ -28,6 +28,7 @@
     "@coreui/icons": "^3.0.1",
     "@coreui/icons-angular": "^4.8.0",
     "@fortawesome/fontawesome-free": "^6.7.2",
+    "@types/intro.js": "^5.1.5",
     "chart.js": "^4.4.7",
     "express": "^4.18.2",
     "frontend": "file:",
