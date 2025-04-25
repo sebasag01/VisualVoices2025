@@ -12,15 +12,26 @@ export class ExamenService {
 
   constructor(private http: HttpClient) {}
 
+  //inicia una sesión de examen
+  startSession(): Observable<{ sessionId: string }> {
+    return this.http.post<{ ok: boolean; sessionId: string }>(
+      `${this.examApiUrl}/start-session`,
+      {},
+      { withCredentials: true }
+    );
+  }
+
   generarPregunta(): Observable<any> {
     // GET /api/examen/generar
     return this.http.get(`${this.examApiUrl}/generar`, { withCredentials: true });
   }
 
-  verificarRespuesta(questionId: string, selectedAnswerId: string): Observable<any> {
-    // POST /api/examen/verificar
-    // Enviamos { questionId, selectedAnswerId }
-    const payload = { questionId, selectedAnswerId };
+  verificarRespuesta(
+    sessionId: string,
+    questionId: string,
+    selectedAnswerId: string
+  ): Observable<any> {
+    const payload = { sessionId, questionId, selectedAnswerId };
     return this.http.post(`${this.examApiUrl}/verificar`, payload, { withCredentials: true });
   }
 }

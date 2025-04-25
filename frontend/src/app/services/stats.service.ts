@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,38 @@ export class StatsService {
 
   getProporcionUsuarios(): Observable<any> {
     return this.http.get(`${this.statsUrl}/proporcion-usuarios`, { withCredentials: true });
+  }
+
+  // Añadir al archivo stats.service.ts
+  getHorasPico(): Observable<any> {
+    return this.http.get(`${this.statsUrl}/horas-pico`, { withCredentials: true });
+  }
+
+  getScoreDistribution(): Observable<{ _id: number, count: number }[]> {
+    return this.http.get<{ ok: boolean, data: { _id: number, count: number }[] }>(
+      `${this.statsUrl}/scores-distribution`,
+      { withCredentials: true }
+    ).pipe(
+      map(resp => resp.data)
+    );
+  }
+
+  getTopFailedWords(): Observable<{ palabra: string, fails: number }[]> {
+    return this.http
+      .get<{ ok: boolean, data: { palabra: string, fails: number }[] }>(
+        `${this.statsUrl}/top-failed-words`,
+        { withCredentials: true }
+      )
+      .pipe(map(resp => resp.data));
+  }
+
+  getPerformanceEvolution(): Observable<{ _id: string, avgCorrectRate: number }[]> {
+    return this.http.get<{ ok: boolean, data: { _id: string, avgCorrectRate: number }[] }>(
+      `${this.statsUrl}/performance-evolution`,
+      { withCredentials: true }
+    ).pipe(
+      map(resp => resp.data)
+    );
   }
 
 }

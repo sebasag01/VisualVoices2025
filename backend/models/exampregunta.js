@@ -21,7 +21,10 @@ const exampreguntaSchema = new Schema({
   answered: {
     type: Boolean,
     default: false
-  }
+  },
+  answeredCorrect:{ 
+    type: Boolean 
+  },
 });
 
 // Opcionalmente, para no devolver _id en bruto al front

@@ -2,6 +2,7 @@
 const Palabra = require('../models/palabras');
 const exampregunta = require('../models/exampregunta');
 const Usuario = require('../models/usuarios');
+const ExamenSession = require('../models/examenSession');
 
 /**
  * Genera una sola pregunta con:
@@ -98,7 +99,7 @@ const generarPregunta = async (req, res) => {
 const verificarRespuesta = async (req, res) => {
   try {
     const userId = req.uid; // viene del JWT
-    const { questionId, selectedAnswerId } = req.body;
+    const { sessionId, questionId, selectedAnswerId } = req.body;
 
     // 1. Buscamos la exampregunta
     const examQ = await exampregunta.findById(questionId);
@@ -124,13 +125,14 @@ const verificarRespuesta = async (req, res) => {
         msg: 'Esta pregunta ya fue respondida'
       });
     }
+    
+    const acierto = (examQ.correctAnswer.toString() === selectedAnswerId);
 
     // 4. Marcarla como respondida
     examQ.answered = true;
+    examQ.answeredCorrect = acierto;          // ← guardamos si acertó o no
     await examQ.save();
 
-    // 5. Verificar si la opción seleccionada es la correcta
-    const acierto = (examQ.correctAnswer.toString() === selectedAnswerId);
 
     // 6. Actualizar contadores (statsExamen) en el usuario
     const usuario = await Usuario.findById(userId);
@@ -153,11 +155,21 @@ const verificarRespuesta = async (req, res) => {
 
     await usuario.save();
 
+
+    const session = await ExamenSession.findById(sessionId);
+    session.totalQuestions++;
+    if (acierto) session.correct++;
+    else session.incorrect++;
+    // si acabamos (opcional): session.finishedAt = new Date();
+    await session.save();
+
+
     // 7. Responder al front
     return res.json({
       ok: true,
       esCorrecta: acierto,
       msg: acierto ? '¡Respuesta correcta!' : 'Respuesta incorrecta',
+      respuestaCorrecta: !acierto ? examQ.correctAnswer : undefined,
       statsExamen: usuario.statsExamen
     });
 
@@ -170,7 +182,23 @@ const verificarRespuesta = async (req, res) => {
   }
 };
 
+// POST /api/examen/start-session
+const startSession = async (req, res) => {
+  const userId = req.uid;
+  const session = new ExamenSession({ user: userId });
+  await session.save();
+  res.json({ ok: true, sessionId: session._id });
+};
+
+// (Opcional) GET /api/examen/sessions   — para que admin vea todas las sessions
+const listSessions = async (req, res) => {
+  const sesiones = await ExamenSession.find().populate('user','email');
+  res.json({ ok:true, data: sesiones });
+};
+
 module.exports = {
   generarPregunta,
   verificarRespuesta,
+  startSession,
+  listSessions
 };

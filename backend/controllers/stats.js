@@ -2,6 +2,8 @@
 const Stats = require('../models/stats');
 const Usuario = require('../models/usuarios');
 const mongoose = require('mongoose');
+const ExamenSession = require('../models/examenSession');
+const Palabra = require('../models/palabras');
 
 // POST /api/stats/start-level
 // body: { userId, level }
@@ -300,6 +302,142 @@ const getProporcionUsuarios = async (req, res) => {
   }
 };
 
+
+// Función para obtener las horas pico de uso de la plataforma
+const getHorasPico = async (req, res) => {
+  try {
+    // Agregar por hora del día (0-23)
+    const resultados = await Stats.aggregate([
+      {
+        $match: { startTime: { $exists: true } }  // Aseguramos que hay tiempo de inicio
+      },
+      {
+        $project: {
+          hora: { $hour: "$startTime" },  // Extraer la hora (0-23)
+          duracionMs: "$durationMs"
+        }
+      },
+      {
+        $group: {
+          _id: "$hora",  // Agrupar por hora
+          sesiones: { $sum: 1 },  // Contar sesiones
+          duracionPromedio: { $avg: "$duracionMs" }  // Duración promedio
+        }
+      },
+      {
+        $sort: { _id: 1 }  // Ordenar por hora
+      }
+    ]);
+
+    res.json({ ok: true, data: resultados });
+  } catch (error) {
+    console.error("Error obteniendo horas pico:", error);
+    res.status(500).json({ ok: false, msg: "Error al obtener horas pico" });
+  }
+};
+
+const getExamStats = async (req, res) => {
+  // Ejemplo: promedio de aciertos por sesión
+  const agg = await ExamenSession.aggregate([
+    { $group: {
+        _id: null,
+        avgCorrect: { $avg: '$correct' },
+        avgIncorrect: { $avg: '$incorrect' },
+        totalSessions: { $sum: 1 }
+      }
+    }
+  ]);
+  res.json({ ok: true, data: agg[0] });
+};
+
+
+const getScoreDistribution = async (req, res) => {
+  try {
+    // Agrupamos sesiones de examen por número de aciertos
+    const distribucion = await ExamenSession.aggregate([
+      // Opcional: solo contar sesiones completamente terminadas con 5 preguntas
+      { $match: { totalQuestions: 5 } },
+      {
+        $group: {
+          _id: '$correct',        // número de aciertos (0–5)
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }       // orden ascendente: 0,1,2,3,4,5
+    ]);
+    res.json({ ok: true, data: distribucion });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, msg: 'Error al obtener distribución de puntuaciones' });
+  }
+};
+
+
+const getTopFailedWords = async (req, res) => {
+  try {
+    const top5 = await require('../models/exampregunta').aggregate([
+      { $match: { answered: true, answeredCorrect: false } },
+      { $group: {
+          _id: '$correctAnswer',
+          fails: { $sum: 1 }
+        }
+      },
+      { $sort: { fails: -1 } },
+      { $limit: 5 },
+      // traer el texto de la palabra
+      {
+        $lookup: {
+          from: 'palabras',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'word'
+        }
+      },
+      { $unwind: '$word' },
+      {
+        $project: {
+          _id: 0,
+          palabra: '$word.palabra',
+          fails: 1
+        }
+      }
+    ]);
+    res.json({ ok: true, data: top5 });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, msg: 'Error al obtener top failed words' });
+  }
+};
+
+const getPerformanceEvolution = async (req, res) => {
+  try {
+    const resultados = await ExamenSession.aggregate([
+      // sólo sesiones con al menos una pregunta contestada
+      { $match: { totalQuestions: { $gt: 0 } } },
+      {
+        $project: {
+          date: { $dateToString: { format: "%Y-%m-%d", date: "$startedAt" } },
+          correct: 1,
+          total: "$totalQuestions"
+        }
+      },
+      {
+        $group: {
+          _id: "$date",
+          avgCorrectRate: { $avg: { $divide: ["$correct", "$total"] } }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+    res.json({ ok: true, data: resultados });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, msg: "Error al obtener evolución de rendimiento" });
+  }
+};
+
+
+
 module.exports = {
   startLevel,
   endLevel,
@@ -309,6 +447,11 @@ module.exports = {
   endMode,
   startMode,
   getSesionesDiarias,
-  getProporcionUsuarios
+  getProporcionUsuarios,
+  getHorasPico,
+  getExamStats,
+  getScoreDistribution,
+  getTopFailedWords,
+  getPerformanceEvolution
 };
 

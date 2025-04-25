@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { startLevel, endLevel, tiemposPorNivel, getEstadisticasGenerales,getTiempoTotalLibre, endMode, startMode, getSesionesDiarias, getProporcionUsuarios} = require('../controllers/stats');
+const { startLevel, endLevel, tiemposPorNivel, getEstadisticasGenerales,getTiempoTotalLibre, endMode, startMode, getSesionesDiarias, getProporcionUsuarios,getHorasPico, getExamStats,getScoreDistribution,getTopFailedWords,getPerformanceEvolution  } = require('../controllers/stats');
 const { validarJWT } = require('../middleware/validar-jwt');
 const { tieneRol } = require('../middleware/validar-rol');
 
@@ -26,6 +26,31 @@ router.get('/proporcion-usuarios', [
   tieneRol('ROL_ADMIN'),
 ], getProporcionUsuarios);
 
+router.get('/horas-pico', [
+  validarJWT,
+  tieneRol('ROL_ADMIN'),
+], getHorasPico);
+
+router.get('/examen-stats', [validarJWT, tieneRol('ROL_ADMIN')], getExamStats);
+
+router.get(
+  '/scores-distribution',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getScoreDistribution
+);
+
+router.get(
+  '/top-failed-words',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getTopFailedWords
+);
+
+
+router.get(
+  '/performance-evolution',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getPerformanceEvolution
+);
 
 module.exports = router;
 

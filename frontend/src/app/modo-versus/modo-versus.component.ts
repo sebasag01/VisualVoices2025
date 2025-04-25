@@ -75,6 +75,8 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
 
   isLooping = false;
 
+  sessionId!: string;    // Nueva: identificador de la “sesión de examen”
+
 
 
   private isSuddenDeath = false; 
@@ -260,7 +262,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   // ======================================================
   seleccionarOpcion(opcionId: string): void {
     // El GUESSER elige la opción => scoreboard para guesser
-    this.examenService.verificarRespuesta(this.questionId, opcionId).subscribe({
+    this.examenService.verificarRespuesta(this.sessionId, this.questionId, opcionId).subscribe({
       next: (resp) => {
         this.optionStatus[opcionId] = resp.esCorrecta ? 'correct' : 'incorrect';
         this.resultado = resp.esCorrecta ? '¡Respuesta correcta!' : 'Respuesta incorrecta';
