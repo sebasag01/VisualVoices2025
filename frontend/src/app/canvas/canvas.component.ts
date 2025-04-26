@@ -7,6 +7,7 @@ import { AnimacionService, AnimationData } from '../services/animacion.service';
 import { GltfService } from '../services/gltf.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import{} from '../../../../engine/'
 
 @Component({
   selector: 'app-canvas',
