@@ -7,7 +7,7 @@ import { AnimacionService, AnimationData } from '../services/animacion.service';
 import { GltfService } from '../services/gltf.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import{} from '../../../../engine/'
+import { main } from '../../../../engine/main.js';
 
 @Component({
   selector: 'app-canvas',
@@ -27,6 +27,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   private camera!: THREE.PerspectiveCamera;
   private controls!: OrbitControls;
   private loader: GLTFLoader = new GLTFLoader();
+  private isMainActive: boolean = false;
 
   /** Array de grupos (poses) para la animación secuencial */
   private poses: THREE.Group[] = [];
@@ -44,12 +45,14 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     private animacionService: AnimacionService,
     private gltfService: GltfService
   ) {
+    
     // Nos suscribimos al BehaviorSubject que emite { animaciones, loop }
     this.animacionSubscription = this.animacionService.animaciones$.subscribe(
       (data: AnimationData) => {
         // data.animaciones => array de URLs
         // data.loop => true (repetir) / false (una sola vez)
-        
+        if(!this.isMainActive)
+        {
         if (data.animaciones.length > 0) {
           const permitido = this.animacionService.permitirReproduccion();
           console.log('Recibida petición de animación:', data, '¿permitido?', permitido);
@@ -70,6 +73,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
           this.limpiarCanvas();
         }
       }
+    }
     );
   }
 
@@ -151,6 +155,9 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   // CARGA DE ANIMACIONES (POSIBLES POSES) Y REPRODUCCIÓN
   // --------------------------------------------------
   private cargarAnimacionesDinamicas(animaciones: string[], loop: boolean): void {
+    if(!this.isMainActive)
+      {
+
     // 1) Detenemos animación previa, pero sin recargar la pose
     //    (Porque luego mostraremos las nuevas)
     this.stopLoop(false);
@@ -180,6 +187,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         this.reproducirAnimacionSecuencial(loop);
       })
       .catch((error) => console.error('Error cargando animaciones:', error));
+      }
   }
 
   private reproducirAnimacionSecuencial(loop: boolean): void {
@@ -240,7 +248,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   // --------------------------------------------------
   // POSE INICIAL
   // --------------------------------------------------
-  /** Cargar la pose inicial o “modelo por defecto”. */
+  /** Cargar la pose inicial o "modelo por defecto". */
   private loadDefaultPose(force = false): void {
     // Si no forzamos y hay animaciones, no cargamos la pose
     if (!force && this.animacionService.hayAnimacionesActivas()) {
@@ -320,5 +328,15 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     this.camera.lookAt(0, 0, 0);
     this.controls.target.set(0, 0, 0);
     this.controls.update();
+  }
+
+  public callMainFunction(): void {
+    this.isMainActive = !this.isMainActive;
+    if (this.isMainActive) {
+      const canvas = this.canvasRef.nativeElement;
+      main(canvas);
+    } else {
+      // El canvas ya está activo por defecto
+    }
   }
 }
