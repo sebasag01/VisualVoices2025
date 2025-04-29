@@ -146,7 +146,7 @@ export async function main(gl) {
     }
 
     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-    gl.clearColor(0.2, 0.6, 0.8, 1.0);
+    //gl.clearColor(0.2, 0.6, 0.8, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Crear y configurar el programa shader
