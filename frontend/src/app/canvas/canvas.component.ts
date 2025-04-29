@@ -45,15 +45,13 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     private animacionService: AnimacionService,
     private gltfService: GltfService
   ) {
-    
     // Nos suscribimos al BehaviorSubject que emite { animaciones, loop }
     this.animacionSubscription = this.animacionService.animaciones$.subscribe(
       (data: AnimationData) => {
         // data.animaciones => array de URLs
         // data.loop => true (repetir) / false (una sola vez)
-        if(!this.isMainActive)
-        {
-        if (data.animaciones.length > 0) {
+        
+        if (data.animaciones.length > 0&&!this.isMainActive) {
           const permitido = this.animacionService.permitirReproduccion();
           console.log('Recibida petición de animación:', data, '¿permitido?', permitido);
 
@@ -73,7 +71,6 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
           this.limpiarCanvas();
         }
       }
-    }
     );
   }
 
@@ -155,11 +152,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   // CARGA DE ANIMACIONES (POSIBLES POSES) Y REPRODUCCIÓN
   // --------------------------------------------------
   private cargarAnimacionesDinamicas(animaciones: string[], loop: boolean): void {
-    if(!this.isMainActive)
-      {
-
+    if (this.isMainActive) return;
     // 1) Detenemos animación previa, pero sin recargar la pose
-    //    (Porque luego mostraremos las nuevas)
     this.stopLoop(false);
 
     if (!this.animacionService.permitirReproduccion()) {
@@ -187,10 +181,10 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         this.reproducirAnimacionSecuencial(loop);
       })
       .catch((error) => console.error('Error cargando animaciones:', error));
-      }
   }
 
   private reproducirAnimacionSecuencial(loop: boolean): void {
+    if (this.isMainActive) return;
     // Just in case, paramos algo previo
     this.stopLoop(false);
 
@@ -231,6 +225,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
    *                        el avatar desaparezca).
    */
   public stopLoop(revertToDefault: boolean): void {
+    if (this.isMainActive) return;
     // 1) Parar el intervalo
     if (this.poseInterval) {
       clearInterval(this.poseInterval);
@@ -250,6 +245,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   // --------------------------------------------------
   /** Cargar la pose inicial o "modelo por defecto". */
   private loadDefaultPose(force = false): void {
+    if (this.isMainActive) return;
     // Si no forzamos y hay animaciones, no cargamos la pose
     if (!force && this.animacionService.hayAnimacionesActivas()) {
       return;
@@ -292,6 +288,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   // LIMPIAR Y OTRAS UTILIDADES
   // --------------------------------------------------
   limpiarCanvas(): void {
+    if (this.isMainActive) return;
     if (this.avatar) {
       this.scene.remove(this.avatar);
       this.avatar.clear();
@@ -303,8 +300,10 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   private animate(): void {
     const renderLoop = () => {
-      this.controls.update();
-      this.renderer.render(this.scene, this.camera);
+      if (!this.isMainActive) {
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
+      }
       requestAnimationFrame(renderLoop);
     };
     renderLoop();
@@ -312,17 +311,20 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   private handleResize(): void {
     window.addEventListener('resize', () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      if (this.camera instanceof THREE.PerspectiveCamera) {
-        this.camera.aspect = w / h;
-        this.camera.updateProjectionMatrix();
+      if (!this.isMainActive) {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        if (this.camera instanceof THREE.PerspectiveCamera) {
+          this.camera.aspect = w / h;
+          this.camera.updateProjectionMatrix();
+        }
+        this.renderer.setSize(w, h);
       }
-      this.renderer.setSize(w, h);
     });
   }
 
   public resetView(): void {
+    if (this.isMainActive) return;
     // Reposicionar la cámara, si lo deseas
     this.camera.position.set(0, 1.5, 8.5);
     this.camera.lookAt(0, 0, 0);
@@ -332,11 +334,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   public callMainFunction(): void {
     this.isMainActive = !this.isMainActive;
-    if (this.isMainActive) {
-      const canvas = this.canvasRef.nativeElement;
-      main(canvas);
-    } else {
-      // El canvas ya está activo por defecto
-    }
+    const gl=this.renderer.getContext();
+    console.log("Contexto: ", gl);
+    main(gl);
   }
 }

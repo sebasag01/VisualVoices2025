@@ -9,6 +9,7 @@ import TLuz from './entidades/TLuz.js';
 import TCamara from './entidades/TCamara.js';
 import { vec3, mat4 } from '../node_modules/gl-matrix/esm/index.js';
 
+
 // Shaders
 const vsSource = `
     attribute vec4 a_position;
@@ -29,13 +30,9 @@ const vsSource = `
 
 const fsSource = `
     precision mediump float;
-    
-    varying vec3 v_normal;
-    varying vec2 v_texcoord;
-    
+    uniform vec3 u_lightColor;
     void main() {
-        vec3 color = normalize(v_normal) * 0.5 + 0.5;
-        gl_FragColor = vec4(color, 1.0);
+        gl_FragColor = vec4(vec3(0.6) * u_lightColor, 1.0); // Gris modulado por la luz
     }
 `;
 
@@ -70,17 +67,87 @@ function loadShader(gl, type, source) {
     return shader;
 }
 
-export async function main() {
-    console.log("Iniciando la aplicación");
-    
-    // Obtener el contexto WebGL
-    const canvas = document.querySelector('#glcanvas');
-    const gl = canvas.getContext('webgl');
+function dibujarMalla(gl, programInfo, angle, camara, luz) {
+    // Define los vértices de un cubo
+    const vertices = new Float32Array([
+        // Cara frontal
+        -0.5, -0.5,  0.5,
+         0.5, -0.5,  0.5,
+         0.5,  0.5,  0.5,
+        -0.5,  0.5,  0.5,
+        // Cara trasera
+        -0.5, -0.5, -0.5,
+         0.5, -0.5, -0.5,
+         0.5,  0.5, -0.5,
+        -0.5,  0.5, -0.5,
+    ]);
 
+    // Índices para las caras del cubo
+    const indices = new Uint16Array([
+        // Frente
+        0, 1, 2,  2, 3, 0,
+        // Atrás
+        4, 5, 6,  6, 7, 4,
+        // Izquierda
+        4, 0, 3,  3, 7, 4,
+        // Derecha
+        1, 5, 6,  6, 2, 1,
+        // Arriba
+        3, 2, 6,  6, 7, 3,
+        // Abajo
+        4, 5, 1,  1, 0, 4
+    ]);
+
+    // Buffer de vértices
+    const vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+    // Buffer de índices
+    const indexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+
+    // Atributo de posición
+    const posLoc = programInfo.attribLocations.vertexPosition;
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+
+    // Matriz de modelo
+    const model = mat4.create();
+    mat4.rotateY(model, model, angle);
+
+    // Matriz de vista: posición de la cámara (por ejemplo, [0,0,3]), mira al origen
+    const view = mat4.create();
+    // Puedes obtener la posición de la cámara de tu objeto camara si lo implementas
+    mat4.lookAt(view, [0, 0, 3], [0, 0, 0], [0, 1, 0]);
+
+    // Matriz de proyección desde la cámara
+    const projection = camara.getProyeccion();
+
+    // MVP = projection * view * model
+    const mvp = mat4.create();
+    mat4.multiply(mvp, view, model);
+    mat4.multiply(mvp, projection, mvp);
+
+    gl.uniformMatrix4fv(programInfo.uniformLocations.matrix, false, mvp);
+
+    // Pasa la intensidad de la luz al shader
+    gl.uniform3fv(programInfo.uniformLocations.lightColor, luz.getIntensidad());
+
+    // Dibuja el cubo
+    gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+}
+
+export async function main(gl) {
     if (!gl) {
         console.error('No se pudo inicializar WebGL');
         return;
     }
+
+    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+    gl.clearColor(0.2, 0.6, 0.8, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Crear y configurar el programa shader
     const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
@@ -93,6 +160,7 @@ export async function main() {
         },
         uniformLocations: {
             matrix: gl.getUniformLocation(shaderProgram, 'u_matrix'),
+            lightColor: gl.getUniformLocation(shaderProgram, 'u_lightColor'),
         },
     };
     
@@ -135,21 +203,23 @@ export async function main() {
     escena.addHijo(nodoCamara);
     
     // Configurar WebGL
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
     
     // Iniciar el bucle de renderizado
     const matrizIdentidad = mat4.create();
     
+    let angle = 0;
+    
     function render() {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.useProgram(programInfo.program);
         
-        // Recorrer el árbol de escena aplicando las transformaciones
         escena.recorrer(matrizIdentidad);
         
-        // Solicitar el siguiente frame
+        dibujarMalla(gl, programInfo, angle, camara, luz);
+        
+        angle += 0.01;
         requestAnimationFrame(render);
     }
     
@@ -158,5 +228,9 @@ export async function main() {
     
     return escena;
 }
+
+setTimeout(() => {
+  main(canvas);
+}, 100);
 
 export default main;

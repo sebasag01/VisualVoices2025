@@ -20,12 +20,29 @@ class TMalla extends TEntidad {
 
     // Implementación del método dibujar heredado de TEntidad
     dibujar(matrizTransf) {
-        if (!this.malla || !this.gl || !this.programInfo) {
-            console.error('No hay malla cargada o falta el contexto GL');
-            return;
-        }
-        // Llamar al método draw del recurso malla con el contexto GL y el programa
-        this.malla.draw(this.gl, this.programInfo, matrizTransf);
+        if (!this.gl || !this.programInfo) return;
+        const gl = this.gl;
+        const program = this.programInfo.program;
+        gl.useProgram(program);
+
+        // Crear un buffer de prueba
+        const vertices = new Float32Array([
+            0.0,  0.5, 0.0,
+           -0.5, -0.5, 0.0,
+            0.5, -0.5, 0.0
+        ]);
+        const vertexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+        const posLoc = this.programInfo.attribLocations.vertexPosition;
+        gl.enableVertexAttribArray(posLoc);
+        gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+
+        // Uniform de matriz (si lo usas)
+        gl.uniformMatrix4fv(this.programInfo.uniformLocations.matrix, false, matrizTransf);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 }
 
