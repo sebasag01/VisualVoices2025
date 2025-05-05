@@ -49,6 +49,8 @@ export class ModoLibreComponent implements OnInit, OnDestroy {
 
   // Controla si está en loop
   isLooping = false;
+  currentCategorySessionId: string|null = null;
+
 
   constructor(
     private router: Router,
@@ -174,6 +176,13 @@ export class ModoLibreComponent implements OnInit, OnDestroy {
   private reproducirAnimacion(loop: boolean) {
     if (!this.selectedWord) return;
 
+    this.statsService.recordWordEntry(this.selectedWord._id)
+    .subscribe({
+      next: () => console.log('Palabra registrada en stats'),
+      error: e => console.error('Error al registrar palabra', e)
+    });
+
+
     if (this.selectedWord.animaciones?.length > 0) {
       const animacionesUrls = this.selectedWord.animaciones.map((anim: any) =>
         `${environment.apiUrl}/gltf/animaciones/${anim.filename}`
@@ -276,9 +285,23 @@ export class ModoLibreComponent implements OnInit, OnDestroy {
       },
       error: (e) => console.error(e)
     });
+
+    this.statsService.recordCategoryEntry(cat._id).subscribe({
+      next: () => console.log('Categoría registrada en stats'),
+      error: (e) => console.error('Error al registrar categoría', e)
+    });
+
+    this.statsService.startCategorySession(cat._id)
+    .subscribe(resp => this.currentCategorySessionId = resp.sessionId);
+
   }
 
   volverAListaCategorias(): void {
+    if (this.currentCategorySessionId) {
+      this.statsService.endCategorySession(this.currentCategorySessionId)
+        .subscribe();
+      this.currentCategorySessionId = null;
+    }
     this.selectedCategory = null;
     this.palabrasDeCategoriaSeleccionada = [];
     this.toolMenuOpen = false;

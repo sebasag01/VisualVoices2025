@@ -75,4 +75,56 @@ export class StatsService {
     );
   }
 
+
+  recordCategoryEntry(categoryId: string): Observable<any> {
+    return this.http.post(
+      `${this.statsUrl}/category-entry`,
+      { categoryId },
+      { withCredentials: true }
+    );
+  }
+
+  getPopularCategories(limit: number = 5): Observable<{ categoria: string, count: number }[]> {
+    return this.http.get<{ ok: boolean, data: { categoria: string, count: number }[] }>(
+      `${this.statsUrl}/popular-categories?limit=${limit}`,
+      { withCredentials: true }
+    ).pipe(map(resp => resp.data));
+  }
+
+  recordWordEntry(palabraId: string): Observable<any> {
+    return this.http.post(
+      `${this.statsUrl}/word-entry`,
+      { palabraId },
+      { withCredentials: true }
+    );
+  }
+  
+  getPopularWords(limit: number = 10): Observable<{ palabra: string, count: number }[]> {
+    return this.http.get<{ ok: boolean, data: { palabra: string, count: number }[] }>(
+      `${this.statsUrl}/popular-words?limit=${limit}`,
+      { withCredentials: true }
+    ).pipe(map(resp => resp.data));
+  }
+
+  startCategorySession(categoryId: string): Observable<{sessionId: string}> {
+    return this.http.post<{sessionId: string}>(
+      `${this.statsUrl}/start-category`,
+      { categoryId },
+      { withCredentials: true }
+    );
+  }
+  endCategorySession(sessionId: string): Observable<{durationMs: number}> {
+    return this.http.patch<{durationMs: number}>(
+      `${this.statsUrl}/end-category/${sessionId}`,
+      {},
+      { withCredentials: true }
+    );
+  }
+  getTimeByCategory(): Observable<{category: string, avgMin: number}[]> {
+    return this.http.get<{ ok: boolean, data: {category:string,avgMin:number}[] }>(
+      `${this.statsUrl}/time-by-category`,
+      { withCredentials: true }
+    ).pipe(map(r => r.data));
+  }
+  
 }

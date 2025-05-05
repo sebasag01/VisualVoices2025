@@ -4,6 +4,11 @@ const Usuario = require('../models/usuarios');
 const mongoose = require('mongoose');
 const ExamenSession = require('../models/examenSession');
 const Palabra = require('../models/palabras');
+const CategoryEntry = require('../models/categoryEntry');
+const Categoria = require('../models/categorias');
+const WordEntry = require('../models/wordnEntry');
+const CategorySession = require('../models/categorySession');
+
 
 // POST /api/stats/start-level
 // body: { userId, level }
@@ -436,6 +441,137 @@ const getPerformanceEvolution = async (req, res) => {
   }
 };
 
+// POST /api/stats/category-entry
+// Registra que un usuario ha entrado en una categoría en modo libre.
+const recordCategoryEntry = async (req, res) => {
+  try {
+    const userId = req.uid;           // tu middleware validarJWT
+    const { categoryId } = req.body;
+    await CategoryEntry.create({ userId, categoryId });
+    res.json({ ok: true, msg: 'Entrada de categoría registrada' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: 'Error registrando categoría' });
+  }
+};
+
+// GET /api/stats/popular-categories
+// Devuelve las N categorías más populares (por número de entradas)
+const getPopularCategories = async (req, res) => {
+  try {
+    const topN = parseInt(req.query.limit) || 5;
+    const populares = await CategoryEntry.aggregate([
+      { $group: { _id: '$categoryId', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: topN },
+      {
+        $lookup: {
+          from: 'categorias',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'categoria'
+        }
+      },
+      { $unwind: '$categoria' },
+      { $project: { _id: 0, categoria: '$categoria.nombre', count: 1 } }
+    ]);
+    res.json({ ok: true, data: populares });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: 'Error obteniendo categorías populares' });
+  }
+};
+
+
+// POST /api/stats/word-entry
+const recordwordEntry = async (req, res) => {
+  try {
+    const userId     = req.uid;
+    const { palabraId } = req.body;
+    await WordEntry.create({ userId, palabraId });
+    res.json({ ok: true, msg: 'Entrada de palabra registrada' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok:false, msg:'Error registrando palabra' });
+  }
+};
+
+// GET /api/stats/popular-words?limit=N
+const getPopularWords = async (req, res) => {
+  try {
+    const topN = parseInt(req.query.limit) || 10;
+    const populares = await WordEntry.aggregate([
+      { $group: { _id: '$palabraId', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: topN },
+      {
+        $lookup: {
+          from: 'palabras',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'palabra'
+        }
+      },
+      { $unwind: '$palabra' },
+      { $project: { _id:0, palabra: '$palabra.palabra', count:1 } }
+    ]);
+    res.json({ ok: true, data: populares });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok:false, msg:'Error obteniendo palabras populares' });
+  }
+};
+
+
+// POST /api/stats/start-category
+const startCategorySession = async (req, res) => {
+  const userId = req.uid;
+  const { categoryId } = req.body;
+  const sess = new CategorySession({ userId, categoryId });
+  await sess.save();
+  res.json({ ok: true, sessionId: sess._id });
+};
+
+// PATCH /api/stats/end-category/:sessionId
+const endCategorySession = async (req, res) => {
+  const { sessionId } = req.params;
+  const sess = await CategorySession.findById(sessionId);
+  if (!sess) return res.status(404).json({ ok:false, msg:'Sesión no encontrada' });
+
+  sess.endTime = new Date();
+  sess.durationMs = sess.endTime - sess.startTime;
+  await sess.save();
+  res.json({ ok:true, durationMs: sess.durationMs });
+};
+
+// GET /api/stats/time-by-category
+// promedio en minutos por categoría
+const getTimeByCategory = async (req, res) => {
+  const agg = await CategorySession.aggregate([
+    { $match: { endTime: { $exists: true } } },
+    { $group: {
+        _id: '$categoryId',
+        avgMs: { $avg: '$durationMs' }
+      }
+    },
+    { $lookup: {
+        from: 'categorias',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'cat'
+      }
+    },
+    { $unwind: '$cat' },
+    { $project: {
+        _id: 0,
+        category: '$cat.nombre',
+        avgMin: { $divide: ['$avgMs', 1000 * 60] }
+      }
+    },
+    { $sort: { avgMin: -1 } }
+  ]);
+  res.json({ ok:true, data: agg });
+};
 
 
 module.exports = {
@@ -452,6 +588,13 @@ module.exports = {
   getExamStats,
   getScoreDistribution,
   getTopFailedWords,
-  getPerformanceEvolution
+  getPerformanceEvolution,
+  recordCategoryEntry,
+  getPopularCategories,
+  recordwordEntry,
+  getPopularWords,
+  startCategorySession,
+  endCategorySession,
+  getTimeByCategory
 };
 

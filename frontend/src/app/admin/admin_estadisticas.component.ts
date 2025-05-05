@@ -179,8 +179,47 @@ import { map } from 'rxjs/operators';
             </canvas>
           </div>
         </div>
+        </div>
       </div>
+      <div class="col-md-6 mt-4">
+        <div class="card">
+          <div class="card-header"><h3>Categorías más populares</h3></div>
+          <div class="card-body" style="height:300px">
+            <canvas
+              baseChart
+              [data]="barChartCatPopData"
+              [type]="barChartCatPopType"
+              [options]="barChartDistribucionOptions">
+            </canvas>
+          </div>
+        </div>
       </div>
+      <div class="col-md-6 mt-4">
+        <div class="card">
+          <div class="card-header"><h3>Palabras más consultadas</h3></div>
+          <div class="card-body" style="height:300px">
+            <canvas
+              baseChart
+              [data]="barChartWordPopData"
+              [type]="barChartWordPopType"
+              [options]="barChartDistribucionOptions">
+            </canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mt-4">
+          <div class="card">
+            <div class="card-header"><h3>Tiempo por categoría (min)</h3></div>
+            <div class="card-body" style="height:300px">
+              <canvas
+                baseChart
+                [data]="barChartTimeCatData"
+                [type]="barChartTimeCatType"
+                [options]="barChartDistribucionOptions">
+              </canvas>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   `
@@ -355,6 +394,27 @@ export class AdminEstadisticasComponent implements OnInit {
     }]
   };
   
+  //categorias mas populares
+  public barChartCatPopType: 'bar' = 'bar';
+  public barChartCatPopData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{ data: [], label: 'Entradas', backgroundColor: 'rgba(75, 192, 192, 0.6)' }]
+  };
+
+
+  //palabras mas populares
+  public barChartWordPopType: 'bar' = 'bar';
+  public barChartWordPopData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{ data: [], label: 'Consultas' }]
+  };
+
+  //tiempo promedio dedicado a cada categoria
+  public barChartTimeCatType: 'bar' = 'bar';
+  public barChartTimeCatData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{ data: [], label: 'Promedio (min)' }]
+  };
 
   constructor(private http: HttpClient, private statsService: StatsService) {}
 
@@ -398,6 +458,27 @@ export class AdminEstadisticasComponent implements OnInit {
           label: 'Media aciertos (%)'
         }]
       };
+    });
+
+    //para categorias mas populares
+    this.statsService.getPopularCategories(5).subscribe(list => {
+      const labels = list.map(x => x.categoria);
+      const data   = list.map(x => x.count);
+      this.barChartCatPopData = { labels, datasets: [{ data, label: 'Visitas' }] };
+    });
+
+    //palabras mas populares
+    this.statsService.getPopularWords(10)
+    .subscribe(list => {
+      const labels = list.map(x => x.palabra);
+      const data   = list.map(x => x.count);
+      this.barChartWordPopData = { labels, datasets:[{ data, label:'Visitas' }] };
+    });
+
+    this.statsService.getTimeByCategory().subscribe(list => {
+      const labels = list.map(x => x.category);
+      const data   = list.map(x => +x.avgMin.toFixed(2));
+      this.barChartTimeCatData = { labels, datasets: [{ data, label: 'Minutos' }] };
     });
 
 

@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { startLevel, endLevel, tiemposPorNivel, getEstadisticasGenerales,getTiempoTotalLibre, endMode, startMode, getSesionesDiarias, getProporcionUsuarios,getHorasPico, getExamStats,getScoreDistribution,getTopFailedWords,getPerformanceEvolution  } = require('../controllers/stats');
+const { startLevel, endLevel, tiemposPorNivel, getEstadisticasGenerales,getTiempoTotalLibre, endMode, startMode, getSesionesDiarias, getProporcionUsuarios,getHorasPico, getExamStats,getScoreDistribution,getTopFailedWords,getPerformanceEvolution, recordCategoryEntry, getPopularCategories, recordwordEntry, getPopularWords, startCategorySession, endCategorySession, getTimeByCategory  } = require('../controllers/stats');
 const { validarJWT } = require('../middleware/validar-jwt');
 const { tieneRol } = require('../middleware/validar-rol');
 
@@ -50,6 +50,47 @@ router.get(
   '/performance-evolution',
   [ validarJWT, tieneRol('ROL_ADMIN') ],
   getPerformanceEvolution
+);
+
+router.post(
+  '/category-entry',
+  validarJWT,
+  recordCategoryEntry
+);
+
+router.get(
+  '/popular-categories',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getPopularCategories
+);
+
+router.post(
+  '/word-entry',
+  validarJWT,
+  recordwordEntry
+);
+
+router.get(
+  '/popular-words',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getPopularWords
+);
+
+
+router.post(
+  '/start-category',
+  validarJWT,
+  startCategorySession
+);
+router.patch(
+  '/end-category/:sessionId',
+  validarJWT,
+  endCategorySession
+);
+router.get(
+  '/time-by-category',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getTimeByCategory
 );
 
 module.exports = router;
