@@ -63,6 +63,8 @@ export class MiperfilComponent implements OnInit {
   passwordError: string | null = null;
   emailErrorField: string | null = null;
 
+  passwordErrorField : string | null = null; // Campo de error para contraseña
+
   constructor(
     private usuarioService: UsuariosService,
     private router: Router
@@ -154,6 +156,11 @@ export class MiperfilComponent implements OnInit {
   // Cerrar el modal de editar contraseña
   closePasswordModal() {
     this.isPasswordModalOpen = false;
+    this.currentPassword = '';
+  this.newPassword = '';
+  this.confirmPassword = '';
+  this.passwordError = null;
+  this.passwordErrorField = null;
   }
 
   toggleEdit(field: string) {
@@ -220,5 +227,31 @@ export class MiperfilComponent implements OnInit {
 
   volverAModos(): void {
     this.router.navigate(['/modos']);
+  }
+
+  updatePassword() {
+
+    // Resetear errores antes de validar
+  this.passwordError = null;
+  this.passwordErrorField = null;
+
+  // Validaciones básicas
+  if (!this.currentPassword) {
+    this.passwordErrorField = 'currentPassword';
+    this.passwordError = 'La contraseña actual es obligatoria';
+    return;
+  }
+
+  if (!this.newPassword) {
+    this.passwordErrorField = 'newPassword';
+    this.passwordError = 'La nueva contraseña es obligatoria';
+    return;
+  }
+
+  if (this.newPassword !== this.confirmPassword) {
+    this.passwordErrorField = 'confirmPassword';
+    this.passwordError = 'Las contraseñas no coinciden';
+    return;
+  }
   }
 }

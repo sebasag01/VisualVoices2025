@@ -347,58 +347,74 @@
     </div>
 
     <!-- Modal Editar Contraseña -->
-    <div id="passwordModal" class="modal" *ngIf="isPasswordModalOpen">
-      <div class="modal-content">
-        <span class="close-btn" (click)="closePasswordModal()">&times;</span>
+    <!-- Modal Editar Contraseña -->
+<div id="passwordModal" class="modal" *ngIf="isPasswordModalOpen">
+  <div class="modal-content">
+    
 
-        <h3>Editar Contraseña</h3>
+    <h3 style="font-weight: bold; text-transform: uppercase;">
+      <i class="fa-solid fa-lock"></i> Cambia tu contraseña
+    </h3>
+    <p style="font-size: 0.9em; margin-bottom: 15px;">
+      Introduce tu contraseña actual y la nueva contraseña que deseas usar
+    </p>
 
-        <!-- Formulario de edición de contraseña -->
-        <form>
-          <!-- Input para contraseña actual -->
-          <div class="form-group">
-            <label for="currentPassword">Contraseña Actual</label>
-            <input
-              type="password"
-              id="currentPassword"
-              [(ngModel)]="currentPassword"
-              name="currentPassword"
-              required
-            />
-          </div>
-
-          <!-- Input para nueva contraseña -->
-          <div class="form-group">
-            <label for="newPassword">Nueva Contraseña</label>
-            <input
-              type="password"
-              id="newPassword"
-              [(ngModel)]="newPassword"
-              name="newPassword"
-              required
-            />
-          </div>
-
-          <!-- Input para repetir nueva contraseña -->
-          <div class="form-group">
-            <label for="confirmPassword">Repetir Nueva Contraseña</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              [(ngModel)]="confirmPassword"
-              name="confirmPassword"
-              required
-            />
-          </div>
-
-          <!-- Botón para enviar formulario -->
-          <button type="submit" class="btn-submit">Actualizar</button>
-        </form>
-
-        <!-- Mensaje de error si las contraseñas no coinciden -->
-        <p *ngIf="passwordError" class="error-message">{{ passwordError }}</p>
+    <!-- Formulario de edición de contraseña -->
+    <form (ngSubmit)="updatePassword()">
+      <!-- Input para contraseña actual -->
+      <div class="form-group" [ngClass]="{'show-error': passwordErrorField === 'currentPassword'}">
+        <input
+          type="password"
+          id="currentPassword"
+          [(ngModel)]="currentPassword"
+          name="currentPassword"
+          required
+          placeholder="Contraseña actual"
+        />
+        <p class="error-message" [class.visible]="passwordErrorField === 'currentPassword'">
+          <i class="fa-solid fa-triangle-exclamation"></i> La contraseña actual no es correcta
+        </p>
       </div>
-    </div>
+
+      <!-- Input para nueva contraseña -->
+      <div class="form-group" [ngClass]="{'show-error': passwordErrorField === 'newPassword'}">
+        <input
+          type="password"
+          id="newPassword"
+          [(ngModel)]="newPassword"
+          name="newPassword"
+          required
+          placeholder="Nueva contraseña"
+        />
+        <p class="error-message" [class.visible]="passwordErrorField === 'newPassword'">
+          <i class="fa-solid fa-triangle-exclamation"></i> La nueva contraseña no es válida
+        </p>
+      </div>
+
+      <!-- Input para repetir nueva contraseña -->
+      <div class="form-group" [ngClass]="{'show-error': passwordErrorField === 'confirmPassword'}">
+        <input
+          type="password"
+          id="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          required
+          placeholder="Repetir nueva contraseña"
+        />
+        <p class="error-message" [class.visible]="passwordErrorField === 'confirmPassword'">
+          <i class="fa-solid fa-triangle-exclamation"></i> Las contraseñas no coinciden
+        </p>
+      </div>
+
+      <!-- Botones -->
+      <div style="display: flex; justify-content: center; gap: 10px;">
+        <button type="button" class="start-button cancel-button" (click)="closePasswordModal()">Cancelar</button>
+        <button type="submit" class="start-button">Actualizar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
   </div>
 
   <ngx-charts-bar-horizontal
