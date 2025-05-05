@@ -20,6 +20,9 @@ export class RegistroComponent {
   passwordMismatch: boolean = false; // Variable para indicar que las contraseñas no coinciden
   showPasswordHint: boolean = false; // Controla la visibilidad del hint
   emailAlreadyExists: boolean = false; // Añadimos esta variable
+  errorField: string | null = null;  // indica qué campo está en error
+errorMessage: string | null = null; // mensaje general de error
+
 
   @Output() toggleLogin = new EventEmitter<void>();  
 
@@ -34,13 +37,25 @@ export class RegistroComponent {
     // Reiniciar estados de error
     this.passwordMismatch = false;
     this.emailAlreadyExists = false;
+    this.errorField = null;
+    this.errorMessage = null;
   
-    // Validar que las contraseñas coincidan antes de enviar
+    if (!this.user.email.trim()) {
+      this.errorField = 'email';
+      this.errorMessage = 'El correo no es válido';
+      return;
+    }
+  
+    if (!this.isPasswordValid()) {
+      this.errorField = 'password';
+      this.errorMessage = 'La contraseña no cumple los requisitos';
+      return;
+    }
+  
     if (this.user.password !== this.user.repeatPassword) {
+      this.errorField = 'repeatPassword';
       this.passwordMismatch = true;
-      return; // No continuar con el registro
-    } else {
-      this.passwordMismatch = false;
+      return;
     }
   
     console.log('Datos enviados:', this.user); // Log para verificar los datos
@@ -73,6 +88,15 @@ export class RegistroComponent {
     const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,12}$/;
     return regex.test(pwd);
   }
+
+  onPasswordFocus(): void {
+    this.showPasswordHint = true;
+    if (this.errorField === 'password') {
+      this.errorField = null;
+      this.errorMessage = null;
+    }
+  }
+  
 
 
 }

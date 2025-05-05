@@ -356,3 +356,37 @@
   }
 
 
+  .input-field,
+  .password-container .input-field {
+    box-sizing: border-box;
+  }
+  
+  .form-group.show-error input {
+    border-color: #b71c1c;
+  }
+  
+  .form-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  
+  .form-group .error-message {
+    color: #b71c1c;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    height: 16px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    text-align: left;
+    padding-left: 5px;
+  }
+  
+  .form-group .error-message.visible {
+    opacity: 1;
+    max-height: 50px;
+  }
+  
