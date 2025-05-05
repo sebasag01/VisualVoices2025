@@ -3,61 +3,68 @@
 <div class="container">
   <div class="content">
     <div class="layout">
-      
       <!-- Contenedor del avatar (3D) a la izquierda -->
-      <div class="image-container" id="avatar-element" [ngClass]="{'libre-half-width': showWebcam}">
+      <div
+        class="image-container"
+        id="avatar-element"
+        [ngClass]="{ 'libre-half-width': showWebcam }"
+      >
         <!-- Canvas con la animación -->
         <app-canvas [animationUrls]="animaciones"></app-canvas>
 
         <!-- Menú de herramientas (Radio Buttons) -->
         <div class="radio-input open" (change)="onRadioChange($event)">
           <!-- Play -->
-          <label class="label label-play" [class.selected]="selectedTool === 'play'">
+          <label
+            class="label label-play"
+            [class.selected]="selectedTool === 'play'"
+          >
             <input type="radio" id="play" name="value-radio" value="play" />
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <svg
+              class="icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+            >
               <path d="M96 52v408l320-204-320-204z" />
             </svg>
           </label>
 
           <!-- Toggle de “bucle”/”stop” -->
-<label class="label label-play2">
-  <input
-    type="checkbox"
-    id="toggleLoop"
-    (change)="onToggleLoop($event)"
-  />
+          <label class="label label-play2">
+            <input
+              type="checkbox"
+              id="toggleLoop"
+              (change)="onToggleLoop($event)"
+            />
 
-  <!-- Icono bucle cuando NO estamos en loop -->
-  <img
-    *ngIf="!isLooping"
-    class="icon-play2"
-    src="assets/play-bucle.svg"
-    alt="Play2"
-  />
+            <!-- Icono bucle cuando NO estamos en loop -->
+            <img
+              *ngIf="!isLooping"
+              class="icon-play2"
+              src="assets/play-bucle.svg"
+              alt="Play2"
+            />
 
-  <!-- Icono STOP cuando SÍ estamos en loop -->
-  <svg
-    *ngIf="isLooping"
-    class="icon-stop"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 512 512"
-    width="38"
-    height="38"
-  >
-    <path d="M64 64h384v384H64z" />
-  </svg>
-</label>
+            <!-- Icono STOP cuando SÍ estamos en loop -->
+            <svg
+              *ngIf="isLooping"
+              class="icon-stop"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              width="38"
+              height="38"
+            >
+              <path d="M64 64h384v384H64z" />
+            </svg>
+          </label>
 
-
-          <!-- Webcam -->
-<label class="label label-webcam">
-  <input
-    type="checkbox"
-    id="toggleWebcam"
-    [checked]="showWebcam"
-    (change)="toggleWebcam()"
-  />
-  <img class="icon-webcam" src="assets/webcam.svg" alt="Webcam" />
+          <label
+  class="label label-webcam"
+  style="opacity: 0.5; pointer-events: none"
+  title="No disponible"
+>
+  <input type="checkbox" disabled />
+  <img class="icon-webcam" src="assets/webcam.svg" alt="Webcam (No disponible)" />
 </label>
 
 
@@ -67,8 +74,8 @@
             <span class="text">Veloc</span>
           </label>
         </div>
-      </div> 
-      
+      </div>
+
       <!-- Contenedor de la cámara, se muestra solo si showWebcam es true -->
       <div class="camera-container" *ngIf="showWebcam">
         <video #videoElement class="mirror-video" autoplay></video>
@@ -76,7 +83,6 @@
 
       <!-- Panel derecho con las opciones de examen -->
       <div class="right-panel" *ngIf="!showWebcam">
-        
         <!-- Iconos de perfil, ajustes, logout -->
         <div class="icon-menu-fixed">
           <a (click)="volverAModos()" title="Modos">
@@ -85,7 +91,7 @@
           <a (click)="navigateTo('perfil')" title="Mi Perfil" class="user-icon">
             <i class="fa-solid fa-user"></i>
           </a>
-          
+
           <a (click)="logout()" title="Cerrar Sesión" class="logout-icon">
             <i class="fa-solid fa-right-from-bracket"></i>
           </a>
@@ -93,48 +99,63 @@
 
         <!-- Título del modo examen -->
         <h2 class="exam-title">
-          <i class="fa-solid fa-bolt" style="margin-right: 10px;"></i>
+          <i class="fa-solid fa-bolt" style="margin-right: 10px"></i>
           ¡PONTE A PRUEBA!
         </h2>
         <!-- Nuevo enunciado general debajo del título -->
         <p class="enunciado-general">¿Qué ha dicho el avatar?</p>
-        
+
         <!-- Mensaje de carga (se mantiene en esta posición) -->
         <div *ngIf="cargandoPregunta">Cargando pregunta...</div>
 
         <!-- Opciones de respuesta (4) -->
         <div class="word-list" *ngIf="opciones && !cargandoPregunta">
-          <div 
-            class="word-item" 
-            *ngFor="let opcion of opciones" 
+          <div
+            class="word-item"
+            *ngFor="let opcion of opciones"
             (click)="seleccionarOpcion(opcion._id)"
             [ngClass]="{
               'correct-answer': optionStatus[opcion._id] === 'correct',
               'wrong-answer': optionStatus[opcion._id] === 'incorrect'
-            }">
+            }"
+          >
             {{ opcion.palabra }}
           </div>
         </div>
 
         <!-- Botón para cargar una nueva pregunta manualmente (opcional) -->
-        <div style="margin-top: 2rem; display: flex; justify-content: center;">
+        <div style="margin-top: 2rem; display: flex; justify-content: center">
           <button class="small-webcam-btn" (click)="cargarNuevaPregunta()">
             Siguiente pregunta
           </button>
         </div>
 
         <!-- Bloque de feedback: se muestra debajo del botón de "Nueva Pregunta" -->
-        <div *ngIf="resultado" class="resultado" 
-             [ngClass]="{'resultado-correcto': resultado==='¡Respuesta correcta!', 'resultado-incorrecto': resultado==='Respuesta incorrecta'}">
+        <div
+          *ngIf="resultado"
+          class="resultado"
+          [ngClass]="{
+            'resultado-correcto': resultado === '¡Respuesta correcta!',
+            'resultado-incorrecto': resultado === 'Respuesta incorrecta'
+          }"
+        >
           <p>
-            <i *ngIf="resultado==='¡Respuesta correcta!'" class="fa-solid fa-circle-check icon-correct"></i>
-            <i *ngIf="resultado==='Respuesta incorrecta'" class="fa-solid fa-circle-xmark icon-incorrect"></i>
+            <i
+              *ngIf="resultado === '¡Respuesta correcta!'"
+              class="fa-solid fa-circle-check icon-correct"
+            ></i>
+            <i
+              *ngIf="resultado === 'Respuesta incorrecta'"
+              class="fa-solid fa-circle-xmark icon-incorrect"
+            ></i>
             {{ resultado }}
           </p>
         </div>
-
-      </div><!-- fin right-panel -->
-
-    </div><!-- fin layout -->
-  </div><!-- fin content -->
-</div><!-- fin container -->
+      </div>
+      <!-- fin right-panel -->
+    </div>
+    <!-- fin layout -->
+  </div>
+  <!-- fin content -->
+</div>
+<!-- fin container -->

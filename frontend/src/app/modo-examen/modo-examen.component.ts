@@ -113,15 +113,21 @@ this.isLooping = false; // Asegura que se detiene cualquier loop anterior
   seleccionarOpcion(opcionId: string): void {
     this.examenService.verificarRespuesta(this.questionId, opcionId).subscribe({
       next: (resp) => {
-        // Actualizamos el estado de la opción clicada según si es correcta o no
+        // Marcar la opción seleccionada como correcta o incorrecta
         this.optionStatus[opcionId] = resp.esCorrecta ? 'correct' : 'incorrect';
         this.resultado = resp.esCorrecta ? '¡Respuesta correcta!' : 'Respuesta incorrecta';
+  
+        // Si fue incorrecta, también marca la correcta en verde
+        if (!resp.esCorrecta && resp.opcionCorrectaId) {
+          this.optionStatus[resp.opcionCorrectaId] = 'correct';
+        }
       },
       error: (err) => {
         console.error('Error al verificar respuesta:', err);
       }
     });
   }
+  
 
   // ==========================================================
   // MENÚ DE BOTONES (radio buttons) => play / loop / stop / webcam / veloc

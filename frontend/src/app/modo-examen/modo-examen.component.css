@@ -1188,6 +1188,28 @@
   color: black;
 }
 
+.label-webcam {
+  width: 130px;
+  height: 80px;
+  position: relative;
+  background: linear-gradient(to bottom, #333, #242323);
+  pointer-events: none;
+}
+
+.label-webcam input[type="checkbox"] {
+  display: none;
+  pointer-events: none;
+}
+
+.icon-webcam {
+  display: block;
+  width: 40px;
+  height: auto;
+  margin: 0 auto;
+  transition: filter 0.2s;
+  pointer-events: none;
+}
+
 .label-webcam:has(input[type="checkbox"]:checked) .icon-webcam {
   filter: drop-shadow(0 0 5px #cae2fd);
 }

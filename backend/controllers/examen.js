@@ -157,6 +157,7 @@ const verificarRespuesta = async (req, res) => {
     return res.json({
       ok: true,
       esCorrecta: acierto,
+      opcionCorrectaId: examQ.correctAnswer,  // <<< añade esta línea
       msg: acierto ? '¡Respuesta correcta!' : 'Respuesta incorrecta',
       statsExamen: usuario.statsExamen
     });

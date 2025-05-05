@@ -264,6 +264,11 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
       next: (resp) => {
         this.optionStatus[opcionId] = resp.esCorrecta ? 'correct' : 'incorrect';
         this.resultado = resp.esCorrecta ? '¡Respuesta correcta!' : 'Respuesta incorrecta';
+
+        // Si fue incorrecta, también marca la correcta en verde
+        if (!resp.esCorrecta && resp.opcionCorrectaId) {
+          this.optionStatus[resp.opcionCorrectaId] = 'correct';
+        }
   
         // Actualizar scoreboard AL GUESSER
         if (this.guesserName === this.player1Name) {
