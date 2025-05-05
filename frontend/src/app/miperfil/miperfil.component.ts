@@ -2,25 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsuariosService } from '../services/usuarios.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';  // ✅ Importado FormsModule para usar ngModel
+import { FormsModule } from '@angular/forms'; // ✅ Importado FormsModule para usar ngModel
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-
 
 @Component({
   selector: 'app-miperfil',
   templateUrl: './miperfil.component.html',
   styleUrls: ['./miperfil.component.css'],
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, CommonModule, FormsModule, NgxChartsModule] // ✅ Agregado FormsModule
+  imports: [HeaderComponent, CommonModule, FormsModule, NgxChartsModule], // ✅ Agregado FormsModule
 })
 export class MiperfilComponent implements OnInit {
   single = [
-    { "name": "Usuarios", "value": 40632 },
-    { "name": "Palabras", "value": 50000 },
-    { "name": "Tiempo de uso", "value": 36745 },
-    { "name": "Niveles", "value": 36240 },
+    { name: 'Usuarios', value: 40632 },
+    { name: 'Palabras', value: 50000 },
+    { name: 'Tiempo de uso', value: 36745 },
+    { name: 'Niveles', value: 36240 },
     // { "name": "Spain", "value": 33000 },
     // { "name": "Italy", "value": 35800 }
   ];
@@ -45,41 +44,41 @@ export class MiperfilComponent implements OnInit {
     fullname: false,
     email: false,
     imagen: false, // Agregado para evitar errores si se usa en la interfaz
-    password: false
+    password: false,
   };
 
-  emailUsuario: string = '';  // Asignamos manualmente el email
+  emailUsuario: string = ''; // Asignamos manualmente el email
   isModalOpen: boolean = false;
-  isPasswordModalOpen: boolean = false;  // Nueva variable para gestionar el modal de contraseña
+  isPasswordModalOpen: boolean = false; // Nueva variable para gestionar el modal de contraseña
 
-
-  
   // Variables para el formulario
-  currentEmail: string = '';  // Email introducido por el usuario
-  newEmail: string = '';      // Nuevo email a actualizar
-  emailError: string | null = null;  // Mensaje de error
+  currentEmail: string = ''; // Email introducido por el usuario
+  newEmail: string = ''; // Nuevo email a actualizar
+  emailError: string | null = null; // Mensaje de error
 
   // Variables para el formulario de cambio de contraseña
-  currentPassword: string = ''; 
-  newPassword: string = '';      
-  confirmPassword: string = ''; 
+  currentPassword: string = '';
+  newPassword: string = '';
+  confirmPassword: string = '';
   passwordError: string | null = null;
+  emailErrorField: string | null = null;
 
-
-  constructor(private usuarioService: UsuariosService, private router: Router) {}
+  constructor(
+    private usuarioService: UsuariosService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadUserData();
   }
 
   loadUserData() {
-
     this.usuarioService.getAuthenticatedUser().subscribe({
       next: (data) => {
         console.log('Datos recibidos:', data); // Verificando los datos recibidos
         const user = data.usuario; // Asegurándote de acceder al objeto usuario
         this.userData = user;
-    
+
         // Verificar que el email esté cargado correctamente
         if (user && user.email) {
           this.emailUsuario = user.email;
@@ -90,94 +89,87 @@ export class MiperfilComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al cargar los datos del usuario:', error);
-      }
+      },
     });
-    
-    
   }
 
   updateEmail() {
+    this.emailErrorField = null;
+
+    // Validar email actual
     if (this.currentEmail !== this.emailUsuario) {
-      this.emailError = 'El email actual no es correcto';
-      return; // Si no coincide, mostramos el error
+      this.emailErrorField = 'currentEmail';
+      return;
     }
-  
+
+    // Validar nuevo email (simple validación, puedes mejorarla)
+    if (!this.newEmail || !this.newEmail.includes('@')) {
+      this.emailErrorField = 'newEmail';
+      return;
+    }
+
     // Verificar que el UID del usuario esté presente
     if (!this.userData.uid) {
       console.error('UID del usuario no encontrado.');
-      alert('Hubo un problema al actualizar el email. El identificador del usuario no está disponible.');
+      alert(
+        'Hubo un problema al actualizar el email. El identificador del usuario no está disponible.'
+      );
       return; // No proceder si el UID no está presente
     }
-  
+
     // Si los emails coinciden, realizamos la actualización
     const updatedEmail = { email: this.newEmail };
-  
-    console.log('Enviando solicitud para actualizar email:', updatedEmail);  // Depuración
+
+    console.log('Enviando solicitud para actualizar email:', updatedEmail); // Depuración
     console.log('UID del usuario:', this.userData.uid); // Verificar que el UID esté disponible
-  
+
     // Usamos el UID en lugar de ID
-    this.usuarioService.updateUsuario(this.userData.uid, updatedEmail).subscribe({
-      next: () => {
-        this.emailUsuario = this.newEmail; // Actualizamos el email en la sesión
-        this.closeModal(); // Cerramos el modal
-        alert('Email actualizado correctamente');
-      },
-      error: (error) => {
-        console.error('Error al actualizar el email:', error);
-        if (error && error.message) {
-          alert('Hubo un problema al actualizar el email. Detalles: ' + error.message);
-        } else {
-          alert('Hubo un problema al actualizar el email.');
-        }
-      }
-    });
-  }
-  
-  // Método para actualizar la contraseña
-  updatePassword() {
-    if (this.newPassword !== this.confirmPassword) {
-      this.passwordError = 'Las contraseñas no coinciden.';
-      return; // Si no coinciden, mostramos el error
-    }
-
-    // Si las contraseñas coinciden, realizamos la actualización
-    const updatedPassword = { password: this.newPassword };
-
-    this.usuarioService.updateUsuario(this.userData.email, updatedPassword).subscribe({
-      next: () => {
-        alert('Contraseña actualizada correctamente');
-        this.closePasswordModal(); // Cerramos el modal de contraseña
-      },
-      error: (error) => {
-        console.error('Error al actualizar la contraseña:', error);
-        alert('Hubo un problema al actualizar la contraseña.');
-      }
-    });
+    this.usuarioService
+      .updateUsuario(this.userData.uid, updatedEmail)
+      .subscribe({
+        next: () => {
+          this.emailUsuario = this.newEmail; // Actualizamos el email en la sesión
+          this.closeModal(); // Cerramos el modal
+          alert('Email actualizado correctamente');
+        },
+        error: (error) => {
+          console.error('Error al actualizar el email:', error);
+          if (error && error.message) {
+            alert(
+              'Hubo un problema al actualizar el email. Detalles: ' +
+                error.message
+            );
+          } else {
+            alert('Hubo un problema al actualizar el email.');
+          }
+        },
+      });
   }
 
   // Abrir el modal de editar contraseña
   openPasswordModal() {
     this.isPasswordModalOpen = true;
-    this.passwordError = null;  // Limpiamos el error cuando se abre el modal
   }
 
   // Cerrar el modal de editar contraseña
   closePasswordModal() {
     this.isPasswordModalOpen = false;
   }
-  
 
-  toggleEdit(field: string) {  // Cambié el tipo de field a 'string' para flexibilidad
+  toggleEdit(field: string) {
+    // Cambié el tipo de field a 'string' para flexibilidad
     if (this.isEditing[field]) {
       const updatedField = { [field]: this.userData[field] };
-      this.usuarioService.updateUsuario(this.userData.email, updatedField).subscribe(
-        () => {
-          this.isEditing[field] = false;
-        },
-        (error) => {
-          console.error('Error al actualizar:', error);
-        }
-      );
+      this.usuarioService
+        .updateUsuario(this.userData.email, updatedField)
+        .subscribe(
+          () => {
+            this.isEditing[field] = false;
+          },
+          (error) => {
+            console.error('Error al actualizar:', error);
+          }
+        );
     } else {
       this.isEditing[field] = true;
     }
@@ -201,14 +193,16 @@ export class MiperfilComponent implements OnInit {
   // Métodos para abrir y cerrar el modal
   openModal() {
     this.isModalOpen = true;
-    this.emailError = null;  // Limpiamos el error cuando se abre el modal
-
+    this.emailError = null; // Limpiamos el error cuando se abre el modal
   }
 
   closeModal() {
     this.isModalOpen = false;
+    this.currentEmail = '';
+    this.newEmail = '';
+    this.emailError = null;
+    this.emailErrorField = null;
   }
-
 
   logout(): void {
     console.log('[DEBUG] Cerrando sesión desde Modo Libre...');

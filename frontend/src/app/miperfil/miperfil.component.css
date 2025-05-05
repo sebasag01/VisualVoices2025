@@ -220,12 +220,25 @@ html {
 .modal-content {
   background-color: #f2c464; /* Color de fondo cambiado */
   border-radius: 10px;
-  padding: 20px;
+  padding: 40px;
   text-align: center;
-  width: 300px;
-  font-family: 'Chauphilomene', sans-serif; /* Estilo de la fuente */
+  width: 420px;
+  font-family: 'Lexend', sans-serif; /* Estilo de la fuente */
   color: black; /* Color del texto */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  padding: 30px;
+
+
 }
+
+.modal-content h3{
+  font-family: 'Chauphilomene', sans-serif; /* Estilo de la fuente */
+  margin-bottom: 20px; /* más separación con el subtítulo */
+
+
+}
+
+
 
 /* Botón de cerrar (X) */
 .close-btn {
@@ -248,7 +261,7 @@ html {
 
 /* Estilos para los inputs y el formulario */
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .form-group input {
@@ -275,6 +288,37 @@ html {
   background-color: #ffffff; /* Cambiar fondo cuando se hace focus */
 }
 
+.form-group .error-message {
+  color: #b71c1c;
+  /* color:  rgba(0, 0, 0, 0.8);  */
+  font-size: 0.8rem;
+  margin-top: 4px;
+  height: 16px; /* reserva siempre espacio, incluso sin error */
+
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+  text-align: left;
+  padding-left: 5px;
+}
+
+.form-group .error-message.visible {
+  opacity: 1;
+}
+
+.form-group.show-error .error-message {
+  opacity: 1;
+  max-height: 50px; /* permite mostrar el texto */
+}
+
+.form-group.show-error input {
+  border-color: #d9534f;
+  border: 2px solid #b71c1c; /* rojo vino elegante */
+
+}
+
+
 /* Estilos para el botón de enviar */
 .btn-submit {
   background-color: #4caf50;
@@ -289,12 +333,6 @@ html {
   background-color: #45a049;
 }
 
-/* Estilos para el mensaje de error */
-.error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 10px;
-}
 
 .estadisticas-container {
   display: flex; /* Coloca las dos secciones en línea */
@@ -478,3 +516,58 @@ ngx-charts-bar-horizontal {
 
 }
 
+.start-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-family: "Lexend", sans-serif;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  background-color: #41b8d5;
+  /* background-color: rgb(3, 145, 3); */
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  font-weight: bold;
+  display: block; /* asegura que respeta el margin auto */
+  margin-left: auto; /* centra el botón horizontalmente */
+  margin-right: auto; /* centra el botón horizontalmente */
+  
+  
+}
+.start-button:hover {
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.2em 0.2em;
+}
+
+.cancel-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-family: "Lexend", sans-serif;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  background-color: #e05c5c;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  font-weight: bold;
+  display: block; /* asegura que respeta el margin auto */
+  margin-left: auto; /* centra el botón horizontalmente */
+  margin-right: auto; /* centra el botón horizontalmente */
+  
+  
+}
+.cancel-button:hover {
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.2em 0.2em;
+}
+
+
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-content {
+  animation: scaleIn 0.3s ease-out;
+}
