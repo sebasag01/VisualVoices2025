@@ -7,6 +7,7 @@ import TNodo from './entidades/TNodo.js';
 import TMalla from './entidades/TMalla.js';
 import TLuz from './entidades/TLuz.js';
 import TCamara from './entidades/TCamara.js';
+import TGestorRecursos from './recursos/TGestorRecursos.js';
 import { vec3, mat4 } from '../node_modules/gl-matrix/esm/index.js';
 
 
@@ -172,8 +173,15 @@ export async function main(gl) {
     const nodoLuz = new TNodo("Luz");
     const nodoCamara = new TNodo("Camara");
     
-    // Crear las entidades
-    const malla = new TMalla(gl, programInfo);
+    // Crear el gestor de recursos
+    const gestorRecursos = new TGestorRecursos();
+
+    // Esperar a que se cargue el recurso cubo.gltf
+    const recursoMalla = await gestorRecursos.getRecurso('cubo.gltf');
+    console.log(recursoMalla);
+
+    // Crear la malla usando el recurso cargado
+    const malla = new TMalla(gl, programInfo, recursoMalla);
     const luz = new TLuz();
     const camara = new TCamara();
     
@@ -214,11 +222,26 @@ export async function main(gl) {
     function render() {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.useProgram(programInfo.program);
-        
+        gl.enable(gl.CULL_FACE);
+
         escena.recorrer(matrizIdentidad);
-        
-        dibujarMalla(gl, programInfo, angle, camara, luz);
-        
+
+        // Calcula la matriz de modelo, vista y proyección aquí
+        const model = mat4.create();
+        mat4.rotateY(model, model, angle);
+
+        const view = mat4.create();
+        mat4.lookAt(view, [0, 0, 3], [0, 0, 0], [0, 1, 0]);
+
+        const projection = camara.getProyeccion();
+
+        const mvp = mat4.create();
+        mat4.multiply(mvp, view, model);
+        mat4.multiply(mvp, projection, mvp);
+
+        // Llama al método draw de la malla
+        malla.dibujar(mvp);
+
         angle += 0.01;
         requestAnimationFrame(render);
     }

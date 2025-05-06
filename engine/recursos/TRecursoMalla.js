@@ -10,35 +10,82 @@ class TRecursoMalla extends TRecurso {
         this.indices = null;     // int array para índices
     }
 
-    // Método para cargar el fichero y rellenar los buffers
-    cargarFichero(nombre) {
+    async cargarFichero(nombre) {
         this.SetNombre(nombre);
         try {
-            // Aquí implementaremos la carga del fichero
-            // Por ahora es un placeholder que crea una geometría simple
-            this.vertices = new Float32Array([
-                // Vértices de un triángulo simple por defecto
-                -1.0, -1.0, 0.0,
-                1.0, -1.0, 0.0,
-                0.0, 1.0, 0.0
-            ]);
+            // Cargar el archivo GLTF embebido (JSON)
+            //const response = await fetch(`./assets/${nombre}`);
+            const response = await fetch(`frontend/src/assets/cubo.gltf`);
+            const gltf = await response.json();
 
-            this.normales = new Float32Array([
-                0.0, 0.0, 1.0,
-                0.0, 0.0, 1.0,
-                0.0, 0.0, 1.0
-            ]);
+            // Cargar el buffer embebido (base64)
+            const bufferView = gltf.bufferViews[0];
+            const buffer = gltf.buffers[0];
+            // Extraer el base64 del URI (data:application/octet-stream;base64,....)
+            const base64 = buffer.uri.split(',')[1];
+            const bin = atob(base64);
+            const bytes = new Uint8Array(bin.length);
+            for (let i = 0; i < bin.length; i++) {
+                bytes[i] = bin.charCodeAt(i);
+            }
 
-            this.coordTexturas = new Float32Array([
-                0.0, 0.0,
-                1.0, 0.0,
-                0.5, 1.0
-            ]);
+            // Accesores
+            const mesh = gltf.meshes[0];
+            const primitive = mesh.primitives[0];
 
-            this.indices = new Uint16Array([0, 1, 2]);
+            // Vértices
+            const posAccessor = gltf.accessors[primitive.attributes.POSITION];
+            const posOffset = gltf.bufferViews[posAccessor.bufferView].byteOffset || 0;
+            this.vertices = new Float32Array(
+                bytes.buffer,
+                posOffset,
+                posAccessor.count * 3
+            );
 
+            // Normales
+            if (primitive.attributes.NORMAL !== undefined) {
+                const normAccessor = gltf.accessors[primitive.attributes.NORMAL];
+                const normOffset = gltf.bufferViews[normAccessor.bufferView].byteOffset || 0;
+                this.normales = new Float32Array(
+                    bytes.buffer,
+                    normOffset,
+                    normAccessor.count * 3
+                );
+            }
+
+            // Coordenadas de textura
+            if (primitive.attributes.TEXCOORD_0 !== undefined) {
+                const texAccessor = gltf.accessors[primitive.attributes.TEXCOORD_0];
+                const texOffset = gltf.bufferViews[texAccessor.bufferView].byteOffset || 0;
+                this.coordTexturas = new Float32Array(
+                    bytes.buffer,
+                    texOffset,
+                    texAccessor.count * 2
+                );
+            }
+
+            // Índices
+            if (primitive.indices !== undefined) {
+                const idxAccessor = gltf.accessors[primitive.indices];
+                const idxView = gltf.bufferViews[idxAccessor.bufferView];
+                const idxOffset = idxView.byteOffset || 0;
+                // Puede ser UNSIGNED_SHORT o UNSIGNED_INT
+                if (idxAccessor.componentType === 5123) { // UNSIGNED_SHORT
+                    this.indices = new Uint16Array(
+                        bytes.buffer,
+                        idxOffset,
+                        idxAccessor.count
+                    );
+                } else if (idxAccessor.componentType === 5125) { // UNSIGNED_INT
+                    this.indices = new Uint32Array(
+                        bytes.buffer,
+                        idxOffset,
+                        idxAccessor.count
+                    );
+                }
+            }
         } catch (error) {
-            console.error('Error al cargar el fichero:', error);
+            console.error('Error al cargar el fichero GLTF:', error);
             throw error;
         }
     }

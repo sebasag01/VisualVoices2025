@@ -1,34 +1,48 @@
 import TRecurso from './TRecurso.js';
+import TRecursoMalla from './TRecursoMalla.js';
+// Si tienes TRecursoTextura, descomenta la siguiente línea
+// import TRecursoTextura from './TRecursoTextura.js';
 
 class TGestorRecursos {
     constructor() {
         this.recursos = []; // Vector de TRecurso
     }
 
-    // Método principal para obtener un recurso
-    getRecurso(nombre) {
-        // Buscar el recurso en el vector
+    async getRecurso(nombre) {
         let rec = this.buscarRecurso(nombre);
-        
-        // Si no se encuentra, crear uno nuevo
         if (!rec) {
-            rec = this.crearRecurso();
-            rec.SetNombre(nombre);
-            this.recursos.push(rec);
+            rec = this.crearRecurso(nombre);
+            console.log("ARRAY RECURSOS ", rec)
+            if (!rec) {
+                console.warn(`Tipo de recurso no soportado para: ${nombre}`);
+                return null;
+            }
+            try {
+                await rec.cargarFichero(nombre);
+                this.recursos.push(rec);
+            } catch (error) {
+                console.error(`No se pudo cargar el recurso: ${nombre}`, error);
+                return null;
+            }
         }
-        
         return rec;
     }
 
-    // Método auxiliar para buscar un recurso por nombre
     buscarRecurso(nombre) {
         return this.recursos.find(recurso => recurso.GetNombre() === nombre);
     }
 
-    // Método para crear una nueva instancia de recurso
-    crearRecurso() {
-        // Este método debe ser sobrescrito por las clases derivadas
-        throw new Error('crearRecurso debe ser implementado por las clases derivadas');
+    crearRecurso(nombre) { 
+        const extension = nombre.split('.').pop().toLowerCase();
+        if (extension === 'gltf') {
+            return new TRecursoMalla();
+        } else if (extension === 'png' || extension === 'jpg' || extension === 'jpeg') {
+            // return new TRecursoTextura();
+            return null; // Si no tienes implementado TRecursoTextura aún
+        } else {
+            // Aquí puedes añadir más tipos en el futuro
+            return null;
+        }
     }
 }
 
