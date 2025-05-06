@@ -8,7 +8,8 @@ import TMalla from './entidades/TMalla.js';
 import TLuz from './entidades/TLuz.js';
 import TCamara from './entidades/TCamara.js';
 import TGestorRecursos from './recursos/TGestorRecursos.js';
-import { vec3, mat4 } from '../node_modules/gl-matrix/esm/index.js';
+//import { vec3, mat4 } from '../node_modules/gl-matrix/esm/index.js';
+import { mat4, vec3 } from 'gl-matrix';
 
 
 // Shaders
@@ -177,7 +178,7 @@ export async function main(gl) {
     const gestorRecursos = new TGestorRecursos();
 
     // Esperar a que se cargue el recurso cubo.gltf
-    const recursoMalla = await gestorRecursos.getRecurso('cubo.gltf');
+    const recursoMalla = await gestorRecursos.getRecurso('malanimation.gltf');
     console.log(recursoMalla);
 
     // Crear la malla usando el recurso cargado

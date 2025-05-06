@@ -15,7 +15,7 @@ class TRecursoMalla extends TRecurso {
         try {
             // Cargar el archivo GLTF embebido (JSON)
             //const response = await fetch(`./assets/${nombre}`);
-            const response = await fetch(`frontend/src/assets/cubo.gltf`);
+            const response = await fetch(`/assets/${nombre}`);
             const gltf = await response.json();
 
             // Cargar el buffer embebido (base64)

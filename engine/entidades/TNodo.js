@@ -1,5 +1,5 @@
 import TEntidad from './TEntidad.js';
-import { vec3, mat4 } from '../../node_modules/gl-matrix/esm/index.js';
+import { mat4, vec3 } from 'gl-matrix';
 
 class TNodo {
     constructor(nombre = "Sin nombre") {
