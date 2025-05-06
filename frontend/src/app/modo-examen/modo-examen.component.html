@@ -59,14 +59,17 @@
           </label>
 
           <label
-  class="label label-webcam"
-  style="opacity: 0.5; pointer-events: none"
-  title="No disponible"
->
-  <input type="checkbox" disabled />
-  <img class="icon-webcam" src="assets/webcam.svg" alt="Webcam (No disponible)" />
-</label>
-
+            class="label label-webcam"
+            style="opacity: 0.5; pointer-events: none"
+            title="No disponible"
+          >
+            <input type="checkbox" disabled />
+            <img
+              class="icon-webcam"
+              src="assets/webcam.svg"
+              alt="Webcam (No disponible)"
+            />
+          </label>
 
           <!-- Velocidad (Speed) -->
           <label class="label">
@@ -105,7 +108,7 @@
           </h2>
           <!-- Nuevo enunciado general debajo del título -->
           <p class="enunciado-general">¿Qué ha dicho el avatar?</p>
-  
+
           <!-- Mensaje de carga (se mantiene en esta posición) -->
           <div *ngIf="cargandoPregunta">Cargando pregunta...</div>
 
@@ -120,71 +123,97 @@
                 'wrong-answer': optionStatus[opcion._id] === 'incorrect',
                 'correct-solution': respuestaCorrectaId === opcion._id
               }"
-          >
+            >
               {{ opcion.palabra }}
-              <i *ngIf="respuestaCorrectaId === opcion._id" 
-                  class="fa-solid fa-check" 
-                  style="margin-left: 8px; color: #4caf50;"></i>
+              <!-- <i
+                *ngIf="respuestaCorrectaId === opcion._id"
+                class="fa-solid fa-check"
+                style="margin-left: 8px; color: #4caf50"
+              ></i> -->
             </div>
           </div>
 
           <!-- Botón manual: solo aparece tras responder la pregunta -->
-          <div *ngIf="answeredThisQuestion && questionCount < maxQuestions" class="text-center mt-4">
+          <div
+            *ngIf="answeredThisQuestion && questionCount < maxQuestions"
+            class="text-center mt-4"
+          >
             <button class="small-webcam-btn" (click)="cargarNuevaPregunta()">
               Siguiente pregunta
             </button>
           </div>
-          
+
           <!-- Mostrar resultados si ya contestaste la última -->
-          <div *ngIf="answeredThisQuestion && readyToShowResults" class="text-center mt-4">
+          <div
+            *ngIf="answeredThisQuestion && readyToShowResults"
+            class="text-center mt-4"
+          >
             <button class="small-webcam-btn" (click)="mostrarResultados()">
               🎉 Mostrar resultados
             </button>
           </div>
 
           <!-- Bloque de feedback: se muestra debajo del botón de "Nueva Pregunta" -->
-          <div *ngIf="resultado" class="resultado" 
-              [ngClass]="{'resultado-correcto': resultado==='¡Respuesta correcta!', 'resultado-incorrecto': resultado==='Respuesta incorrecta'}">
+          <div
+            *ngIf="resultado"
+            class="resultado"
+            [ngClass]="{
+              'resultado-correcto': resultado === '¡Respuesta correcta!',
+              'resultado-incorrecto': resultado === 'Respuesta incorrecta'
+            }"
+          >
             <p>
-              <i *ngIf="resultado==='¡Respuesta correcta!'" class="fa-solid fa-circle-check icon-correct"></i>
-              <i *ngIf="resultado==='Respuesta incorrecta'" class="fa-solid fa-circle-xmark icon-incorrect"></i>
+              <i
+                *ngIf="resultado === '¡Respuesta correcta!'"
+                class="fa-solid fa-circle-check icon-correct"
+              ></i>
+              <i
+                *ngIf="resultado === 'Respuesta incorrecta'"
+                class="fa-solid fa-circle-xmark icon-incorrect"
+              ></i>
               {{ resultado }}
             </p>
           </div>
-      </div>
-
-      <div *ngIf="examFinished" class="exam-summary">
-        <h3>🏆 ¡Examen completado!</h3>
-        <p>Has respondido {{ maxQuestions }} preguntas:</p>
-      
-        <!-- Línea de iconos: verde para acierto, rojo para fallo -->
-        <div class="summary-icons">
-          <ng-container *ngFor="let ok of resultsHistory; let i = index">
-            <i 
-              class="fa" 
-              [ngClass]="ok ? 'fa-check-circle icon-correct' : 'fa-times-circle icon-incorrect'"
-            ></i>
-          </ng-container>
         </div>
-      
-        <p class="mt-3">
-          <strong>Aciertos:</strong> {{ correctCount }}  
-          &nbsp;|&nbsp; 
-          <strong>Fallos:</strong> {{ incorrectCount }}
-        </p>
-      
-        <div class="mt-4">
-          <button class="small-webcam-btn" (click)="startExamSession()">
-            🔄 Volver a empezar
-          </button>
-          <button class="small-webcam-btn" (click)="volverAModos()">
-            🏠 Salir
-          </button>
+
+        <div *ngIf="examFinished" class="exam-summary">
+          <h3><i class="fa-solid fa-trophy"></i>  ¡Examen completado!</h3>
+          <p>Has respondido {{ maxQuestions }} preguntas:</p>
+
+          <!-- Línea de iconos: verde para acierto, rojo para fallo -->
+          <div class="summary-icons">
+            <ng-container *ngFor="let ok of resultsHistory; let i = index">
+              <i
+                class="fa"
+                [ngClass]="
+                  ok
+                    ? 'fa-check-circle icon-correct'
+                    : 'fa-times-circle icon-incorrect'
+                "
+              ></i>
+            </ng-container>
+          </div>
+
+          <p class="mt-3">
+            <strong>Aciertos:</strong> {{ correctCount }}
+            &nbsp;|&nbsp;
+            <strong>Fallos:</strong> {{ incorrectCount }}
+          </p>
+
+          <div class="mt-4">
+            <button class="small-webcam-btn" (click)="startExamSession()">
+              <i class="fa-solid fa-rotate-right"></i> Volver a empezar
+            </button>
+            <button class="small-webcam-btn" (click)="volverAModos()">
+              <i class="fa-solid fa-house"></i> Salir
+            </button>
+          </div>
         </div>
       </div>
-
-      </div><!-- fin right-panel -->
-
-    </div><!-- fin layout -->
-  </div><!-- fin content -->
-</div><!-- fin container -->
+      <!-- fin right-panel -->
+    </div>
+    <!-- fin layout -->
+  </div>
+  <!-- fin content -->
+</div>
+<!-- fin container -->
