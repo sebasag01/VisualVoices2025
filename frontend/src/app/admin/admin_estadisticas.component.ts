@@ -6,7 +6,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
-import { StatsService } from '../services/stats.service';  // ← importa
+import { StatsService } from '../services/stats.service';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -20,7 +20,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./admin.component.scss'],
   template: `
     <div class="container mt-3">
-      <h2>Estadísticas</h2>
+      <h2 class="main-title mb-4">Estadísticas de la Plataforma</h2>
 
       <div *ngIf="errorMensaje" class="alert alert-danger" role="alert">
         {{ errorMensaje }}
@@ -29,194 +29,151 @@ import { map } from 'rxjs/operators';
         Cargando estadísticas...
       </div>
 
-      <!-- GRÁFICOS EXISTENTES -->
-      <div class="row chart-container mt-3">
-        <!-- GRÁFICO: Sesiones diarias y Duración promedio (min) -->
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-header">
-              <h3>Sesiones diarias y duración promedio (min)</h3>
-            </div>
-            <div class="card-body">
-              <canvas
-                baseChart
-                [data]="barChartData"
-                [options]="barChartOptions"
-                [type]="barChartType"
-              ></canvas>
+      <!-- SECCIÓN 1: ESTADÍSTICAS GENERALES -->
+      <div class="stats-section mb-5">
+        <h3 class="section-title">Estadísticas Generales</h3>
+        <div class="row chart-container">
+          <!-- Sesiones diarias y Duración -->
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header"><h4>Sesiones diarias y duración</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
+              </div>
             </div>
           </div>
-        </div>
-        
-        <!-- GRÁFICO: Proporción de usuarios nuevos vs recurrentes -->
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-header">
-              <h3>Usuarios nuevos vs recurrentes</h3>
-            </div>
-            <div class="card-body">
-              <canvas
-                baseChart
-                [data]="pieChartData"
-                [options]="pieChartOptions"
-                [type]="pieChartType"
-              ></canvas>
+
+          <!-- Usuarios nuevos vs recurrentes -->
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header"><h4>Usuarios nuevos vs recurrentes</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="pieChartType"></canvas>
+              </div>
             </div>
           </div>
-        </div>
-        
-        <!-- GRÁFICO: Horas pico de uso de la plataforma -->
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-header">
-              <h3>Horas pico de uso</h3>
-            </div>
-            <div class="card-body">
-              <canvas
-                baseChart
-                [data]="lineChartData"
-                [options]="lineChartOptions"
-                [type]="lineChartType"
-              ></canvas>
+
+          <!-- Horas pico de uso -->
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header"><h4>Horas pico de uso</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType"></canvas>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- NUEVAS GRÁFICAS -->
-      <div class="row chart-container mt-3">
-        <!-- GRÁFICO: Distribución de Usuarios por Nivel -->
-        <div class="col-md-6">
-          <div class="card">
-            <div class="card-header">
-              <h3>Distribución de Usuarios por Nivel</h3>
-            </div>
-            <div class="card-body">
-              <canvas
-                baseChart
-                [data]="barChartDistribucionData"
-                [options]="barChartDistribucionOptions"
-                [type]="barChartDistribucionType"
-              ></canvas>
+      <!-- SECCIÓN 2: ESTADÍSTICAS MODO GUIADO -->
+      <div class="stats-section mb-5">
+        <h3 class="section-title">Estadísticas Modo Guiado</h3>
+        <div class="row chart-container">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header"><h4>Distribución de Usuarios por Nivel</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartDistribucionData" [options]="barChartDistribucionOptions" [type]="barChartDistribucionType"></canvas>
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- GRÁFICO: Tiempo en Cada Nivel (min) -->
-        <div class="col-md-6">
-          <div class="card">
-            <div class="card-header">
-              <h3>Tiempo en Cada Nivel (min)</h3>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header"><h4>Tiempo en Cada Nivel (min)</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartTiempoData" [options]="barChartTiempoOptions" [type]="barChartTiempoType"></canvas>
+              </div>
             </div>
-            <div class="card-body">
-              <canvas
-                baseChart
-                [data]="barChartTiempoData"
-                [options]="barChartTiempoOptions"
-                [type]="barChartTiempoType"
-              ></canvas>
-            </div>
-          </div>
-        </div>
-
-      <div class="row chart-container mt-3">
-        <!-- GRÁFICO: Exámenes (promedio aciertos/fallos) -->
-        <div class="col-md-6">
-          <div class="card">
-            <div class="card-header">
-              <h3>Exámenes (promedio aciertos/fallos)</h3>
-            </div>
-            <div class="card-body">
-              <canvas baseChart
-                [data]="examChartData"
-                [options]="examChartOptions"
-                [type]="examChartType">
-              </canvas>
-            </div>
-          </div>
-        </div>
-
-        <!-- GRÁFICO: Distribución de puntuaciones (0–5) -->
-        <div class="col-md-6">
-          <div class="card">
-            <div class="card-header">
-              <h3>Distribución de puntuaciones (0–5)</h3>
-            </div>
-            <div class="card-body">
-              <canvas
-                baseChart
-                [data]="barChartScoresData"
-                [options]="barChartScoresOptions"
-                [type]="barChartScoresType"
-              ></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 mt-4">
-          <div class="card">
-            <div class="card-header">
-              <h3>Top 5 palabras más falladas</h3>
-            </div>
-            <div class="card-body" style="height:300px">
-              <canvas
-                baseChart
-                [data]="barChartFailedData"
-                [options]="barChartFailedOptions"
-                [type]="barChartFailedType">
-              </canvas>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12 mt-4">
-        <div class="card">
-          <div class="card-header"><h3>Evolución del rendimiento</h3></div>
-          <div class="card-body" style="height:300px">
-            <canvas
-              baseChart
-              [data]="perfChartData"
-              [options]="perfChartOptions"
-              [type]="perfChartType">
-            </canvas>
-          </div>
-        </div>
-        </div>
-      </div>
-      <div class="col-md-6 mt-4">
-        <div class="card">
-          <div class="card-header"><h3>Categorías más populares</h3></div>
-          <div class="card-body" style="height:300px">
-            <canvas
-              baseChart
-              [data]="barChartCatPopData"
-              [type]="barChartCatPopType"
-              [options]="barChartDistribucionOptions">
-            </canvas>
           </div>
         </div>
       </div>
-      <div class="col-md-6 mt-4">
-        <div class="card">
-          <div class="card-header"><h3>Palabras más consultadas</h3></div>
-          <div class="card-body" style="height:300px">
-            <canvas
-              baseChart
-              [data]="barChartWordPopData"
-              [type]="barChartWordPopType"
-              [options]="barChartDistribucionOptions">
-            </canvas>
+
+      <!-- SECCIÓN 3: ESTADÍSTICAS MODO EXAMEN -->
+      <div class="stats-section mb-5">
+        <h3 class="section-title">Estadísticas Modo Examen</h3>
+        <div class="row chart-container">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header"><h4>Aciertos/Fallos Promedio</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="examChartData" [options]="examChartOptions" [type]="examChartType"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header"><h4>Distribución de puntuaciones</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartScoresData" [options]="barChartScoresOptions" [type]="barChartScoresType"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header"><h4>Top 5 palabras más falladas</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartFailedData" [options]="barChartFailedOptions" [type]="barChartFailedType"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- MOVIDO: Evolución del rendimiento -->
+        <div class="row chart-container mt-4">
+          <div class="col-md-6 mx-auto">
+            <div class="card">
+              <div class="card-header"><h4>Evolución del rendimiento</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="perfChartData" [options]="perfChartOptions" [type]="perfChartType"></canvas>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-6 mt-4">
-          <div class="card">
-            <div class="card-header"><h3>Tiempo por categoría (min)</h3></div>
-            <div class="card-body" style="height:300px">
-              <canvas
-                baseChart
-                [data]="barChartTimeCatData"
-                [type]="barChartTimeCatType"
-                [options]="barChartDistribucionOptions">
-              </canvas>
+
+      <!-- SECCIÓN 4:ESTADÍSTICAS MODO LIBRE-->
+      <div class="stats-section mb-5">
+        <h3 class="section-title">Estadísticas Modo Libre</h3>
+        <div class="row chart-container">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header"><h4>Palabras más consultadas</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartWordPopData" [options]="barChartDistribucionOptions" [type]="barChartWordPopType"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header"><h4>Tiempo por categoría (min)</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartTimeCatData" [options]="barChartDistribucionOptions" [type]="barChartTimeCatType"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- MOVIDO: Categorías más populares -->
+        <div class="row chart-container mt-4">
+          <div class="col-md-6 mx-auto">
+            <div class="card">
+              <div class="card-header"><h4>Categorías más populares</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartCatPopData" [options]="barChartDistribucionOptions" [type]="barChartCatPopType"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 5:ESTADÍSTICAS MODO VERSUS -->
+      <div class="stats-section mb-5">
+        <h3 class="section-title">Estadísticas Modo Versus</h3>
+        <div class="row chart-container">
+          <div class="col-md-6 mx-auto">
+            <div class="card">
+              <div class="card-header"><h4>Partidas Versus diarias</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="versusDailyData" [options]="barChartDistribucionOptions" [type]="versusDailyType"></canvas>
+              </div>
             </div>
           </div>
         </div>
@@ -317,14 +274,22 @@ export class AdminEstadisticasComponent implements OnInit {
     ]
   };
 
-
-
-  // Propiedades
+  // Propiedades Gráfico Examen
   public examChartType: 'bar' = 'bar';
-  public examChartOptions: ChartOptions<'bar'> = { /*…*/ };
+  public examChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 10 } } }
+    }
+  };
   public examChartData: ChartData<'bar'> = {
     labels: ['Aciertos','Fallos'],
-    datasets: [{ data: [], label: 'Promedio por sesión' }]
+    datasets: [{ 
+      data: [], 
+      label: 'Promedio por sesión',
+      backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)']
+    }]
   };
 
   //Distribucion de puntuaciones
@@ -359,7 +324,7 @@ export class AdminEstadisticasComponent implements OnInit {
   public barChartFailedData: ChartData<'bar'> = {
     labels: [],
     datasets: [
-      { data: [], label: 'Fails' }
+      { data: [], label: 'Fails', backgroundColor: 'rgba(255, 99, 132, 0.6)' }
     ]
   };
 
@@ -390,7 +355,9 @@ export class AdminEstadisticasComponent implements OnInit {
       data: [],
       label: 'Media aciertos (%)',
       fill: false,
-      tension: 0.1
+      tension: 0.1,
+      borderColor: 'rgba(54, 162, 235, 1)',
+      backgroundColor: 'rgba(54, 162, 235, 0.2)'
     }]
   };
   
@@ -398,22 +365,44 @@ export class AdminEstadisticasComponent implements OnInit {
   public barChartCatPopType: 'bar' = 'bar';
   public barChartCatPopData: ChartData<'bar'> = {
     labels: [],
-    datasets: [{ data: [], label: 'Entradas', backgroundColor: 'rgba(75, 192, 192, 0.6)' }]
+    datasets: [{ 
+      data: [], 
+      label: 'Visitas', 
+      backgroundColor: 'rgba(75, 192, 192, 0.6)' 
+    }]
   };
-
 
   //palabras mas populares
   public barChartWordPopType: 'bar' = 'bar';
   public barChartWordPopData: ChartData<'bar'> = {
     labels: [],
-    datasets: [{ data: [], label: 'Consultas' }]
+    datasets: [{ 
+      data: [], 
+      label: 'Consultas', 
+      backgroundColor: 'rgba(153, 102, 255, 0.6)' 
+    }]
   };
 
   //tiempo promedio dedicado a cada categoria
   public barChartTimeCatType: 'bar' = 'bar';
   public barChartTimeCatData: ChartData<'bar'> = {
     labels: [],
-    datasets: [{ data: [], label: 'Promedio (min)' }]
+    datasets: [{ 
+      data: [], 
+      label: 'Minutos', 
+      backgroundColor: 'rgba(255, 159, 64, 0.6)' 
+    }]
+  };
+
+  // Partidas jugadas diariamente modo versus
+  public versusDailyType: 'bar' = 'bar';
+  public versusDailyData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{ 
+      data: [], 
+      label: 'Partidas', 
+      backgroundColor: 'rgba(54, 162, 235, 0.6)' 
+    }]
   };
 
   constructor(private http: HttpClient, private statsService: StatsService) {}
@@ -441,47 +430,89 @@ export class AdminEstadisticasComponent implements OnInit {
       };
     });
 
-    this.statsService.getTopFailedWords() .subscribe(list => {
+    this.statsService.getTopFailedWords().subscribe(list => {
       const labels = list.map(w => w.palabra);
-      const data   = list.map(w => w.fails);
-      this.barChartFailedData = { labels, datasets: [{ data, label: 'Fails' }] };
+      const data = list.map(w => w.fails);
+      this.barChartFailedData = { 
+        labels, 
+        datasets: [{ 
+          data, 
+          label: 'Fails',
+          backgroundColor: 'rgba(255, 99, 132, 0.6)'
+        }] 
+      };
     });
 
-
-    //para medir la evolucion a traves del tiempo
-    this.statsService.getPerformanceEvolution()
-    .subscribe(series => {
+    // Para medir la evolución a través del tiempo
+    this.statsService.getPerformanceEvolution().subscribe(series => {
       this.perfChartData = {
         labels: series.map(s => s._id),
         datasets: [{
           data: series.map(s => +s.avgCorrectRate.toFixed(4)), // e.g. [0.2, 0.6, …]
-          label: 'Media aciertos (%)'
+          label: 'Media aciertos (%)',
+          fill: false,
+          tension: 0.1,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)'
         }]
       };
     });
 
-    //para categorias mas populares
+    // Para categorías más populares
     this.statsService.getPopularCategories(5).subscribe(list => {
       const labels = list.map(x => x.categoria);
-      const data   = list.map(x => x.count);
-      this.barChartCatPopData = { labels, datasets: [{ data, label: 'Visitas' }] };
+      const data = list.map(x => x.count);
+      this.barChartCatPopData = { 
+        labels, 
+        datasets: [{ 
+          data, 
+          label: 'Visitas',
+          backgroundColor: 'rgba(75, 192, 192, 0.6)' 
+        }] 
+      };
     });
 
-    //palabras mas populares
-    this.statsService.getPopularWords(10)
-    .subscribe(list => {
+    // Palabras más populares
+    this.statsService.getPopularWords(10).subscribe(list => {
       const labels = list.map(x => x.palabra);
-      const data   = list.map(x => x.count);
-      this.barChartWordPopData = { labels, datasets:[{ data, label:'Visitas' }] };
+      const data = list.map(x => x.count);
+      this.barChartWordPopData = { 
+        labels, 
+        datasets: [{ 
+          data, 
+          label: 'Consultas',
+          backgroundColor: 'rgba(153, 102, 255, 0.6)'
+        }] 
+      };
     });
 
+    // Tiempo por categoría
     this.statsService.getTimeByCategory().subscribe(list => {
       const labels = list.map(x => x.category);
-      const data   = list.map(x => +x.avgMin.toFixed(2));
-      this.barChartTimeCatData = { labels, datasets: [{ data, label: 'Minutos' }] };
+      const data = list.map(x => +x.avgMin.toFixed(2));
+      this.barChartTimeCatData = { 
+        labels, 
+        datasets: [{ 
+          data, 
+          label: 'Minutos',
+          backgroundColor: 'rgba(255, 159, 64, 0.6)'
+        }] 
+      };
     });
 
-
+    // Partidas versus diarias
+    this.statsService.getVersusDaily().subscribe(list => {
+      const labels = list.map(x => x._id);
+      const data = list.map(x => x.partidas);
+      this.versusDailyData = { 
+        labels, 
+        datasets: [{ 
+          data, 
+          label: 'Partidas',
+          backgroundColor: 'rgba(54, 162, 235, 0.6)'
+        }] 
+      };
+    });
   }
   
   private cargarEstadisticas(): void {
@@ -536,8 +567,16 @@ export class AdminEstadisticasComponent implements OnInit {
     this.barChartData = {
       labels,
       datasets: [
-        { data: sesiones, label: 'Sesiones diarias' },
-        { data: duracionEnMinutos, label: 'Duración promedio (s)' }
+        { 
+          data: sesiones, 
+          label: 'Sesiones diarias',
+          backgroundColor: 'rgba(54, 162, 235, 0.6)'
+        },
+        { 
+          data: duracionEnMinutos, 
+          label: 'Duración promedio (min)',
+          backgroundColor: 'rgba(75, 192, 192, 0.6)'
+        }
       ]
     };
   }
@@ -581,12 +620,16 @@ export class AdminEstadisticasComponent implements OnInit {
   private cargarExamStats() {
     this.http.get(`${environment.apiUrl}/stats/examen-stats`, { withCredentials:true })
     .subscribe((resp:any) => {
-        const d = resp.data;
-        this.examChartData = {
-          labels: ['Aciertos','Fallos'],
-          datasets: [{ data: [d.avgCorrect, d.avgIncorrect], label: 'Promedio por sesión' }]
-        };
-      });
+      const d = resp.data;
+      this.examChartData = {
+        labels: ['Aciertos','Fallos'],
+        datasets: [{ 
+          data: [d.avgCorrect, d.avgIncorrect], 
+          label: 'Promedio por sesión',
+          backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)']
+        }]
+      };
+    });
   }
   
   private actualizarDatosGraficoPie(data: any): void {

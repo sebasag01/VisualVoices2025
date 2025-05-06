@@ -125,13 +125,25 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     // Pasamos a la pantalla "TurnAnnounce"
     this.uiState = 'turnAnnounce';
 
-    this.iniciarModo();   // <<--- se ejecuta aquí
+    this.examenService.startSession().subscribe({
+      next: resp => {
+        this.sessionId = resp.sessionId;
+  
+        // 2) ahora sí arrancas el modo y cargas la primera pregunta
+        this.iniciarModo();
+        
+        // y tras el delay pasas a playing…
+        setTimeout(() => {
+          this.uiState = 'playing';
+          this.iniciarModo();
+        }, 2500);
+      },
+      error: err => {
+        console.error('No pude iniciar sesión de Versus:', err);
+        alert('Error arrancando la partida.');
+      }
+    });
 
-    // Esperar 2s (o 5s) y luego "playing"
-    setTimeout(() => {
-      this.uiState = 'playing';
-      this.iniciarModo(); // Enciende la webcam y carga la pregunta
-    }, 2500);
   }
   
 
@@ -279,7 +291,10 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
         // Comprobar si hay ganador después de actualizar índices
         this.checkForWinner();
       },
-      error: (err) => {/* ... */}
+      error: err => {
+        console.error('Error al verificar respuesta:', err);
+        alert('No se pudo verificar la respuesta.');
+      }
     });
   }
 

@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { startLevel, endLevel, tiemposPorNivel, getEstadisticasGenerales,getTiempoTotalLibre, endMode, startMode, getSesionesDiarias, getProporcionUsuarios,getHorasPico, getExamStats,getScoreDistribution,getTopFailedWords,getPerformanceEvolution, recordCategoryEntry, getPopularCategories, recordwordEntry, getPopularWords, startCategorySession, endCategorySession, getTimeByCategory  } = require('../controllers/stats');
+const { startLevel, endLevel, tiemposPorNivel, getEstadisticasGenerales,getTiempoTotalLibre, endMode, startMode, getSesionesDiarias, getProporcionUsuarios,getHorasPico, getExamStats,getScoreDistribution,getTopFailedWords,getPerformanceEvolution, recordCategoryEntry, getPopularCategories, recordwordEntry, getPopularWords, startCategorySession, endCategorySession, getTimeByCategory,getVersusDaily   } = require('../controllers/stats');
 const { validarJWT } = require('../middleware/validar-jwt');
 const { tieneRol } = require('../middleware/validar-rol');
 
@@ -91,6 +91,13 @@ router.get(
   '/time-by-category',
   [ validarJWT, tieneRol('ROL_ADMIN') ],
   getTimeByCategory
+);
+
+
+router.get(
+  '/versus-daily',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getVersusDaily
 );
 
 module.exports = router;

@@ -573,6 +573,28 @@ const getTimeByCategory = async (req, res) => {
   res.json({ ok:true, data: agg });
 };
 
+// GET /api/stats/versus-daily
+const getVersusDaily = async (req, res) => {
+  try {
+    const resultados = await ExamenSession.aggregate([
+      // Sólo las partidas ya terminadas (opcional)
+      { $match: {  } },
+      // Agrupar por día de inicio
+      { 
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$startedAt" } },
+          partidas: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+    res.json({ ok: true, data: resultados });
+  } catch (error) {
+    console.error("Error obteniendo partidas versus diarias:", error);
+    res.status(500).json({ ok: false, msg: "Error interno" });
+  }
+};
+
 
 module.exports = {
   startLevel,
@@ -595,6 +617,7 @@ module.exports = {
   getPopularWords,
   startCategorySession,
   endCategorySession,
-  getTimeByCategory
+  getTimeByCategory,
+  getVersusDaily
 };
 

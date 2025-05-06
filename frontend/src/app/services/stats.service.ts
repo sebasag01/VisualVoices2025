@@ -126,5 +126,14 @@ export class StatsService {
       { withCredentials: true }
     ).pipe(map(r => r.data));
   }
+
+  getVersusDaily(): Observable<{ _id: string, partidas: number }[]> {
+    return this.http
+      .get<{ ok: boolean, data: { _id: string, partidas: number }[] }>(
+        `${this.statsUrl}/versus-daily`,
+        { withCredentials: true }
+      )
+      .pipe(map(resp => resp.data));
+  }
   
 }
