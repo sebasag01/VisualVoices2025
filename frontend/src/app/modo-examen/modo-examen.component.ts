@@ -35,6 +35,20 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   animaciones: any[] = [];
   resultado: string = '';
   cargandoPregunta: boolean = false;
+  respuestaCorrectaId: string | null = null;
+
+  //para las preguntas del examen
+  readonly maxQuestions = 5;
+  questionCount = 0;
+  correctCount = 0;
+  incorrectCount = 0;
+  examFinished = false;
+  sessionId!: string;    // Nueva: identificador de la “sesión de examen”
+
+  answeredThisQuestion = false;      
+  readyToShowResults = false;
+     
+  resultsHistory: boolean[] = [];         // <-- Para almacenar aciertos/fallos
 
   selectedTool: string = '';
 
@@ -52,7 +66,24 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.cargarNuevaPregunta();
+    this.startExamSession();
+  }
+
+  public startExamSession() {
+    // Llamada a un nuevo endpoint para iniciar sesión
+    this.examenService.startSession().subscribe(resp => {
+      this.sessionId = resp.sessionId;
+      this.resetExam();
+      this.cargarNuevaPregunta();
+    });
+  }
+
+  //para resetear examen
+  private resetExam() {
+    this.questionCount = 0;
+    this.correctCount = 0;
+    this.incorrectCount = 0;
+    this.examFinished = false;
   }
 
   ngOnDestroy(): void {
@@ -66,11 +97,13 @@ export class ModoExamenComponent implements OnInit, OnDestroy {
     this.cargandoPregunta = true;
     this.resultado = '';
     this.optionStatus = {}; // Reiniciamos el estado de las opciones
+    this.respuestaCorrectaId = null; // Resetear la respuesta correcta
+    this.answeredThisQuestion = false;   
 
     // Deseleccionar todos los radio buttons
-const radios = document.querySelectorAll('input[name="value-radio"]') as NodeListOf<HTMLInputElement>;
-radios.forEach(r => r.checked = false);
-this.isLooping = false; // Asegura que se detiene cualquier loop anterior
+    const radios = document.querySelectorAll('input[name="value-radio"]') as NodeListOf<HTMLInputElement>;
+    radios.forEach(r => r.checked = false);
+    this.isLooping = false; // Asegura que se detiene cualquier loop anterior
 
 
     this.examenService.generarPregunta().subscribe({
@@ -111,23 +144,43 @@ this.isLooping = false; // Asegura que se detiene cualquier loop anterior
   // EXAMEN: Seleccionar opción
   // ==========================================================
   seleccionarOpcion(opcionId: string): void {
-    this.examenService.verificarRespuesta(this.questionId, opcionId).subscribe({
+    this.examenService.verificarRespuesta(
+      this.sessionId,       // <-- slot para el sessionId
+      this.questionId,
+      opcionId
+    ).subscribe({
       next: (resp) => {
-        // Marcar la opción seleccionada como correcta o incorrecta
-        this.optionStatus[opcionId] = resp.esCorrecta ? 'correct' : 'incorrect';
-        this.resultado = resp.esCorrecta ? '¡Respuesta correcta!' : 'Respuesta incorrecta';
-  
-        // Si fue incorrecta, también marca la correcta en verde
-        if (!resp.esCorrecta && resp.opcionCorrectaId) {
-          this.optionStatus[resp.opcionCorrectaId] = 'correct';
+        const wasCorrect = resp.esCorrecta;
+        // 1) Marcar feedback inmediato
+        this.optionStatus[opcionId] = wasCorrect ? 'correct' : 'incorrect';
+        this.resultado = wasCorrect ? '¡Respuesta correcta!' : 'Respuesta incorrecta';
+
+        // 2) Actualizar contador
+        this.questionCount++;
+        this.resultsHistory.push(wasCorrect);     
+        if (wasCorrect) this.correctCount++; else this.incorrectCount++;
+
+        // 3) Mostrar respuesta correcta si fallas
+        if (!wasCorrect && resp.respuestaCorrecta) {
+          this.respuestaCorrectaId = resp.respuestaCorrecta;
+          setTimeout(() => {
+            this.optionStatus[this.respuestaCorrectaId!] = 'correct';
+          }, 1500);
         }
-      },
-      error: (err) => {
-        console.error('Error al verificar respuesta:', err);
+
+        // 4) Fin de la pregunta actual
+        this.answeredThisQuestion = true;        // <-- desbloquea el botón
+
+        // 5) ¿Hemos llegado al máximo?
+        if (this.questionCount >= this.maxQuestions) {
+          // Fin de examen: mostramos resumen
+          this.readyToShowResults = true;
+        }
       }
     });
   }
   
+
 
   // ==========================================================
   // MENÚ DE BOTONES (radio buttons) => play / loop / stop / webcam / veloc
@@ -242,5 +295,12 @@ this.isLooping = false; // Asegura que se detiene cualquier loop anterior
       this.canvasRef?.stopLoop(true);  // parar animación
     }
   }
+
+  // nuevo método para “Mostrar resultados”
+  mostrarResultados(): void {
+    this.examFinished = true;
+  }
+
+  
   
 }

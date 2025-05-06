@@ -2,133 +2,702 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http'
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { ChartData, ChartOptions } from 'chart.js';
+import { StatsService } from '../services/stats.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-estadisticas',
   standalone: true,
-  imports: [CommonModule, FormsModule,HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, BaseChartDirective],
+  providers: [
+    provideCharts(withDefaultRegisterables())
+  ],
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./admin.component.scss'], // Usa el mismo estilo que en admin
+  styleUrls: ['./admin.component.scss'],
   template: `
-  <div class="container mt-3">
-    <h2>Estadísticas del Modo Guiado</h2>
+    <div class="container mt-3">
+      <h2 class="main-title mb-4">Estadísticas de la Plataforma</h2>
 
-    <div *ngIf="errorMensaje" class="alert alert-danger" role="alert">
-      {{ errorMensaje }}
-    </div>
-    <div *ngIf="cargando" class="alert alert-info" role="alert">
-      Cargando estadísticas...
-    </div>
+      <div *ngIf="errorMensaje" class="alert alert-danger" role="alert">
+        {{ errorMensaje }}
+      </div>
+      <div *ngIf="cargando" class="alert alert-info" role="alert">
+        Cargando estadísticas...
+      </div>
 
-    <div class="card" *ngIf="!cargando && datosEstadisticas">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h3>Distribución de Usuarios por Nivel</h3>
-      </div>
-      <div class="card-body">
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Nivel</th>
-              <th>Número de Usuarios</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let dist of datosEstadisticas.distribucionNiveles">
-              <td>{{ dist.level }}</td>
-              <td>{{ dist.count }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <!-- SECCIÓN 1: ESTADÍSTICAS GENERALES -->
+      <div class="stats-section mb-5">
+        <h3 class="section-title">Estadísticas Generales</h3>
+        <div class="row chart-container">
+          <!-- Sesiones diarias y Duración -->
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header"><h4>Sesiones diarias y duración</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
+              </div>
+            </div>
+          </div>
 
-    <div class="card" *ngIf="!cargando && datosEstadisticas">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h3>Tiempo en Cada Nivel (ms)</h3>
+          <!-- Usuarios nuevos vs recurrentes -->
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header"><h4>Usuarios nuevos vs recurrentes</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="pieChartType"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Horas pico de uso -->
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header"><h4>Horas pico de uso</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card-body">
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Nivel</th>
-              <th>Promedio</th>
-              <th>Mínimo</th>
-              <th>Máximo</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let tiempo of datosEstadisticas.tiemposPorNivel">
-              <td>{{ tiempo._id }}</td>
-              <td>{{ tiempo.promedio | number }}</td>
-              <td>{{ tiempo.minimo }}</td>
-              <td>{{ tiempo.maximo }}</td>
-            </tr>
-          </tbody>
-        </table>
+
+      <!-- SECCIÓN 2: ESTADÍSTICAS MODO GUIADO -->
+      <div class="stats-section mb-5">
+        <h3 class="section-title">Estadísticas Modo Guiado</h3>
+        <div class="row chart-container">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header"><h4>Distribución de Usuarios por Nivel</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartDistribucionData" [options]="barChartDistribucionOptions" [type]="barChartDistribucionType"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header"><h4>Tiempo en Cada Nivel (min)</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartTiempoData" [options]="barChartTiempoOptions" [type]="barChartTiempoType"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 3: ESTADÍSTICAS MODO EXAMEN -->
+      <div class="stats-section mb-5">
+        <h3 class="section-title">Estadísticas Modo Examen</h3>
+        <div class="row chart-container">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header"><h4>Aciertos/Fallos Promedio</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="examChartData" [options]="examChartOptions" [type]="examChartType"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header"><h4>Distribución de puntuaciones</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartScoresData" [options]="barChartScoresOptions" [type]="barChartScoresType"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header"><h4>Top 5 palabras más falladas</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartFailedData" [options]="barChartFailedOptions" [type]="barChartFailedType"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- MOVIDO: Evolución del rendimiento -->
+        <div class="row chart-container mt-4">
+          <div class="col-md-6 mx-auto">
+            <div class="card">
+              <div class="card-header"><h4>Evolución del rendimiento</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="perfChartData" [options]="perfChartOptions" [type]="perfChartType"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 4:ESTADÍSTICAS MODO LIBRE-->
+      <div class="stats-section mb-5">
+        <h3 class="section-title">Estadísticas Modo Libre</h3>
+        <div class="row chart-container">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header"><h4>Palabras más consultadas</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartWordPopData" [options]="barChartDistribucionOptions" [type]="barChartWordPopType"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header"><h4>Tiempo por categoría (min)</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartTimeCatData" [options]="barChartDistribucionOptions" [type]="barChartTimeCatType"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- MOVIDO: Categorías más populares -->
+        <div class="row chart-container mt-4">
+          <div class="col-md-6 mx-auto">
+            <div class="card">
+              <div class="card-header"><h4>Categorías más populares</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="barChartCatPopData" [options]="barChartDistribucionOptions" [type]="barChartCatPopType"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 5:ESTADÍSTICAS MODO VERSUS -->
+      <div class="stats-section mb-5">
+        <h3 class="section-title">Estadísticas Modo Versus</h3>
+        <div class="row chart-container">
+          <div class="col-md-6 mx-auto">
+            <div class="card">
+              <div class="card-header"><h4>Partidas Versus diarias</h4></div>
+              <div class="card-body">
+                <canvas baseChart [data]="versusDailyData" [options]="barChartDistribucionOptions" [type]="versusDailyType"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  `,
+  `
 })
 export class AdminEstadisticasComponent implements OnInit {
-    datosEstadisticas: any = null;
-    cargando = false;
-    errorMensaje: string | null = null;
+  datosEstadisticas: any = null;
+  cargando = false;
+  errorMensaje: string | null = null;
   
-    constructor(private http: HttpClient) {} // inyectamos HttpClient
-  
-    ngOnInit(): void {
-        this.cargando = true;
-        const url = `${environment.apiUrl}/stats/estadisticas`;
-        console.log('[DEBUG] Llamando a estadísticas en:', url);
-        this.http.get(url, { withCredentials: true })
-          .subscribe({
-            next: (resp: any) => {
-              console.log('[DEBUG] Respuesta del endpoint estadísticas:', resp);
-              this.datosEstadisticas = {
-                distribucionNiveles: resp.distribucionNiveles,
-                tiemposPorNivel: resp.tiemposPorNivel
-              };
-              this.cargando = false;
-            },
-            error: (err) => {
-              console.error('[ERROR] Error al cargar estadísticas:', err);
-              this.cargando = false;
-              this.errorMensaje = 'Error al cargar estadísticas';
-            }
-        });
+  // GRÁFICO: Sesiones diarias y Duración promedio
+  public barChartType: 'bar' = 'bar';
+  public barChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 10 } } }
     }
-      
+  };
+  public barChartData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [
+      { data: [], label: 'Sesiones diarias' },
+      { data: [], label: 'Duración promedio (min)' }
+    ]
+  };
+
+  // GRÁFICO: Usuarios nuevos vs recurrentes (Pie)
+  public pieChartType: 'pie' = 'pie';
+  public pieChartOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 10 } } }
+    }
+  };
+  public pieChartData: ChartData<'pie'> = {
+    labels: ['Nuevos usuarios', 'Usuarios recurrentes'],
+    datasets: [{
+      data: [0, 0],
+      backgroundColor: ['rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)']
+    }]
+  };
+
+  // GRÁFICO: Horas pico
+  public lineChartType: 'line' = 'line';
+  public lineChartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: { beginAtZero: true, ticks: { font: { size: 9 } } },
+      x: { ticks: { font: { size: 9 } } }
+    },
+    plugins: {
+      legend: { labels: { font: { size: 10 } } }
+    }
+  };
+  public lineChartData: ChartData<'line'> = {
+    labels: [],
+    datasets: [
+      { data: [], label: 'Sesiones por hora', borderColor: 'rgba(75, 192, 192, 1)', backgroundColor: 'rgba(75, 192, 192, 0.2)', tension: 0.1 }
+    ]
+  };
+
+  // NUEVA GRÁFICA: Distribución de Usuarios por Nivel (Bar)
+  public barChartDistribucionType: 'bar' = 'bar';
+  public barChartDistribucionOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 10 } } }
+    }
+  };
+  public barChartDistribucionData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [
+      { data: [], label: 'Usuarios', backgroundColor: 'rgba(153, 102, 255, 0.6)' }
+    ]
+  };
+
+  // NUEVA GRÁFICA: Tiempo en Cada Nivel (ms) (Bar)
+  public barChartTiempoType: 'bar' = 'bar';
+  public barChartTiempoOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 10 } } }
+    }
+  };
+  public barChartTiempoData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [
+      { data: [], label: 'Promedio', backgroundColor: 'rgba(75, 192, 192, 0.6)' },
+      { data: [], label: 'Mínimo', backgroundColor: 'rgba(54, 162, 235, 0.6)' },
+      { data: [], label: 'Máximo', backgroundColor: 'rgba(255, 99, 132, 0.6)' }
+    ]
+  };
+
+  // Propiedades Gráfico Examen
+  public examChartType: 'bar' = 'bar';
+  public examChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 10 } } }
+    }
+  };
+  public examChartData: ChartData<'bar'> = {
+    labels: ['Aciertos','Fallos'],
+    datasets: [{ 
+      data: [], 
+      label: 'Promedio por sesión',
+      backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)']
+    }]
+  };
+
+  //Distribucion de puntuaciones
+  public barChartScoresType: 'bar' = 'bar';
+  public barChartScoresOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { title: { display: true, text: 'Aciertos (/5)' } },
+      y: { beginAtZero: true, title: { display: true, text: 'Número de sesiones' } }
+    },
+    plugins: { legend: { display: false } }
+  };
+  public barChartScoresData: ChartData<'bar'> = {
+    labels: [],       // e.g. ['0','1','2','3','4','5']
+    datasets: [
+      { data: [], label: 'Cantidad', backgroundColor: 'rgba(255, 159, 64, 0.6)' }
+    ]
+  };
+
+  //5 palabras mas falladas
+  public barChartFailedType: 'bar' = 'bar';
+  public barChartFailedOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { title: { display: true, text: 'Palabra' } },
+      y: { beginAtZero: true, title: { display: true, text: 'Veces fallada' } }
+    },
+    plugins: { legend: { display: false } }
+  };
+  public barChartFailedData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [
+      { data: [], label: 'Fails', backgroundColor: 'rgba(255, 99, 132, 0.6)' }
+    ]
+  };
+
+  //para medir la evolucion a traves del tiempo
+  public perfChartType: 'line' = 'line';
+  public perfChartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { title: { display: true, text: 'Fecha' } },
+      y: {
+        beginAtZero: true,
+        max: 1,
+        ticks: {
+          callback: v => (v as number * 100).toFixed(0) + '%'
+        },
+        title: { display: true, text: 'Tasa de acierto (%)' }
+      }
+    },
+    plugins: {
+      legend: { labels: { font: { size: 10 } } }
+    }
+  };
   
+  public perfChartData: ChartData<'line'> = {
+    labels: [],
+    datasets: [{
+      data: [],
+      label: 'Media aciertos (%)',
+      fill: false,
+      tension: 0.1,
+      borderColor: 'rgba(54, 162, 235, 1)',
+      backgroundColor: 'rgba(54, 162, 235, 0.2)'
+    }]
+  };
+  
+  //categorias mas populares
+  public barChartCatPopType: 'bar' = 'bar';
+  public barChartCatPopData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{ 
+      data: [], 
+      label: 'Visitas', 
+      backgroundColor: 'rgba(75, 192, 192, 0.6)' 
+    }]
+  };
 
-  cargarEstadisticas() {
-    this.cargando = true;
-    this.errorMensaje = null;
-    // Ejemplo: Llamar a un servicio o endpoint que devuelva un objeto con la info
-    // El backend podría tener un endpoint GET /api/stats/estadisticas
-    // que devuelva algo como:
-    // {
-    //   distribucionNiveles: [ { level: 1, count: 10 }, { level: 2, count: 5 } ],
-    //   tiemposPorNivel: [ { _id: 1, promedio: 12345, minimo: 5000, maximo: 30000 }, ... ]
-    // }
+  //palabras mas populares
+  public barChartWordPopType: 'bar' = 'bar';
+  public barChartWordPopData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{ 
+      data: [], 
+      label: 'Consultas', 
+      backgroundColor: 'rgba(153, 102, 255, 0.6)' 
+    }]
+  };
 
-    // Simulando la llamada:
-    setTimeout(() => {
-      // Simulación de datos
-      this.datosEstadisticas = {
-        distribucionNiveles: [
-          { level: 1, count: 10 },
-          { level: 2, count: 7 },
-          { level: 3, count: 3 }
-        ],
-        tiemposPorNivel: [
-          { _id: 1, promedio: 15000, minimo: 5000, maximo: 25000 },
-          { _id: 2, promedio: 22000, minimo: 10000, maximo: 40000 }
-        ]
+  //tiempo promedio dedicado a cada categoria
+  public barChartTimeCatType: 'bar' = 'bar';
+  public barChartTimeCatData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{ 
+      data: [], 
+      label: 'Minutos', 
+      backgroundColor: 'rgba(255, 159, 64, 0.6)' 
+    }]
+  };
+
+  // Partidas jugadas diariamente modo versus
+  public versusDailyType: 'bar' = 'bar';
+  public versusDailyData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{ 
+      data: [], 
+      label: 'Partidas', 
+      backgroundColor: 'rgba(54, 162, 235, 0.6)' 
+    }]
+  };
+
+  constructor(private http: HttpClient, private statsService: StatsService) {}
+
+  ngOnInit(): void {
+    // Cargar estadísticas que incluyen la distribución y los tiempos por nivel
+    this.cargarEstadisticas();
+    this.cargarSesionesDiarias();
+    this.cargarProporcionUsuarios();
+    this.cargarHorasPico();
+    this.cargarExamStats();
+
+    this.statsService.getScoreDistribution().subscribe(dist => {
+      const labels = ['0','1','2','3','4','5'];
+      const countsMap = new Map(dist.map(d => [d._id, d.count]));
+      const data = labels.map((_, i) => countsMap.get(i) || 0);
+  
+      this.barChartScoresData = {
+        labels,
+        datasets: [{
+          data,
+          label: 'Cantidad',
+          backgroundColor: 'rgba(255, 159, 64, 0.6)'
+        }]
       };
-      this.cargando = false;
-    }, 1500);
+    });
+
+    this.statsService.getTopFailedWords().subscribe(list => {
+      const labels = list.map(w => w.palabra);
+      const data = list.map(w => w.fails);
+      this.barChartFailedData = { 
+        labels, 
+        datasets: [{ 
+          data, 
+          label: 'Fails',
+          backgroundColor: 'rgba(255, 99, 132, 0.6)'
+        }] 
+      };
+    });
+
+    // Para medir la evolución a través del tiempo
+    this.statsService.getPerformanceEvolution().subscribe(series => {
+      this.perfChartData = {
+        labels: series.map(s => s._id),
+        datasets: [{
+          data: series.map(s => +s.avgCorrectRate.toFixed(4)), // e.g. [0.2, 0.6, …]
+          label: 'Media aciertos (%)',
+          fill: false,
+          tension: 0.1,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)'
+        }]
+      };
+    });
+
+    // Para categorías más populares
+    this.statsService.getPopularCategories(5).subscribe(list => {
+      const labels = list.map(x => x.categoria);
+      const data = list.map(x => x.count);
+      this.barChartCatPopData = { 
+        labels, 
+        datasets: [{ 
+          data, 
+          label: 'Visitas',
+          backgroundColor: 'rgba(75, 192, 192, 0.6)' 
+        }] 
+      };
+    });
+
+    // Palabras más populares
+    this.statsService.getPopularWords(10).subscribe(list => {
+      const labels = list.map(x => x.palabra);
+      const data = list.map(x => x.count);
+      this.barChartWordPopData = { 
+        labels, 
+        datasets: [{ 
+          data, 
+          label: 'Consultas',
+          backgroundColor: 'rgba(153, 102, 255, 0.6)'
+        }] 
+      };
+    });
+
+    // Tiempo por categoría
+    this.statsService.getTimeByCategory().subscribe(list => {
+      const labels = list.map(x => x.category);
+      const data = list.map(x => +x.avgMin.toFixed(2));
+      this.barChartTimeCatData = { 
+        labels, 
+        datasets: [{ 
+          data, 
+          label: 'Minutos',
+          backgroundColor: 'rgba(255, 159, 64, 0.6)'
+        }] 
+      };
+    });
+
+    // Partidas versus diarias
+    this.statsService.getVersusDaily().subscribe(list => {
+      const labels = list.map(x => x._id);
+      const data = list.map(x => x.partidas);
+      this.versusDailyData = { 
+        labels, 
+        datasets: [{ 
+          data, 
+          label: 'Partidas',
+          backgroundColor: 'rgba(54, 162, 235, 0.6)'
+        }] 
+      };
+    });
+  }
+  
+  private cargarEstadisticas(): void {
+    this.cargando = true;
+    const urlEstadisticas = `${environment.apiUrl}/stats/estadisticas`;
+    
+    this.http.get(urlEstadisticas, { withCredentials: true })
+      .subscribe({
+        next: (resp: any) => {
+          // Guardar datos en variable local (útil si se requieren en otro sitio)
+          this.datosEstadisticas = {
+            distribucionNiveles: resp.distribucionNiveles,
+            tiemposPorNivel: resp.tiemposPorNivel
+          };
+          // Actualizar las gráficas nuevas con los datos obtenidos
+          this.actualizarGraficoDistribucionUsuarios(resp.distribucionNiveles);
+          this.actualizarGraficoTiemposPorNivel(resp.tiemposPorNivel);
+        },
+        error: (err) => {
+          console.error('[ERROR] Error al cargar estadísticas:', err);
+          this.errorMensaje = 'Error al cargar estadísticas';
+        }
+      });
+  }
+  
+  private cargarSesionesDiarias(): void {
+    const urlSesionesDiarias = `${environment.apiUrl}/stats/sesiones-diarias`;
+    
+    this.http.get(urlSesionesDiarias, { withCredentials: true })
+      .subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            this.actualizarDatosGraficoBarras(resp.data);
+          } else {
+            this.errorMensaje = 'No se pudieron obtener las sesiones diarias.';
+          }
+          this.cargando = false;
+        },
+        error: (err) => {
+          console.error('[ERROR] Error al obtener sesiones diarias:', err);
+          this.errorMensaje = 'Error al obtener sesiones diarias.';
+          this.cargando = false;
+        }
+      });
+  }
+  
+  private actualizarDatosGraficoBarras(data: any[]): void {
+    const labels = data.map((item: any) => item._id);
+    const sesiones = data.map((item: any) => item.sesiones);
+    const duracionEnMinutos = data.map(item => item.duracionPromedio / 60).map(min => +min.toFixed(2)); // redondeamos a 2 decimales    
+
+    this.barChartData = {
+      labels,
+      datasets: [
+        { 
+          data: sesiones, 
+          label: 'Sesiones diarias',
+          backgroundColor: 'rgba(54, 162, 235, 0.6)'
+        },
+        { 
+          data: duracionEnMinutos, 
+          label: 'Duración promedio (min)',
+          backgroundColor: 'rgba(75, 192, 192, 0.6)'
+        }
+      ]
+    };
+  }
+  
+  private cargarProporcionUsuarios(): void {
+    const urlProporcionUsuarios = `${environment.apiUrl}/stats/proporcion-usuarios`;
+    
+    this.http.get(urlProporcionUsuarios, { withCredentials: true })
+      .subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            this.actualizarDatosGraficoPie(resp.data);
+          }
+        },
+        error: (err) => {
+          console.error('[ERROR] Error al obtener proporción de usuarios:', err);
+          this.errorMensaje = 'Error al obtener proporción de usuarios.';
+        }
+      });
+  }
+
+  private cargarHorasPico(): void {
+    const urlHorasPico = `${environment.apiUrl}/stats/horas-pico`;
+    
+    this.http.get(urlHorasPico, { withCredentials: true })
+      .subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            this.actualizarDatosGraficoLinea(resp.data);
+          } else {
+            this.errorMensaje = 'No se pudieron obtener las horas pico.';
+          }
+        },
+        error: (err) => {
+          console.error('[ERROR] Error al obtener horas pico:', err);
+          this.errorMensaje = 'Error al obtener horas pico.';
+        }
+      });
+  }
+
+  private cargarExamStats() {
+    this.http.get(`${environment.apiUrl}/stats/examen-stats`, { withCredentials:true })
+    .subscribe((resp:any) => {
+      const d = resp.data;
+      this.examChartData = {
+        labels: ['Aciertos','Fallos'],
+        datasets: [{ 
+          data: [d.avgCorrect, d.avgIncorrect], 
+          label: 'Promedio por sesión',
+          backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)']
+        }]
+      };
+    });
+  }
+  
+  private actualizarDatosGraficoPie(data: any): void {
+    this.pieChartData = {
+      labels: ['Nuevos usuarios', 'Usuarios recurrentes'],
+      datasets: [
+        {
+          data: [data.porcentajeNuevos, data.porcentajeRecurrentes],
+          backgroundColor: ['rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)']
+        }
+      ]
+    };
+  }
+
+  private actualizarDatosGraficoLinea(data: any[]): void {
+    // Aseguramos tener todas las horas (0-23)
+    const horasCompletas = Array.from({ length: 24 }, (_, i) => i);
+    const etiquetasHoras = horasCompletas.map(hora => `${hora}:00`);
+
+    const sesiones = Array(24).fill(0);
+    data.forEach((item: any) => {
+      const hora = item._id;
+      sesiones[hora] = item.sesiones;
+    });
+    this.lineChartData = {
+      labels: etiquetasHoras,
+      datasets: [
+        {
+          data: sesiones,
+          label: 'Sesiones por hora',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          tension: 0.1
+        }
+      ]
+    };
+  }
+
+  // Método para actualizar el gráfico de distribución de usuarios por nivel
+  private actualizarGraficoDistribucionUsuarios(data: any[]): void {
+    const labels = data.map(item => item.level);
+    const counts = data.map(item => item.count);
+    this.barChartDistribucionData = {
+      labels,
+      datasets: [
+        {
+          data: counts,
+          label: 'Usuarios',
+          backgroundColor: 'rgba(153, 102, 255, 0.6)'
+        }
+      ]
+    };
+  }
+
+  // Método para actualizar el gráfico de tiempos por nivel
+  private actualizarGraficoTiemposPorNivel(data: any[]): void {
+    const labels = data.map(item => item._id);
+    const promediosMin = data.map(item => +(item.promedio / 60000).toFixed(2));
+    const minimosMin   = data.map(item => +(item.minimo   / 60000).toFixed(2));
+    const maximosMin   = data.map(item => +(item.maximo   / 60000).toFixed(2));
+
+    this.barChartTiempoData = {
+      labels,
+      datasets: [
+        { data: promediosMin, label: 'Promedio', backgroundColor: 'rgba(75, 192, 192, 0.6)' },
+        { data: minimosMin, label: 'Mínimo', backgroundColor: 'rgba(54, 162, 235, 0.6)' },
+        { data: maximosMin, label: 'Máximo', backgroundColor: 'rgba(255, 99, 132, 0.6)' }
+      ]
+    };
   }
 }

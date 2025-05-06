@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { startLevel, endLevel, tiemposPorNivel, getEstadisticasGenerales,getTiempoTotalLibre, endMode, startMode } = require('../controllers/stats');
+const { startLevel, endLevel, tiemposPorNivel, getEstadisticasGenerales,getTiempoTotalLibre, endMode, startMode, getSesionesDiarias, getProporcionUsuarios,getHorasPico, getExamStats,getScoreDistribution,getTopFailedWords,getPerformanceEvolution, recordCategoryEntry, getPopularCategories, recordwordEntry, getPopularWords, startCategorySession, endCategorySession, getTimeByCategory,getVersusDaily   } = require('../controllers/stats');
 const { validarJWT } = require('../middleware/validar-jwt');
 const { tieneRol } = require('../middleware/validar-rol');
 
@@ -19,7 +19,86 @@ router.get('/estadisticas', [
 ], getEstadisticasGenerales);
 
 router.get('/libre-total/:userId', validarJWT, getTiempoTotalLibre);
+router.get('/sesiones-diarias',validarJWT, getSesionesDiarias);
 
+router.get('/proporcion-usuarios', [
+  validarJWT,
+  tieneRol('ROL_ADMIN'),
+], getProporcionUsuarios);
+
+router.get('/horas-pico', [
+  validarJWT,
+  tieneRol('ROL_ADMIN'),
+], getHorasPico);
+
+router.get('/examen-stats', [validarJWT, tieneRol('ROL_ADMIN')], getExamStats);
+
+router.get(
+  '/scores-distribution',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getScoreDistribution
+);
+
+router.get(
+  '/top-failed-words',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getTopFailedWords
+);
+
+
+router.get(
+  '/performance-evolution',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getPerformanceEvolution
+);
+
+router.post(
+  '/category-entry',
+  validarJWT,
+  recordCategoryEntry
+);
+
+router.get(
+  '/popular-categories',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getPopularCategories
+);
+
+router.post(
+  '/word-entry',
+  validarJWT,
+  recordwordEntry
+);
+
+router.get(
+  '/popular-words',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getPopularWords
+);
+
+
+router.post(
+  '/start-category',
+  validarJWT,
+  startCategorySession
+);
+router.patch(
+  '/end-category/:sessionId',
+  validarJWT,
+  endCategorySession
+);
+router.get(
+  '/time-by-category',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getTimeByCategory
+);
+
+
+router.get(
+  '/versus-daily',
+  [ validarJWT, tieneRol('ROL_ADMIN') ],
+  getVersusDaily
+);
 
 module.exports = router;
 

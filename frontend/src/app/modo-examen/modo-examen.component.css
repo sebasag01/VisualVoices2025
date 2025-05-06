@@ -1214,3 +1214,67 @@
   filter: drop-shadow(0 0 5px #cae2fd);
 }
 
+/* En modo-examen.component.css */
+.correct-solution {
+  border: 2px solid #4caf50 !important;
+  background-color: #4caf50 !important;
+  position: relative;
+}
+
+/* Opcional: Animación sutil para resaltar la respuesta correcta */
+@keyframes highlightCorrect {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.correct-solution {
+  animation: highlightCorrect 0.7s ease-in-out;
+}
+
+
+.exam-summary {
+  text-align: center;
+  background: #fffbea;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-top: 10rem;    /* sube o baja este valor a tu gusto */
+
+}
+
+.exam-summary .mt-4 button {
+  margin: 0 0.75rem;  /* 0 arriba/abajo, 0.75rem izquierda/derecha */
+}
+
+.summary-icons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+
+.icon-correct {
+  color: #28a745;
+  animation: pop 0.5s ease-out;
+}
+
+.icon-incorrect {
+  color: #dc3545;
+  animation: shake 0.5s ease;
+}
+
+/* Animaciones */
+@keyframes pop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  60%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
