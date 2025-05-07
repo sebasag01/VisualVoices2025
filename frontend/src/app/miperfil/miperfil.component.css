@@ -20,7 +20,6 @@
   font-size: 30px;
   z-index: 1000;
   cursor: pointer;
-
 }
 
 .icon-perfil {
@@ -39,33 +38,129 @@
   transform: scale(1.1);
 }
 
-/* Asegurar que el body y html ocupen toda la pantalla sin scroll */
-body,
-html {
+/* Estilos generales del cuerpo y HTML */
+body, html {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100vh; /* Forzar que la altura sea la de la pantalla */
+  height: 100%;
   background-color: #f5f5d6;
+  font-family: "Lexend", sans-serif;
+  overflow: hidden; /* Evitar scroll */
+}
+
+/* Nuevo contenedor tipo dashboard modificado para grid layout */
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 300px 1fr; /* Reducido de 280px a 250px */
+  gap: 15px; /* Reducido de 20px a 15px */
+  padding: 15px; /* Reducido de 20px a 15px */
+  padding-top: 55px; /* Reducido de 60px a 55px */
+  background-color: #f5f5d6;
+  height: 100vh; /* Altura exacta de la ventana */
+  box-sizing: border-box;
+}
+
+/* Columna izquierda: Tarjeta de perfil */
+.profile-column {
+  grid-column: 1;
+  display: flex;
+  justify-content: center;
+  padding-top: 120px; /* Reducido de 60px a 20px */
+  align-self: flex-start; /* Alinea al principio para evitar estiramiento */
+}
+
+/* Contenedor de estadísticas ocupando el resto del espacio */
+.stats-column {
+  grid-column: 2;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
-  overflow: hidden; /* Elimina el scroll */
+  gap: 15px; /* Reducido de 20px a 15px */
+  padding-top: 10px; /* Reducido de 20px a 10px */
+  max-height: calc(100vh - 70px); /* Limitar altura */
+  overflow: hidden; /* Evitar scroll interno */
 }
 
-.profile-container {
+/* Filas de estadísticas ahora usan grid */
+.stats-row {
+  display: grid;
+  gap: 15px; /* Reducido de 20px a 15px */
+}
+
+/* Dos columnas en la primera fila */
+.stats-row.two-cols {
+  grid-template-columns: repeat(2, 1fr);
+  height: calc(40vh - 30px); /* Altura ajustada para primer fila */
+}
+
+/* Tres columnas en la segunda fila */
+.stats-row.three-cols {
+  grid-template-columns: repeat(3, 1fr);
+  height: calc(50vh - 40px); /* Altura ajustada para segunda fila */
+}
+
+/* Centrar el gráfico de pie */
+.stats-row.two-cols .stats-card:first-child {
   display: flex;
-  justify-content: flex-start; /* Alinea a la izquierda */
-  align-items: center; /* Mantiene la alineación vertical */
-  width: 100%;
-  height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
-  background-color: #f5f5d6;
-  cursor: pointer;
-
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Forzar centrado del gráfico de pie */
+.stats-card ngx-charts-pie-chart {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* Tarjetas de estadísticas más pequeñas */
+.stats-card {
+  background-color: white;
+  border-radius: 15px;
+  padding: 10px; /* Reducido de 15px a 12px */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border: 3px solid #f2c464;
+  display: flex;
+  flex-direction: column;
+  transition: transform .3s ease;
+  overflow: hidden; /* Prevenir desbordamiento de contenido */
+}
+
+.stats-card:hover {
+  transform: translateY(-3px); /* Reducido de -5px a -3px */
+}
+
+.wide-card {
+  grid-column: 1 / span 2;
+}
+
+.stats-card h3 {
+  color: #333;
+  font-family: "ChauPhilomene", sans-serif;
+  margin-top: 0;
+  margin-bottom: 8px; /* Reducido de 10px a 8px */
+  font-size: 1rem; /* Reducido de 1.1rem a 1rem */
+  text-align: center;
+  border-bottom: 2px solid #f2c464;
+  padding-bottom: 6px; /* Reducido de 8px a 6px */
+}
+
+.stats-card p {
+  margin: 6px 0; /* Reducido de 8px a 6px */
+  font-size: 0.85rem; /* Reducido de 0.9rem a 0.85rem */
+}
+
+.stats-card .small {
+  font-size: 0.75rem; /* Reducido de 0.8rem a 0.75rem */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px; /* Reducido de 8px a 6px */
+}
+
+/* Estilo de la tarjeta de perfil */
 .card {
   --main-color: #fff;
   --submain-color: #ccc;
@@ -73,17 +168,18 @@ html {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   position: relative;
-  width: 300px;
-  height: 384px;
+  width: 250px; /* Reducido de 280px a 250px */
+  height: 340px; /* Reducido de 360px a 340px */
   display: flex;
   flex-direction: column;
   align-items: center;
   border-radius: 20px;
   background: var(--bg-color);
+  margin-top: 10px; /* Reducido de 20px a 10px */
 }
 
 .card__img {
-  height: 192px;
+  height: 180px; /* Reducido de 192px a 180px */
   width: 100%;
 }
 
@@ -94,85 +190,43 @@ html {
 
 .card__avatar {
   position: absolute;
-  width: 114px;
-  height: 114px;
+  width: 100px; /* Reducido de 114px a 100px */
+  height: 100px; /* Reducido de 114px a 100px */
   background: var(--bg-color);
   border-radius: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  top: calc(50% - 57px);
-  border-radius: 50%; /* Hace que sea un círculo */
+  top: calc(50% - 50px); /* Ajustado para nuevo tamaño */
 }
 
 .card__avatar img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ajusta la imagen para que cubra el área circular */
-  border: 5px solid black; /* Añade un borde negro alrededor de la imagen */
-}
-
-.card__avatar svg {
-  width: 100px;
-  height: 100px;
+  object-fit: cover;
+  border: 5px solid black;
 }
 
 .card__title {
-  margin-top: 60px;
+  margin-top: 55px; /* Reducido de 60px a 55px */
   font-weight: 500;
-  font-size: 18px;
-  color: var(--main-color);
-}
-
-.card__subtitle {
-  margin-top: 10px;
-  font-weight: 400;
-  font-size: 15px;
-  color: var(--submain-color);
-}
-
-.card__btn {
-  margin-top: 15px;
-  width: 76px;
-  height: 31px;
-  border: 2px solid var(--main-color);
-  border-radius: 4px;
-  font-weight: 700;
-  font-size: 11px;
-  color: var(--main-color);
-  background: var(--bg-color);
-  text-transform: uppercase;
-  transition: all 0.3s;
-}
-
-.card__btn-solid {
-  background: var(--main-color);
-  color: var(--bg-color);
-}
-
-.card__btn:hover {
-  background: var(--main-color);
-  color: var(--bg-color);
-}
-
-.card__btn-solid:hover {
-  background: var(--bg-color);
+  font-size: 16px; /* Reducido de 18px a 16px */
   color: var(--main-color);
 }
 
 .card__wrapper {
   display: flex;
-  gap: 10px; /* Espacio entre los botones */
-  margin-top: 15px;
+  gap: 8px; /* Reducido de 10px a 8px */
+  margin-top: 12px; /* Reducido de 15px a 12px */
 }
 
 .card__btn {
-  width: 120px; /* Aumenta el tamaño del botón */
-  height: 40px; /* Aumenta la altura */
+  width: 110px; /* Reducido de 120px a 110px */
+  height: 35px; /* Reducido de 40px a 35px */
   border: 2px solid var(--main-color);
-  border-radius: 6px; /* Bordes más redondeados */
+  border-radius: 6px;
   font-weight: 700;
-  font-size: 13px; /* Aumenta el tamaño del texto */
+  font-size: 12px; /* Reducido de 13px a 12px */
   color: var(--main-color);
   background: var(--bg-color);
   text-transform: uppercase;
@@ -196,12 +250,12 @@ html {
 }
 
 .card__btn i {
-  margin-right: 5px; /* Espacio entre el icono y el texto */
-  font-size: 14px; /* Tamaño del icono */
+  margin-right: 4px; /* Reducido de 5px a 4px */
+  font-size: 12px; /* Reducido de 14px a 12px */
   vertical-align: middle;
 }
 
-/* Modal - Fondo */
+/* Modal y estilos de formulario */
 .modal {
   position: fixed;
   z-index: 1000;
@@ -209,92 +263,73 @@ html {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro y semitransparente */
+  background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
-  display: flex; /* Asegúrate de usar display flex para centrarlo */
+  display: flex;
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Contenido del modal */
 .modal-content {
-  background-color: #f2c464; /* Color de fondo cambiado */
+  background-color: #f2c464;
   border-radius: 10px;
-  padding: 40px;
+  padding: 25px; /* Reducido de 30px a 25px */
   text-align: center;
-  width: 420px;
-  font-family: 'Lexend', sans-serif; /* Estilo de la fuente */
-  color: black; /* Color del texto */
+  width: 400px; /* Reducido de 420px a 400px */
+  font-family: 'Lexend', sans-serif;
+  color: black;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  padding: 30px;
-
-
+  animation: scaleIn 0.3s ease-out;
 }
 
-.modal-content h3{
-  font-family: 'Chauphilomene', sans-serif; /* Estilo de la fuente */
-  margin-bottom: 20px; /* más separación con el subtítulo */
-
-
+.modal-content h3 {
+  font-family: 'Chauphilomene', sans-serif;
+  margin-bottom: 15px; /* Reducido de 20px a 15px */
 }
 
-
-
-/* Botón de cerrar (X) */
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 30px;
-  cursor: pointer;
-}
-
-/* Para la animación de aparición */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* Estilos para los inputs y el formulario */
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
 .form-group {
-  margin-bottom: 10px;
+  margin-bottom: 12px; /* Reducido de 15px a 12px */
 }
 
 .form-group input {
   width: 100%;
-  padding: 10px;
-  margin: 5px 0;
+  padding: 8px; /* Reducido de 10px a 8px */
+  margin: 4px 0; /* Reducido de 5px a 4px */
   border-radius: 4px;
   border: 1px solid #ccc;
   font-size: 14px;
   color: black;
   background-color: #f9f9f9;
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
-/* Los placeholder dentro de los inputs */
 .form-group input::placeholder {
-  color: rgba(0, 0, 0, 0.5); /* Gris translúcido */
+  color: rgba(0, 0, 0, 0.5);
   font-weight: normal;
 }
 
-/* Al hacer focus en los inputs */
 .form-group input:focus {
   border-color: #4caf50;
-  background-color: #ffffff; /* Cambiar fondo cuando se hace focus */
+  background-color: #ffffff;
+  outline: none;
 }
 
 .form-group .error-message {
   color: #b71c1c;
-  /* color:  rgba(0, 0, 0, 0.8);  */
   font-size: 0.8rem;
-  margin-top: 4px;
-  height: 16px; /* reserva siempre espacio, incluso sin error */
-
+  margin-top: 3px; /* Reducido de 4px a 3px */
+  height: 16px;
   opacity: 0;
   max-height: 0;
   overflow: hidden;
@@ -309,265 +344,156 @@ html {
 
 .form-group.show-error .error-message {
   opacity: 1;
-  max-height: 50px; /* permite mostrar el texto */
+  max-height: 50px;
 }
 
 .form-group.show-error input {
-  border-color: #d9534f;
-  border: 2px solid #b71c1c; /* rojo vino elegante */
-
-}
-
-
-/* Estilos para el botón de enviar */
-.btn-submit {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn-submit:hover {
-  background-color: #45a049;
-}
-
-
-.estadisticas-container {
-  display: flex; /* Coloca las dos secciones en línea */
-  justify-content: center; /* Centra en la pantalla */
-  align-items: center; /* Alinea verticalmente */
-  gap: 50px; /* Espacio entre los bloques */
-  height: 100vh; /* Para centrar en toda la pantalla */
-}
-
-
-/* Estilo para estadisticas1 */
-.estatisticas1 {
-  margin-left: 100px;
-  width: 520px; /* Aumentado el tamaño */
-  height: 500px; /* Aumentado el tamaño */
-  color: white;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 5px;
-  overflow: visible;
-  font-size: 2.5em; 
-}
-
-.estatisticas1 .item {
-  border-radius: 10px;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5em; 
-  border: 4px solid black; /* Borde negro */
-
-}
-
-.item:hover {
-  transform: scale(1.2);
-  transition: all 350ms ease-in-out;
-}
-
-.item svg {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 7px;
-}
-
-/* .item--1 {
-  background: #c7c7ff;
-}
-
-.item--2 {
-  background: #ffd8be;
-}
-
-.item--3 {
-  background: #a9ecbf;
-}
-
-.item--4 {
-  background: #f3bbe1;
-} */
-
-.item--1, .item--2, .item--3, .item--4 {
-  background: rgba(242, 196, 100, 0.8); /* Color con transparencia */
-  color: black; /* Texto negro */
-}
-
-.quantity {
-  font-size: 25px;
-  font-weight: 600;
-  font-family: "Chauphilomene", sans-serif; /* Cambia la fuente a Chau Philomene */
-
-  
-}
-
-.text {
-  /* font-size: 12px; */
-  font-family: "Chauphilomene", sans-serif; /* Cambia la fuente a Chau Philomene */
-  font-weight: 600;
-  font-size: 0.3em; 
-}
-
-/* .text--1 {
-  color: rgba(149, 149, 255, 1);
-}
-
-.text--2 {
-  color: rgba(252, 161, 71, 1);
-}
-
-.text--3 {
-  color: rgba(66, 193, 110, 1);
-}
-
-.text--4 {
-  color: rgba(220, 91, 183, 1);
-} */
-
-/* Estilo para estadisticas2 */
-.estadisticas2 {
-  margin-left: 100px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  flex-direction: column;
-
-}
-
-.stats-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  width: 180px; /* Aumentar el ancho de las tarjetas */
-  height: 180px; /* Aumentar la altura de las tarjetas */
-  border-radius: 20px;
-  /* background-color: rgb(255, 255, 255); */
-  padding: 15px;
-  /* box-shadow: 20px 20px 60px #e6e6e6, -20px -20px 60px #f3f3f3; */
-  font-size: 2.5em; /* Aumenta el tamaño del texto */
-  background-color: #41b8d5; /* Color de fondo */
-  border: 4px solid black; /* Borde negro */
-  color: black; /* Texto blanco para contraste */
-  font-family: "Chauphilomene";
-
-}
-
-.stats-wrapper:hover {
-  transform: scale(1.2);
-  transition: all 350ms ease-in-out;
-}
-
-
-.item, .stats-wrapper, .item svg, .item span {
-  cursor: pointer;
-}
-
-
-
-.heading {
-  font-size: 0.7em;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.bottom-wrapper {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.bottom-wrapper .star {
-  width: 30px;
-  fill: gold;
-}
-
-.bottom-wrapper .tag {
-  width: 27px;
-  fill: rgb(141, 214, 32);
-}
-
-.bottom-wrapper .thumb {
-  width: 27px;
-  fill: blueviolet;
-}
-
-.bottom-wrapper p {
-  font-size: 1.2em;
-  font-weight: 700;
-}
-
-
-ngx-charts-bar-horizontal {
-  margin-left: 20px; /* Ajusta el valor según lo que necesites */
-  font-family: "Chauphilomene";
-  font-size: 30px !important;
-
+  border: 2px solid #b71c1c;
 }
 
 .start-button {
-  padding: 10px 20px;
-  font-size: 1rem;
+  padding: 8px 18px; /* Reducido de 10px 20px a 8px 18px */
+  font-size: 0.95rem; /* Reducido de 1rem a 0.95rem */
   font-family: "Lexend", sans-serif;
   border: 3px solid black;
   border-radius: 0.4em;
   background-color: #41b8d5;
-  /* background-color: rgb(3, 145, 3); */
   color: rgb(0, 0, 0);
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.3s ease;
   font-weight: bold;
-  display: block; /* asegura que respeta el margin auto */
-  margin-left: auto; /* centra el botón horizontalmente */
-  margin-right: auto; /* centra el botón horizontalmente */
-  
-  
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
+
 .start-button:hover {
   transform: translate(-0.05em, -0.05em);
   box-shadow: 0.2em 0.2em;
 }
 
 .cancel-button {
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-family: "Lexend", sans-serif;
-  border: 3px solid black;
-  border-radius: 0.4em;
   background-color: #e05c5c;
-  color: rgb(0, 0, 0);
+}
+
+/* Estilos específicos para los componentes de gráficos */
+.stats-card ngx-charts-pie-chart,
+.stats-card ngx-charts-bar-vertical {
+  display: block;
+  width: 100%;
+  height: 200px !important; /* Reducido de 250px a 200px */
+}
+
+/* Ajuste específico para el gráfico de pie - centrado */
+.stats-row.two-cols .stats-card:first-child ngx-charts-pie-chart {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Configuración de vista para gráficos */
+:host ::ng-deep .ngx-charts {
+  float: none;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Mejoras para los ejes de los gráficos */
+:host ::ng-deep .ngx-charts .axis text {
+  font-family: "Lexend", sans-serif;
+  font-size: 11px; /* Reducido de 12px a 11px */
+  fill: #555;
+}
+
+:host ::ng-deep .ngx-charts .chart-legend .legend-label {
+  fill: #333 !important;
+  font-size: 12px !important; /* Reducido de 13px a 12px */
+}
+
+/* Etiquetas de datos dentro de la gráfica */
+:host ::ng-deep .ngx-charts .pie-label,
+:host ::ng-deep .ngx-charts .bar-label {
+  font-size: 13px !important; /* Reducido de 14px a 13px */
+}
+
+/* Media queries para responsividad */
+@media screen and (max-width: 1200px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
+    padding-top: 80px; /* Reducido de 100px a 80px */
+    overflow-y: auto; /* Permitir scroll en pantallas pequeñas */
+    height: auto;
+  }
+  
+  body, html {
+    overflow-y: auto; /* Permitir scroll en pantallas pequeñas */
+  }
+  
+  .stats-column {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    max-height: none;
+    overflow: visible;
+  }
+  
+  .stats-row.two-cols,
+  .stats-row.three-cols {
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard-container {
+    padding-top: 80px; /* Reducido de 100px a 80px */
+  }
+  
+  .stats-card {
+    height: auto;
+    min-height: 220px; /* Reducido de 250px a 220px */
+  }
+}
+
+/* Animaciones adicionales */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03); /* Reducido de 1.05 a 1.03 */
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.stats-card:hover h3 {
+  animation: pulse 1s infinite;
+}
+
+/* Mejora visual para barras de carga y progreso */
+:host ::ng-deep .ngx-charts .bar {
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .ngx-charts .bar:hover {
+  opacity: 0.8;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.3s ease;
-  font-weight: bold;
-  display: block; /* asegura que respeta el margin auto */
-  margin-left: auto; /* centra el botón horizontalmente */
-  margin-right: auto; /* centra el botón horizontalmente */
-  
-  
-}
-.cancel-button:hover {
-  transform: translate(-0.05em, -0.05em);
-  box-shadow: 0.2em 0.2em;
 }
 
-
-
-@keyframes scaleIn {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+/* Mejora accesibilidad para interacción con gráficos */
+:host ::ng-deep .ngx-charts .bar:focus,
+:host ::ng-deep .ngx-charts .arc:focus {
+  outline: 2px solid #41b8d5;
+  outline-offset: 2px;
 }
 
-.modal-content {
-  animation: scaleIn 0.3s ease-out;
+/* Mejora para tooltip de gráficos */
+:host ::ng-deep .ngx-charts-tooltip-content {
+  background: rgba(0, 0, 0, 0.8) !important;
+  color: white !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  font-family: "Lexend", sans-serif !important;
+  font-size: 13px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
 }

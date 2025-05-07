@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { startLevel, endLevel, tiemposPorNivel, getEstadisticasGenerales,getTiempoTotalLibre, endMode, startMode, getSesionesDiarias, getProporcionUsuarios,getHorasPico, getExamStats,getScoreDistribution,getTopFailedWords,getPerformanceEvolution, recordCategoryEntry, getPopularCategories, recordwordEntry, getPopularWords, startCategorySession, endCategorySession, getTimeByCategory,getVersusDaily   } = require('../controllers/stats');
+const { startLevel, endLevel, tiemposPorNivel, getEstadisticasGenerales,getTiempoTotalLibre, endMode, startMode, getSesionesDiarias, getProporcionUsuarios,getHorasPico, getExamStats,getScoreDistribution,getTopFailedWords,getPerformanceEvolution, recordCategoryEntry, getPopularCategories, recordwordEntry, getPopularWords, startCategorySession, endCategorySession, getTimeByCategory,getVersusDaily,getMyExamStats, getLoginStats, getTopLearnedWords, endVersus,getTopVersusPlayers, getCompletedLevels} = require('../controllers/stats');
 const { validarJWT } = require('../middleware/validar-jwt');
 const { tieneRol } = require('../middleware/validar-rol');
 
@@ -99,6 +99,25 @@ router.get(
   [ validarJWT, tieneRol('ROL_ADMIN') ],
   getVersusDaily
 );
+
+router.get('/my-exam', validarJWT, getMyExamStats);
+
+router.get('/login-stats', validarJWT, getLoginStats);
+
+router.get(
+  '/top-learned-words',
+  validarJWT,
+  getTopLearnedWords
+);
+
+
+router.post('/end-versus', validarJWT, endVersus);
+
+
+router.get('/top-versus-players', validarJWT, getTopVersusPlayers);
+
+router.get('/levels-completed', validarJWT, getCompletedLevels);
+
 
 module.exports = router;
 

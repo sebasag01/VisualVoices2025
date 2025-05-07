@@ -8,6 +8,8 @@ const CategoryEntry = require('../models/categoryEntry');
 const Categoria = require('../models/categorias');
 const WordEntry = require('../models/wordnEntry');
 const CategorySession = require('../models/categorySession');
+const LoginLog = require('../models/loginLog');
+const VersusSession = require('../models/versusSession');
 
 
 // POST /api/stats/start-level
@@ -595,6 +597,127 @@ const getVersusDaily = async (req, res) => {
   }
 };
 
+const getMyExamStats = async (req, res) => {
+  const userId = req.uid;
+  const usuario = await Usuario.findById(userId, 'statsExamen');
+  return res.json({ ok: true, data: usuario.statsExamen });
+};
+
+
+const getLoginStats = async (req, res) => {
+  const uid = req.uid;
+  // 1) obtén todos los días en que hizo login, ordenados
+  const docs = await LoginLog.find({ user: uid }).sort('date').select('date -_id');
+  const days = docs.map(d => d.date);
+  const totalDays = days.length;
+
+  // 2) calcula racha actual: desde hoy hacia atrás
+  let currentStreak = 0;
+  const today = new Date(), msDay = 1000*60*60*24;
+  for (let i = 0; ; i++) {
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
+    if (days.some(x => x.getTime() === d.getTime())) currentStreak++;
+    else break;
+  }
+
+  // 3) calcula racha máxima recorriendo la lista
+  let maxStreak = 0, streak = 1;
+  for (let i = 1; i < days.length; i++) {
+    if ((days[i].getTime() - days[i-1].getTime()) === msDay) {
+      streak++;
+    } else {
+      maxStreak = Math.max(maxStreak, streak);
+      streak = 1;
+    }
+  }
+  maxStreak = Math.max(maxStreak, streak);
+
+  return res.json({ ok: true, data: { totalDays, currentStreak, maxStreak } });
+};
+
+const getTopLearnedWords = async (req, res) => {
+  const userId = req.uid;
+  const top = await WordEntry.aggregate([
+    // aquí usamos 'new'
+    { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+    { $group: { _id: '$palabraId', count: { $sum: 1 } } },
+    { $sort: { count: -1 } },
+    { $limit: 3 },
+    {
+      $lookup: {
+        from: 'palabras',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'palabra'
+      }
+    },
+    { $unwind: '$palabra' },
+    { $project: { _id: 0, palabra: '$palabra.palabra', count: 1 } }
+  ]);
+  res.json({ ok: true, data: top });
+};
+
+const endVersus = async (req, res) => {
+  const {
+    player1Id, player1Name,
+    player2Id, player2Name,
+    winnerId,   winnerName
+  } = req.body;
+
+  await VersusSession.create({
+    participants: [
+      { userId: player1Id, name: player1Name },
+      { userId: player2Id, name: player2Name }
+    ],
+    winner: { userId: winnerId, name: winnerName },
+    finishedAt: new Date()
+  });
+
+  res.json({ ok: true });
+};
+
+const getTopVersusPlayers = async (req, res) => {
+  try {
+    const me = mongoose.Types.ObjectId(req.uid);
+    const top3 = await VersusSession.aggregate([
+      // Sólo partidas donde tú participaste:
+      { $match: { 'participants.userId': me } },
+      // Agrupar por nombre de ganador
+      { $group: {
+          _id: '$winner.name',
+          wins: { $sum: 1 }
+      }},
+      { $sort: { wins: -1 } },
+      { $limit: 3 },
+      { $project: {
+          _id:      0,
+          player:  '$_id',
+          wins:     1
+      }}
+    ]);
+    res.json({ ok: true, data: top3 });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, msg: 'Error obteniendo top versus players' });
+  }
+};
+
+
+const getCompletedLevels = async (req, res) => {
+  try {
+    const userId = req.uid; // viene del validarJWT
+    // Cuenta cuántas sesiones de modo "guiado" tienen endTime definido
+    const completed = await Stats.countDocuments({
+      userId: mongoose.Types.ObjectId(userId),
+      mode: 'guiado',
+      endTime: { $exists: true }
+    });
+    return res.json({ ok: true, completedLevels: completed });
+  } catch (err) {
+    console.error('Error obteniendo niveles completados:', err);
+    return res.status(500).json({ ok: false, msg: 'Error interno' });
+  }
+};
 
 module.exports = {
   startLevel,
@@ -618,6 +741,12 @@ module.exports = {
   startCategorySession,
   endCategorySession,
   getTimeByCategory,
-  getVersusDaily
+  getVersusDaily,
+  getMyExamStats,
+  getLoginStats,
+  getTopLearnedWords,
+  getTopVersusPlayers,
+  endVersus,
+  getCompletedLevels
 };
 

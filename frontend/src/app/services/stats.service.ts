@@ -135,5 +135,47 @@ export class StatsService {
       )
       .pipe(map(resp => resp.data));
   }
+
+  getMyExamStats(): Observable<{ correctas: number; incorrectas: number }> {
+    return this.http
+      .get<{ ok: boolean; data: { correctas: number; incorrectas: number } }>(
+        `${this.statsUrl}/my-exam`,
+        { withCredentials: true }
+      )
+      .pipe(map(r => r.data));
+  }
+
+  getLoginStats(): Observable<{ totalDays: number; currentStreak: number; maxStreak: number }> {
+    return this.http.get<{ ok: boolean, data: { totalDays: number; currentStreak: number; maxStreak: number } }>(
+      `${this.statsUrl}/login-stats`, { withCredentials: true }
+    ).pipe(map(r => r.data));
+  }
+  
+  getTopLearnedWords(): Observable<{ palabra: string, count: number }[]> {
+    return this.http
+      .get<{ ok: boolean, data: { palabra: string, count: number }[] }>(
+        `${this.statsUrl}/top-learned-words`,
+        { withCredentials: true }
+      )
+      .pipe(map(resp => resp.data));
+  }
+  
+  getTopVersusPlayers(): Observable<{ player: string, wins: number }[]> {
+    return this.http
+      .get<{ ok: boolean; data: { player: string; wins: number }[] }>(
+        `${this.statsUrl}/top-versus-players`,
+        { withCredentials: true }
+      )
+      .pipe(map(resp => resp.data));
+  }
+
+  getCompletedLevels(): Observable<number> {
+    return this.http
+      .get<{ ok: boolean, completedLevels: number }>(
+        `${this.statsUrl}/levels-completed`,
+        { withCredentials: true }
+      )
+      .pipe(map(resp => resp.completedLevels));
+  }
   
 }

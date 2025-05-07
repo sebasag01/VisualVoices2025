@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms'; // ✅ Importado FormsModule para 
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { StatsService } from '../services/stats.service';   // ← importa el servicio
+
 
 @Component({
   selector: 'app-miperfil',
@@ -29,11 +31,9 @@ export class MiperfilComponent implements OnInit {
   showXAxis = true;
   showYAxis = true;
   gradient = false;
-  showLegend = true;
+  showLegend = false;
   showXAxisLabel = true;
-  xAxisLabel = '';
   showYAxisLabel = true;
-  yAxisLabel = '';
 
   colorScheme = 'vivid'; // O puedes usar 'cool', 'cooldown', 'flame', etc.
 
@@ -65,13 +65,42 @@ export class MiperfilComponent implements OnInit {
 
   passwordErrorField : string | null = null; // Campo de error para contraseña
 
+  examStats: { name: string; value: number }[] = [];
+
+  // 2) configuración del gráfico de pastel
+  examView: [number, number] = [300, 300];
+  showLabels = true;
+
+  loginStats = { totalDays: 0, currentStreak: 0, maxStreak: 0 };
+  topWords: { palabra: string, count: number }[] = [];
+
+  // configuración del gráfico de barras para top 3 palabras
+  barChartData: { name: string, value: number }[] = [];
+  barView: [number, number] = [500, 300];     // tamaño del gráfico
+  xAxisLabel = 'Palabra';
+  yAxisLabel = 'Clicks';
+
+  topVersus: { name: string, value: number }[] = [];
+  vsView: [number,number] = [500, 300];
+
+  //para niveles completados en modo guiado
+  completedLevels = 0;
+  levelsPieData: { name: string; value: number }[] = [];
+
   constructor(
     private usuarioService: UsuariosService,
-    private router: Router
+    private router: Router,
+    private statsService: StatsService,
   ) {}
 
   ngOnInit() {
     this.loadUserData();
+    this.loadExamStats(); 
+    this.loadLoginStats();
+    this.loadTopWords();
+    this.loadTopVersus();
+    this.loadCompletedLevels();       
+
   }
 
   loadUserData() {
@@ -254,4 +283,68 @@ export class MiperfilComponent implements OnInit {
     return;
   }
   }
+
+  //metodos que cargan las estadisticas
+  private loadExamStats(): void {
+    this.statsService.getMyExamStats().subscribe({
+      next: ({ correctas = 0, incorrectas = 0 }) => {
+        this.examStats = [
+          { name: 'Aciertos', value: correctas },
+          { name: 'Fallos',   value: incorrectas }
+        ];
+      },
+      error: err => console.error('No pude cargar stats de examen:', err)
+    });
+  }
+
+  private loadLoginStats() {
+    this.statsService.getLoginStats().subscribe({
+      next: stats => this.loginStats = stats,
+      error: err => console.error(err)
+    });
+  }
+
+  private loadTopWords() {
+    this.statsService.getTopLearnedWords().subscribe({
+      next: data => {
+        // convierte [{palabra, count}] a [{name, value}]
+        this.barChartData = data.map(w => ({
+          name: w.palabra,
+          value: w.count
+        }));
+        console.log('barChartData:', this.barChartData);
+      },
+      error: err => console.error('No pude cargar top words:', err)
+    });
+  }
+  
+
+  private loadTopVersus() {
+    this.statsService.getTopVersusPlayers()
+      .subscribe({
+        next: list => {
+          this.topVersus = list.map(p => ({
+            name:  p.player,
+            value: p.wins
+          }));
+        },
+        error: err => console.error('No pude cargar top versus:', err)
+      });
+  }
+
+  private loadCompletedLevels(): void {
+    this.statsService.getCompletedLevels().subscribe(
+      cnt => {
+        this.completedLevels = cnt;
+        // preparamos los datos para el pie chart
+        this.levelsPieData = [
+          { name: 'Completados', value: cnt },
+          { name: 'Pendientes',   value: /* aquí totalNiveles − cnt */ cnt > 0 ? 0 : 0 }
+          // si quieres, sustituye el segundo slice por (TOTAL_NIVELES - cnt)
+        ];
+      },
+      err => console.error('Error cargando niveles completados', err)
+    );
+  }
+
 }

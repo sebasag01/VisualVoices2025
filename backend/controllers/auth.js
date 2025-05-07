@@ -11,6 +11,8 @@ const { generarJWT } = require('../helpers/jwt');
 // 6. Envía la cookie al cliente, configurada para ser segura (httpOnly) y con la duración adecuada.
 // 7. Devuelve la respuesta con el token (opcionalmente) en el body.
 const login = async (req, res = response) => {
+  const LoginLog = require('../models/loginLog');
+
   const { email, password, rememberMe } = req.body; 
 
   try {
@@ -47,6 +49,15 @@ const login = async (req, res = response) => {
     // Si las credenciales son válidas, generamos el token JWT
     const token = await generarJWT(usuarioBD._id, usuarioBD.rol);
 
+    const hoy = new Date();
+    const fechaSolo = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+
+    await LoginLog.findOneAndUpdate(
+      { user: usuarioBD._id, date: fechaSolo },
+      { $setOnInsert: { user: usuarioBD._id, date: fechaSolo } },
+      { upsert: true }
+    );
+    
     // Definimos el tiempo de expiración de la cookie
     // Si 'rememberMe' es true, se establece en 7 días; si no, en 24 horas
     const cookieExpiry = rememberMe ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
