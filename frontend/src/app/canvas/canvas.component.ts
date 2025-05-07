@@ -209,7 +209,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         this.avatar.scale.set(1.5, 1.5, 1.5);
   
         // 4. Aplicar un offset vertical fijo (por ejemplo, bajar 1.1 unidades)
-        this.avatar.position.y -= 0.7;
+        this.avatar.position.y -= 1.2;
   
         // Agregar a la escena
         this.scene.add(this.avatar);
@@ -274,7 +274,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
             this.avatar.position.sub(center);
 
             this.avatar.scale.set(1.5, 1.5, 1.5);
-            this.avatar.position.y -= 0.7;
+            this.avatar.position.y -= 1.2;
             this.scene.add(this.avatar);
 
             URL.revokeObjectURL(url);
