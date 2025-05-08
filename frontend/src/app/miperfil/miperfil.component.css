@@ -103,8 +103,8 @@ body, html {
 .stats-row.two-cols .stats-card:first-child {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;     /* los hijos (h3 y chart) ocupan todo el ancho */
+  justify-content: flex-start;
 }
 
 /* Forzar centrado del gráfico de pie */
@@ -381,20 +381,42 @@ body, html {
 .stats-card ngx-charts-bar-vertical {
   display: block;
   width: 100%;
-  height: 200px !important; /* Reducido de 250px a 200px */
 }
 
-/* Ajuste específico para el gráfico de pie - centrado */
-.stats-row.two-cols .stats-card:first-child ngx-charts-pie-chart {
+.stats-card ngx-charts-bar-vertical {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
 }
 
+/* Ajuste específico para el gráfico de pie - centrado */
+.stats-row.two-cols .stats-card:first-child ngx-charts-pie-chart {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 240px !important; /* Aumentado de 200px a 240px */
+}
+
+.stats-row.two-cols .stats-card:first-child h3 {
+  width: 100%;         /* ocupa el ancho de la tarjeta */
+  text-align: center;  /* texto centrado */
+}
+
+.stats-row.three-cols .stats-card ngx-charts-bar-vertical {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 210px !important; /* Ajustado para dar más espacio */
+}
+
 /* Configuración de vista para gráficos */
 :host ::ng-deep .ngx-charts {
-  float: none;
-  margin: 0 auto;
+  float: none !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  justify-content: center !important;
   text-align: center;
 }
 
