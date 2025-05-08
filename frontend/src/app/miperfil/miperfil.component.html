@@ -140,7 +140,7 @@
         <h3>Mi rendimiento en Exámenes</h3>
         <ngx-charts-pie-chart
           [results]="examStats"
-          [view]="[250, 180]"
+          [view]="[300, 220]"
           [legend]="false"
           [labels]="true"
           [scheme]="colorScheme"
@@ -167,7 +167,7 @@
       <div class="stats-card">
         <h3>Mis Palabras Más Aprendidas</h3>
         <ngx-charts-bar-vertical
-          [view]="[280, 180]"
+          [view]="[320, 190]"
           [results]="barChartData"
           [scheme]="colorScheme"
           [gradient]="false"
@@ -183,7 +183,7 @@
       <div class="stats-card">
         <h3>Top 3 Ganadores Versus</h3>
         <ngx-charts-bar-vertical
-          [view]="[280, 180]"
+          [view]="[320, 190]"
           [results]="topVersus"
           [scheme]="colorScheme"
           [gradient]="false"
@@ -201,8 +201,8 @@
         <ng-container *ngIf="completedLevels > 0; else noLevels">
           <ngx-charts-pie-chart
             [results]="levelsPieData"
-            [view]="[220, 180]"
-            [legend]="true"
+            [view]="[250, 190]"
+            [legend]="false"
             [labels]="true"
             [scheme]="colorScheme">
           </ngx-charts-pie-chart>

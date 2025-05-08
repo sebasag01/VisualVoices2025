@@ -678,10 +678,11 @@ const endVersus = async (req, res) => {
 
 const getTopVersusPlayers = async (req, res) => {
   try {
-    const me = mongoose.Types.ObjectId(req.uid);
+    const userId = req.uid;
+
     const top3 = await VersusSession.aggregate([
       // Sólo partidas donde tú participaste:
-      { $match: { 'participants.userId': me } },
+      { $match: { 'participants.userId': userId } },
       // Agrupar por nombre de ganador
       { $group: {
           _id: '$winner.name',
@@ -708,7 +709,7 @@ const getCompletedLevels = async (req, res) => {
     const userId = req.uid; // viene del validarJWT
     // Cuenta cuántas sesiones de modo "guiado" tienen endTime definido
     const completed = await Stats.countDocuments({
-      userId: mongoose.Types.ObjectId(userId),
+      userId: userId,
       mode: 'guiado',
       endTime: { $exists: true }
     });

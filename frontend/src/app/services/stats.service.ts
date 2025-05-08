@@ -169,6 +169,21 @@ export class StatsService {
       .pipe(map(resp => resp.data));
   }
 
+  endVersus(payload: {
+    player1Id: string;
+    player1Name: string;
+    player2Id: string;
+    player2Name: string;
+    winnerId:   string;
+    winnerName: string;
+  }): Observable<any> {
+    return this.http.post(
+      `${this.statsUrl}/end-versus`,
+      payload,
+      { withCredentials: true }
+    );
+  }
+
   getCompletedLevels(): Observable<number> {
     return this.http
       .get<{ ok: boolean, completedLevels: number }>(

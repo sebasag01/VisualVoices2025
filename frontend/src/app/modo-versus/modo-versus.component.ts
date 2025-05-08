@@ -12,7 +12,7 @@ import { CanvasComponent } from '../canvas/canvas.component';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
 import confetti from 'canvas-confetti';
-
+import { StatsService } from '../services/stats.service';
 
 @Component({
   selector: 'app-modo-versus',
@@ -77,6 +77,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
 
   sessionId!: string;    // Nueva: identificador de la “sesión de examen”
 
+  authUser!: { uid: string; username: string;};
 
 
   private isSuddenDeath = false; 
@@ -87,12 +88,16 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     private examenService: ExamenService,
     private usuariosService: UsuariosService,
     private animacionService: AnimacionService,
-    private router: Router
+    private router: Router,
+    private statsService: StatsService,
+
   ) {}
 
   ngOnInit(): void {
     // Cargar la pregunta cuando el usuario inicie el modo
     // (en este ejemplo, se hace al pulsar un botón "Empezar")
+    this.loadAuthenticatedUser();
+
   }
 
   ngOnDestroy(): void {
@@ -441,6 +446,39 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     }, 2000);
   }
 
+  private handleWin() {
+    const miId     = this.authUser.uid;
+    // Los nombres que tecleó el usuario al arrancar la partida:
+    const nombreA  = this.player1Name; 
+    const nombreB  = this.player2Name; 
+    const ganador  = this.ganador;
+
+    console.log({
+      player1Id:   miId,
+      player1Name: nombreA,     // aquí tu this.player1Name
+      player2Id:   miId,
+      player2Name: nombreB,
+      winnerId:    miId,
+      winnerName:  ganador
+    });
+
+    this.statsService.endVersus({
+      // guardamos siempre al usuario “real” como participante A
+      player1Id:   miId,
+      player1Name: nombreA,
+      player2Id:   miId,
+      player2Name: nombreB,
+      winnerId:    miId,
+      winnerName:  ganador
+    }).subscribe({
+      next: () => console.log('Partida versus guardada'),
+      error: e => console.error('Error guardando versus', e)
+    });
+  
+    this.uiState = 'finPartida';
+    this.triggerConfetti();
+  }
+
   private checkForWinner(): boolean {
     const p1Hits = this.player1Score.filter(s => s === 'hit').length;
     const p2Hits = this.player2Score.filter(s => s === 'hit').length;
@@ -455,13 +493,11 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
       if (p1Complete && p2Complete) {
         if (p1Hits > p2Hits) {
           this.ganador = this.player1Name;
-          this.uiState = 'finPartida';
-          this.triggerConfetti();
+          this.handleWin();
           return true;
         } else if (p2Hits > p1Hits) {
           this.ganador = this.player2Name;
-          this.uiState = 'finPartida';
-          this.triggerConfetti();
+          this.handleWin();
           return true;
         } else {
           // Empate: activar muerte súbita
@@ -477,8 +513,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
         const p2PossibleHits = p2Hits + (3 - this.player2Index);
         if (p1Hits > p2PossibleHits) {
           this.ganador = this.player1Name;
-          this.uiState = 'finPartida';
-          this.triggerConfetti();
+          this.handleWin();
           return true;
         }
       }
@@ -488,8 +523,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
         const p1PossibleHits = p1Hits + (3 - this.player1Index);
         if (p2Hits > p1PossibleHits) {
           this.ganador = this.player2Name;
-          this.uiState = 'finPartida';
-          this.triggerConfetti();
+          this.handleWin();
           return true;
         }
       }
@@ -502,15 +536,13 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
         
         if (p1Hits > p2PossibleHits) {
           this.ganador = this.player1Name;
-          this.uiState = 'finPartida';
-          this.triggerConfetti();
+          this.handleWin();
           return true;
         }
         
         if (p2Hits > p1PossibleHits) {
           this.ganador = this.player2Name;
-          this.uiState = 'finPartida';
-          this.triggerConfetti();
+          this.handleWin();
           return true;
         }
       }
@@ -520,13 +552,11 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
       if (this.player1Index === this.player2Index) {
         if (p1Hits > p2Hits) {
           this.ganador = this.player1Name;
-          this.uiState = 'finPartida';
-          this.triggerConfetti();
+          this.handleWin();
           return true;
         } else if (p2Hits > p1Hits) {
           this.ganador = this.player2Name;
-          this.uiState = 'finPartida';
-          this.triggerConfetti();
+          this.handleWin();
           return true;
         }
         // Si están empatados, continúa la muerte súbita
@@ -574,6 +604,13 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     );
   
     this.animacionService.cargarAnimaciones(animacionesUrls, true, loop);
+  }
+
+  private loadAuthenticatedUser(): void {
+    this.usuariosService.getAuthenticatedUser().subscribe({
+      next: resp => this.authUser = resp.usuario,
+      error: err => console.error('No pude cargar usuario autenticado', err)
+    });
   }
     
 }
