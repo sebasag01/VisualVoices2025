@@ -91,6 +91,13 @@ class TNodo {
     // Métodos de transformación
     setTraslacion(v) {
         vec3.copy(this.traslacion, v);
+        // Actualizar la matriz de transformación
+        mat4.identity(this.matrizTransf);
+        mat4.translate(this.matrizTransf, this.matrizTransf, this.traslacion);
+        mat4.rotateX(this.matrizTransf, this.matrizTransf, this.rotacion[0]);
+        mat4.rotateY(this.matrizTransf, this.matrizTransf, this.rotacion[1]);
+        mat4.rotateZ(this.matrizTransf, this.matrizTransf, this.rotacion[2]);
+        mat4.scale(this.matrizTransf, this.matrizTransf, this.escalado);
     }
 
     setRotacion(v) {

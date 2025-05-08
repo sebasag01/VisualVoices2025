@@ -192,7 +192,7 @@ export async function main(gl) {
     nodoCamara.setEntidad(camara);
     
     // Configurar las transformaciones iniciales
-    nodoMalla.setTraslacion([0, 0, -5]);
+    nodoMalla.setTraslacion([0, -1, -5]);
     nodoLuz.setTraslacion([5, 5, 0]);
     nodoCamara.setTraslacion([0, 0, 0]);
     
@@ -225,22 +225,22 @@ export async function main(gl) {
         gl.useProgram(programInfo.program);
         gl.enable(gl.CULL_FACE);
 
-        escena.recorrer(matrizIdentidad);
-
-        // Calcula la matriz de modelo, vista y proyección aquí
-        const model = mat4.create();
-        mat4.rotateY(model, model, angle);
-
+        // Obtener la matriz de transformación del nodo de la malla
+        const modelMatrix = nodoMalla.getMatrizTransf();
+        
+        // Crear matriz de vista
         const view = mat4.create();
         mat4.lookAt(view, [0, 0, 3], [0, 0, 0], [0, 1, 0]);
 
+        // Obtener matriz de proyección
         const projection = camara.getProyeccion();
 
+        // Calcular matriz MVP
         const mvp = mat4.create();
-        mat4.multiply(mvp, view, model);
+        mat4.multiply(mvp, view, modelMatrix);
         mat4.multiply(mvp, projection, mvp);
 
-        // Llama al método draw de la malla
+        // Dibujar la malla con la matriz MVP
         malla.dibujar(mvp);
 
         angle += 0.01;
