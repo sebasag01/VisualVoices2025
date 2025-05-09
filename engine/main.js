@@ -147,6 +147,54 @@ export async function main(gl) {
         return;
     }
 
+    // Variables para el control del ratón
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    let rotationSpeed = 0.01;
+    let currentRotation = { x: 0, y: 0 };
+
+    // Event listeners para el control del ratón
+    const canvas = gl.canvas;
+    console.log('Canvas element:', canvas); // Debug log
+
+    canvas.addEventListener('mousedown', (e) => {
+        console.log('Mouse down'); // Debug log
+        isDragging = true;
+        previousMousePosition = {
+            x: e.clientX,
+            y: e.clientY
+        };
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+
+        const deltaMove = {
+            x: e.clientX - previousMousePosition.x,
+            y: e.clientY - previousMousePosition.y
+        };
+
+        currentRotation.y += deltaMove.x * rotationSpeed;
+        currentRotation.x += deltaMove.y * rotationSpeed;
+
+        console.log('Current rotation:', currentRotation); // Debug log
+
+        previousMousePosition = {
+            x: e.clientX,
+            y: e.clientY
+        };
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        console.log('Mouse up'); // Debug log
+        isDragging = false;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        console.log('Mouse leave'); // Debug log
+        isDragging = false;
+    });
+
     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
     //gl.clearColor(0.2, 0.6, 0.8, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -224,6 +272,11 @@ export async function main(gl) {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.useProgram(programInfo.program);
         gl.enable(gl.CULL_FACE);
+
+        // Actualizar la rotación del nodo de la malla con los controles del ratón
+        const rotationVector = vec3.fromValues(currentRotation.x, currentRotation.y, 0);
+        console.log('Setting rotation:', rotationVector); // Debug log
+        nodoMalla.setRotacion(rotationVector);
 
         // Obtener la matriz de transformación del nodo de la malla
         const modelMatrix = nodoMalla.getMatrizTransf();
