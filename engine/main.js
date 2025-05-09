@@ -152,13 +152,14 @@ export async function main(gl) {
     let previousMousePosition = { x: 0, y: 0 };
     let rotationSpeed = 0.01;
     let currentRotation = { x: 0, y: 0 };
+    const MAX_ROTATION = 60 * (Math.PI / 180); // 60 grados en radianes
 
     // Event listeners para el control del ratón
     const canvas = gl.canvas;
-    console.log('Canvas element:', canvas); // Debug log
+    console.log('Canvas element:', canvas);
 
     canvas.addEventListener('mousedown', (e) => {
-        console.log('Mouse down'); // Debug log
+        console.log('Mouse down');
         isDragging = true;
         previousMousePosition = {
             x: e.clientX,
@@ -174,10 +175,16 @@ export async function main(gl) {
             y: e.clientY - previousMousePosition.y
         };
 
+        // Solo permitimos rotación en el eje Y (horizontal)
         currentRotation.y += deltaMove.x * rotationSpeed;
-        currentRotation.x += deltaMove.y * rotationSpeed;
+        
+        // Limitar la rotación a 45 grados en cada dirección
+        currentRotation.y = Math.max(-MAX_ROTATION, Math.min(MAX_ROTATION, currentRotation.y));
+        
+        // Mantenemos la rotación X en 0 para bloquear la rotación vertical
+        currentRotation.x = 0;
 
-        console.log('Current rotation:', currentRotation); // Debug log
+        console.log('Current rotation:', currentRotation);
 
         previousMousePosition = {
             x: e.clientX,
