@@ -8,6 +8,7 @@ import TMalla from './entidades/TMalla.js';
 import TLuz from './entidades/TLuz.js';
 import TCamara from './entidades/TCamara.js';
 import TGestorRecursos from './recursos/TGestorRecursos.js';
+import TRecursoTextura from './recursos/TRecursoTextura.js';
 //import { vec3, mat4 } from '../node_modules/gl-matrix/esm/index.js';
 import { mat4, vec3 } from 'gl-matrix';
 
@@ -33,8 +34,9 @@ const vsSource = `
 const fsSource = `
     precision mediump float;
     varying vec2 v_texcoord;
+    uniform sampler2D u_texture;
     void main() {
-        gl_FragColor = vec4(v_texcoord, 0, 1);
+        gl_FragColor = texture2D(u_texture, v_texcoord);
     }
 `;
 
@@ -236,8 +238,11 @@ export async function main(gl) {
     const recursoMalla = await gestorRecursos.getRecurso('malanimation.gltf');
     console.log(recursoMalla);
 
-    // Crear la malla usando el recurso cargado
-    const malla = new TMalla(gl, programInfo, recursoMalla);
+    // Crear la malla usando el recurso cargado y la textura directa
+    const texturaDirecta = new TRecursoTextura();
+    await texturaDirecta.cargarFichero('assets/Cubo.png');
+    texturaDirecta.cargarEnGPU(gl);
+    const malla = new TMalla(gl, programInfo, recursoMalla, texturaDirecta);
     const luz = new TLuz();
     const camara = new TCamara();
     
