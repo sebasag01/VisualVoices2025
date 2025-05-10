@@ -1,7 +1,6 @@
 import TRecurso from './TRecurso.js';
 import TRecursoMalla from './TRecursoMalla.js';
-// Si tienes TRecursoTextura, descomenta la siguiente línea
-// import TRecursoTextura from './TRecursoTextura.js';
+import TRecursoTextura from './TRecursoTextura.js';
 
 class TGestorRecursos {
     constructor() {
@@ -37,8 +36,7 @@ class TGestorRecursos {
         if (extension === 'gltf') {
             return new TRecursoMalla();
         } else if (extension === 'png' || extension === 'jpg' || extension === 'jpeg') {
-            // return new TRecursoTextura();
-            return null; // Si no tienes implementado TRecursoTextura aún
+            return new TRecursoTextura();
         } else {
             // Aquí puedes añadir más tipos en el futuro
             return null;

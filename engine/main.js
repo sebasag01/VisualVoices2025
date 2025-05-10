@@ -14,7 +14,7 @@ import { mat4, vec3 } from 'gl-matrix';
 
 // Shaders
 const vsSource = `
-    attribute vec4 a_position;
+    attribute vec3 a_position;
     attribute vec3 a_normal;
     attribute vec2 a_texcoord;
     
@@ -24,7 +24,7 @@ const vsSource = `
     varying vec2 v_texcoord;
     
     void main() {
-        gl_Position = u_matrix * a_position;
+        gl_Position = u_matrix * vec4(a_position, 1.0);
         v_normal = a_normal;
         v_texcoord = a_texcoord;
     }
@@ -32,9 +32,9 @@ const vsSource = `
 
 const fsSource = `
     precision mediump float;
-    uniform vec3 u_lightColor;
+    varying vec2 v_texcoord;
     void main() {
-        gl_FragColor = vec4(vec3(0.6) * u_lightColor, 1.0); // Gris modulado por la luz
+        gl_FragColor = vec4(v_texcoord, 0, 1);
     }
 `;
 
@@ -159,7 +159,7 @@ export async function main(gl) {
     console.log('Canvas element:', canvas);
 
     canvas.addEventListener('mousedown', (e) => {
-        console.log('Mouse down');
+        //console.log('Mouse down');
         isDragging = true;
         previousMousePosition = {
             x: e.clientX,
@@ -184,7 +184,7 @@ export async function main(gl) {
         // Mantenemos la rotación X en 0 para bloquear la rotación vertical
         currentRotation.x = 0;
 
-        console.log('Current rotation:', currentRotation);
+        //console.log('Current rotation:', currentRotation);
 
         previousMousePosition = {
             x: e.clientX,
@@ -193,12 +193,12 @@ export async function main(gl) {
     });
 
     canvas.addEventListener('mouseup', () => {
-        console.log('Mouse up'); // Debug log
+        //console.log('Mouse up'); // Debug log
         isDragging = false;
     });
 
     canvas.addEventListener('mouseleave', () => {
-        console.log('Mouse leave'); // Debug log
+        //console.log('Mouse leave'); // Debug log
         isDragging = false;
     });
 
@@ -282,7 +282,7 @@ export async function main(gl) {
 
         // Actualizar la rotación del nodo de la malla con los controles del ratón
         const rotationVector = vec3.fromValues(currentRotation.x, currentRotation.y, 0);
-        console.log('Setting rotation:', rotationVector); // Debug log
+        //console.log('Setting rotation:', rotationVector); // Debug log
         nodoMalla.setRotacion(rotationVector);
 
         // Obtener la matriz de transformación del nodo de la malla

@@ -97,55 +97,56 @@ class TRecursoMalla extends TRecurso {
             return;
         }
 
-        // Crear y configurar buffers de WebGL
+        // Buffer de posiciones
         const positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.STATIC_DRAW);
+        const positionLocation = gl.getAttribLocation(programInfo.program, 'a_position');
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
 
-        const normalBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this.normales, gl.STATIC_DRAW);
+        // Buffer de normales (opcional)
+        let normalLocation = -1;
+        if (this.normales) {
+            const normalBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, this.normales, gl.STATIC_DRAW);
+            normalLocation = gl.getAttribLocation(programInfo.program, 'a_normal');
+            if (normalLocation !== -1) {
+                gl.enableVertexAttribArray(normalLocation);
+                gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, 0, 0);
+            }
+        }
 
-        const texcoordBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this.coordTexturas, gl.STATIC_DRAW);
+        // Buffer de coordenadas de textura (opcional)
+        let texcoordLocation = -1;
+        if (this.coordTexturas) {
+            const texcoordBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, this.coordTexturas, gl.STATIC_DRAW);
+            texcoordLocation = gl.getAttribLocation(programInfo.program, 'a_texcoord');
+            if (texcoordLocation !== -1) {
+                gl.enableVertexAttribArray(texcoordLocation);
+                gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
+            }
+        }
 
+        // Buffer de índices
         const indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
 
-        // Configurar atributos
-        const positionLocation = gl.getAttribLocation(programInfo.program, 'a_position');
-        const normalLocation = gl.getAttribLocation(programInfo.program, 'a_normal');
-        const texcoordLocation = gl.getAttribLocation(programInfo.program, 'a_texcoord');
-
-        // Establecer la matriz de transformación
+        // Uniform de matriz de transformación
         const matrixLocation = gl.getUniformLocation(programInfo.program, 'u_matrix');
         gl.uniformMatrix4fv(matrixLocation, false, matrizTransf);
 
-        // Habilitar atributos
-        gl.enableVertexAttribArray(positionLocation);
-        gl.enableVertexAttribArray(normalLocation);
-        gl.enableVertexAttribArray(texcoordLocation);
-
-        // Configurar punteros a atributos
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-        gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, 0, 0);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
-        gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
-
         // Dibujar la malla
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
         gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
 
-        // Limpiar
+        // Limpieza (opcional)
         gl.disableVertexAttribArray(positionLocation);
-        gl.disableVertexAttribArray(normalLocation);
-        gl.disableVertexAttribArray(texcoordLocation);
+        if (normalLocation !== -1) gl.disableVertexAttribArray(normalLocation);
+        if (texcoordLocation !== -1) gl.disableVertexAttribArray(texcoordLocation);
     }
 }
 
