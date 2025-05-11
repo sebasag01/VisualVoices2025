@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { HttpHeaders } from '@angular/common/http';
 
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,6 +13,7 @@ export class UsuariosService {
   private apiUrl = `${environment.apiUrl}/usuarios`;
 
   constructor(private http: HttpClient) {}
+  
 
   // Obtener todos los usuarios
   getUsuarios(): Observable<any> {
@@ -31,6 +34,14 @@ export class UsuariosService {
   updateUsuario(id: string, usuario: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, usuario, { withCredentials: true });
   }
+
+  //cambiarcontraseñadesdeperfil
+  updatePassword(uid: string, payload: { currentPassword: string; newPassword: string }) {
+    return this.http.put(`${this.apiUrl}/${uid}/password`, payload, { withCredentials: true });
+
+
+  }
+  
 
   // Eliminar un usuario por ID
   deleteUsuario(id: string): Observable<any> {

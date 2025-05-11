@@ -259,30 +259,53 @@ export class MiperfilComponent implements OnInit {
   }
 
   updatePassword() {
-
     // Resetear errores antes de validar
-  this.passwordError = null;
-  this.passwordErrorField = null;
-
-  // Validaciones básicas
-  if (!this.currentPassword) {
-    this.passwordErrorField = 'currentPassword';
-    this.passwordError = 'La contraseña actual es obligatoria';
-    return;
+    this.passwordError = null;
+    this.passwordErrorField = null;
+  
+    // Validaciones
+    if (!this.currentPassword) {
+      this.passwordErrorField = 'currentPassword';
+      this.passwordError = 'La contraseña actual es obligatoria';
+      return;
+    }
+  
+    if (!this.newPassword) {
+      this.passwordErrorField = 'newPassword';
+      this.passwordError = 'La nueva contraseña es obligatoria';
+      return;
+    }
+  
+    if (this.newPassword !== this.confirmPassword) {
+      this.passwordErrorField = 'confirmPassword';
+      this.passwordError = 'Las contraseñas no coinciden';
+      return;
+    }
+  
+    // Validado → Llamar al servicio
+    const payload = {
+      currentPassword: this.currentPassword,
+      newPassword: this.newPassword
+    };
+  
+    if (!this.userData.uid) {
+      console.error('UID del usuario no encontrado.');
+      alert('No se puede cambiar la contraseña sin un identificador de usuario.');
+      return;
+    }
+  
+    this.usuarioService.updatePassword(this.userData.uid, payload).subscribe({
+      next: () => {
+        alert('Contraseña actualizada correctamente');
+        this.closePasswordModal();
+      },
+      error: (error) => {
+        console.error('Error al actualizar contraseña:', error);
+        alert('No se pudo actualizar la contraseña. Verifica tus datos.');
+      }
+    });
   }
-
-  if (!this.newPassword) {
-    this.passwordErrorField = 'newPassword';
-    this.passwordError = 'La nueva contraseña es obligatoria';
-    return;
-  }
-
-  if (this.newPassword !== this.confirmPassword) {
-    this.passwordErrorField = 'confirmPassword';
-    this.passwordError = 'Las contraseñas no coinciden';
-    return;
-  }
-  }
+  
 
   //metodos que cargan las estadisticas
   private loadExamStats(): void {
