@@ -13,7 +13,8 @@ const {
   explorarPalabraLibre, categoriaMasExplorada,
   obtenerPalabrasAprendidasPorNivel,
   actualizarLastWordLearned,
-  updateFirstTime
+  updateFirstTime,
+  cambiarPassword 
 
 } = require("../controllers/usuarios");
 const { check } = require("express-validator");
@@ -86,6 +87,7 @@ router.patch('/:id/explore-word/:wordId', [
 router.get('/:id/categoria-mas-explorada', validarJWT, categoriaMasExplorada);
 router.patch('/:id/lastWord', validarJWT, actualizarLastWordLearned);
 
+router.put('/:id/password', [validarJWT], cambiarPassword);
 
 module.exports = router;
 

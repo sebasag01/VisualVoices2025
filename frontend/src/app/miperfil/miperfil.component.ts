@@ -303,7 +303,7 @@ export class MiperfilComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al actualizar contraseña:', error);
-        alert('No se pudo actualizar la contraseña. Verifica tus datos.');
+        alert('Error del servidor: ${error?.error?.message || No se pudo actualizar la contraseña. Verifica tus datos.');
       },
     });
   }

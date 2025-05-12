@@ -522,6 +522,47 @@ const updateFirstTime = async (req, res = response) => {
   }
 };
 
+// Cambiar contraseña de un usuario
+const cambiarPassword = async (req, res = response) => {
+  const { id } = req.params;
+  const { currentPassword, newPassword } = req.body;
+
+  try {
+    const usuario = await Usuario.findById(id);
+    if (!usuario) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Usuario no encontrado',
+      });
+    }
+
+    const esPasswordValida = bcrypt.compareSync(currentPassword, usuario.password);
+    if (!esPasswordValida) {
+      return res.status(400).json({
+        ok: false,
+        msg: 'La contraseña actual no es correcta',
+      });
+    }
+
+    const salt = bcrypt.genSaltSync();
+    usuario.password = bcrypt.hashSync(newPassword, salt);
+    await usuario.save();
+
+    return res.json({
+      ok: true,
+      msg: 'Contraseña actualizada correctamente',
+    });
+
+  } catch (error) {
+    console.error('Error al cambiar la contraseña:', error);
+    return res.status(500).json({
+      ok: false,
+      msg: 'Error al cambiar la contraseña',
+    });
+  }
+};
+
+
 module.exports = {
   obtenerUsuarios,
   crearUsuario,
@@ -533,6 +574,7 @@ module.exports = {
   categoriaMasExplorada,
   obtenerPalabrasAprendidasPorNivel,
   actualizarLastWordLearned,
-  updateFirstTime
+  updateFirstTime,
+  cambiarPassword 
 };
 
