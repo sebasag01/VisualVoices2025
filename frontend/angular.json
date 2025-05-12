@@ -25,6 +25,11 @@
                 "glob": "**/*",
                 "input": "public",
                 "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/engine/lib",
+                "output": "assets/engine/lib"
               }
             ],
             "styles": [
@@ -103,7 +108,7 @@
                 "glob": "**/*",
                 "input": "public",
                 "output": "/assets"
-              }
+              } 
             ],
             "styles": [
               "src/styles.css",

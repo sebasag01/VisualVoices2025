@@ -1,6 +1,17 @@
 <div class="canvas-container">
-    <canvas #webglCanvas class="webgl"></canvas>
-    <button *ngIf="showResetButton" class="reset-btn" (click)="resetView()">Centrar Avatar</button>
-    <button (click)="callMainFunction()">Motor WebGL</button>
-  </div>
-  
+  <canvas
+    #threeCanvas
+    class="webgl"
+    [class.invisible]="skinRunning"
+  ></canvas>
+
+  <canvas
+    #skinCanvas
+    class="webgl skin-canvas"
+    [class.invisible]="!skinRunning"
+  ></canvas>
+
+  <button (click)="toggleSkin()">
+    {{ skinRunning ? 'Detener Skin Engine' : 'Arrancar Skin Engine' }}
+  </button>
+</div>

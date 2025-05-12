@@ -7,7 +7,6 @@ import { AnimacionService, AnimationData } from '../services/animacion.service';
 import { GltfService } from '../services/gltf.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { main } from '../../../../engine/main.js';
 
 @Component({
   selector: 'app-canvas',
@@ -17,7 +16,8 @@ import { main } from '../../../../engine/main.js';
   styleUrls: ['./canvas.component.css'],
 })
 export class CanvasComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('webglCanvas', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('threeCanvas', { static: false }) threeCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('skinCanvas',  { static: false }) skinCanvas!: ElementRef<HTMLCanvasElement>;
 
   @Input() animationUrls: string[] = [];
   @Input() showResetButton: boolean = false;
@@ -28,6 +28,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   private controls!: OrbitControls;
   private loader: GLTFLoader = new GLTFLoader();
   private isMainActive: boolean = false;
+
+  
 
   /** Array de grupos (poses) para la animación secuencial */
   private poses: THREE.Group[] = [];
@@ -74,18 +76,15 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     );
   }
 
-  ngOnDestroy() {
-    if (this.animacionSubscription) {
-      this.animacionSubscription.unsubscribe();
-    }
-    // Al destruir el canvas, paramos si hay algo en marcha
-    this.stopLoop(false);
+   ngOnDestroy() {
+    this.animacionSubscription.unsubscribe();
+    this.stopSkin?.();
   }
 
   ngAfterViewInit(): void {
     this.initScene();
     this.initCamera();
-    this.initRenderer();
+    this.initThreeRenderer();
     this.addLights();
     this.addControls();
     this.loadDefaultPose(); // Pose inicial
@@ -96,26 +95,24 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   // --------------------------------------------------
   // INICIALIZAR ESCENA, CÁMARA, LUCES, CONTROLES
   // --------------------------------------------------
-  private initScene(): void {
+  private initScene() {
     this.scene = new THREE.Scene();
   }
 
-  private initCamera(): void {
+  private initCamera() {
     const aspect = window.innerWidth / window.innerHeight;
     this.camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
-    // Ajusta posición
     this.camera.position.set(0, 0, 5.8);
     this.camera.lookAt(0, 0, 0);
-    this.scene.add(this.camera);
   }
 
-  private initRenderer(): void {
-    const canvas = this.canvasRef.nativeElement;
-    this.renderer = new THREE.WebGLRenderer({ canvas });
+   private initThreeRenderer() {
+    this.renderer = new THREE.WebGLRenderer({ canvas: this.threeCanvas.nativeElement, alpha: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    // Fondo transparente
-    this.renderer.setClearColor(0x000000, 0);
+    this.renderer.setClearColor(0x000000, 0);  // transparente
+    this.addLights();
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
   }
 
   private addLights(): void {
@@ -298,15 +295,16 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     console.log('Canvas limpiado: avatar removido, poses vacías');
   }
 
-  private animate(): void {
-    const renderLoop = () => {
-      if (!this.isMainActive) {
+  private animate() {
+    const loop = () => {
+      // sólo render Three.js si el skinEngine NO está activo
+      if (!this.skinRunning) {
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
       }
-      requestAnimationFrame(renderLoop);
+      requestAnimationFrame(loop);
     };
-    renderLoop();
+    loop();
   }
 
   private handleResize(): void {
@@ -332,10 +330,30 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     this.controls.update();
   }
 
-  public callMainFunction(): void {
-    this.isMainActive = !this.isMainActive;
-    const gl=this.renderer.getContext();
-    console.log("Contexto: ", gl);
-    main(gl);
+  private stopSkin?: () => void;
+  public get skinRunning(): boolean {
+    return !!this.stopSkin;
   }
+   async toggleSkin() {
+      if (this.stopSkin) {
+        this.stopSkin();
+        this.stopSkin = undefined;
+        this.skinCanvas.nativeElement.style.display = 'none';
+        return;
+      }
+      // arrancamos el skin engine
+      const { startSkinEngine } = await import('engine/skinEngine.js');
+      this.stopSkin = await startSkinEngine(
+      this.skinCanvas.nativeElement,
+        'assets/malanimation.gltf',
+        () => ({
+          // envolvemos el array de números en un Float32Array
+          projectionMatrix: new Float32Array(this.camera.projectionMatrix.elements),
+          viewMatrix:       new Float32Array(this.camera.matrixWorldInverse.elements)
+        })
+      );
+      this.skinCanvas.nativeElement.style.display = 'block';
+    }
+
+
 }
