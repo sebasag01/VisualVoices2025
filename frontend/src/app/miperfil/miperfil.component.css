@@ -376,6 +376,8 @@ body, html {
   background-color: #e05c5c;
 }
 
+
+
 /* Estilos específicos para los componentes de gráficos */
 .stats-card ngx-charts-pie-chart,
 .stats-card ngx-charts-bar-vertical {
@@ -518,4 +520,25 @@ body, html {
   font-family: "Lexend", sans-serif !important;
   font-size: 13px !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 40px; /* espacio para el icono */
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 1.1em;
 }

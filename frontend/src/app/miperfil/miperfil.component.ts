@@ -6,8 +6,7 @@ import { FormsModule } from '@angular/forms'; // ✅ Importado FormsModule para 
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { StatsService } from '../services/stats.service';   // ← importa el servicio
-
+import { StatsService } from '../services/stats.service'; // ← importa el servicio
 
 @Component({
   selector: 'app-miperfil',
@@ -62,8 +61,10 @@ export class MiperfilComponent implements OnInit {
   confirmPassword: string = '';
   passwordError: string | null = null;
   emailErrorField: string | null = null;
+  passwordFieldType: string = 'password';
+  showCurrentPassword: boolean = false;
 
-  passwordErrorField : string | null = null; // Campo de error para contraseña
+  passwordErrorField: string | null = null; // Campo de error para contraseña
 
   examStats: { name: string; value: number }[] = [];
 
@@ -72,16 +73,16 @@ export class MiperfilComponent implements OnInit {
   showLabels = true;
 
   loginStats = { totalDays: 0, currentStreak: 0, maxStreak: 0 };
-  topWords: { palabra: string, count: number }[] = [];
+  topWords: { palabra: string; count: number }[] = [];
 
   // configuración del gráfico de barras para top 3 palabras
-  barChartData: { name: string, value: number }[] = [];
-  barView: [number, number] = [500, 300];     // tamaño del gráfico
+  barChartData: { name: string; value: number }[] = [];
+  barView: [number, number] = [500, 300]; // tamaño del gráfico
   xAxisLabel = 'Palabra';
   yAxisLabel = 'Clicks';
 
-  topVersus: { name: string, value: number }[] = [];
-  vsView: [number,number] = [500, 300];
+  topVersus: { name: string; value: number }[] = [];
+  vsView: [number, number] = [500, 300];
 
   //para niveles completados en modo guiado
   completedLevels = 0;
@@ -90,17 +91,16 @@ export class MiperfilComponent implements OnInit {
   constructor(
     private usuarioService: UsuariosService,
     private router: Router,
-    private statsService: StatsService,
+    private statsService: StatsService
   ) {}
 
   ngOnInit() {
     this.loadUserData();
-    this.loadExamStats(); 
+    this.loadExamStats();
     this.loadLoginStats();
     this.loadTopWords();
     this.loadTopVersus();
-    this.loadCompletedLevels();       
-
+    this.loadCompletedLevels();
   }
 
   loadUserData() {
@@ -186,10 +186,10 @@ export class MiperfilComponent implements OnInit {
   closePasswordModal() {
     this.isPasswordModalOpen = false;
     this.currentPassword = '';
-  this.newPassword = '';
-  this.confirmPassword = '';
-  this.passwordError = null;
-  this.passwordErrorField = null;
+    this.newPassword = '';
+    this.confirmPassword = '';
+    this.passwordError = null;
+    this.passwordErrorField = null;
   }
 
   toggleEdit(field: string) {
@@ -262,38 +262,40 @@ export class MiperfilComponent implements OnInit {
     // Resetear errores antes de validar
     this.passwordError = null;
     this.passwordErrorField = null;
-  
+
     // Validaciones
     if (!this.currentPassword) {
       this.passwordErrorField = 'currentPassword';
       this.passwordError = 'La contraseña actual es obligatoria';
       return;
     }
-  
+
     if (!this.newPassword) {
       this.passwordErrorField = 'newPassword';
       this.passwordError = 'La nueva contraseña es obligatoria';
       return;
     }
-  
+
     if (this.newPassword !== this.confirmPassword) {
       this.passwordErrorField = 'confirmPassword';
       this.passwordError = 'Las contraseñas no coinciden';
       return;
     }
-  
+
     // Validado → Llamar al servicio
     const payload = {
       currentPassword: this.currentPassword,
-      newPassword: this.newPassword
+      newPassword: this.newPassword,
     };
-  
+
     if (!this.userData.uid) {
       console.error('UID del usuario no encontrado.');
-      alert('No se puede cambiar la contraseña sin un identificador de usuario.');
+      alert(
+        'No se puede cambiar la contraseña sin un identificador de usuario.'
+      );
       return;
     }
-  
+
     this.usuarioService.updatePassword(this.userData.uid, payload).subscribe({
       next: () => {
         alert('Contraseña actualizada correctamente');
@@ -302,10 +304,9 @@ export class MiperfilComponent implements OnInit {
       error: (error) => {
         console.error('Error al actualizar contraseña:', error);
         alert('No se pudo actualizar la contraseña. Verifica tus datos.');
-      }
+      },
     });
   }
-  
 
   //metodos que cargan las estadisticas
   private loadExamStats(): void {
@@ -313,61 +314,74 @@ export class MiperfilComponent implements OnInit {
       next: ({ correctas = 0, incorrectas = 0 }) => {
         this.examStats = [
           { name: 'Aciertos', value: correctas },
-          { name: 'Fallos',   value: incorrectas }
+          { name: 'Fallos', value: incorrectas },
         ];
       },
-      error: err => console.error('No pude cargar stats de examen:', err)
+      error: (err) => console.error('No pude cargar stats de examen:', err),
     });
   }
 
   private loadLoginStats() {
     this.statsService.getLoginStats().subscribe({
-      next: stats => this.loginStats = stats,
-      error: err => console.error(err)
+      next: (stats) => (this.loginStats = stats),
+      error: (err) => console.error(err),
     });
   }
 
   private loadTopWords() {
     this.statsService.getTopLearnedWords().subscribe({
-      next: data => {
+      next: (data) => {
         // convierte [{palabra, count}] a [{name, value}]
-        this.barChartData = data.map(w => ({
+        this.barChartData = data.map((w) => ({
           name: w.palabra,
-          value: w.count
+          value: w.count,
         }));
         console.log('barChartData:', this.barChartData);
       },
-      error: err => console.error('No pude cargar top words:', err)
+      error: (err) => console.error('No pude cargar top words:', err),
     });
   }
-  
 
   private loadTopVersus() {
-    this.statsService.getTopVersusPlayers()
-      .subscribe({
-        next: list => {
-          this.topVersus = list.map(p => ({
-            name:  p.player,
-            value: p.wins
-          }));
-        },
-        error: err => console.error('No pude cargar top versus:', err)
-      });
+    this.statsService.getTopVersusPlayers().subscribe({
+      next: (list) => {
+        this.topVersus = list.map((p) => ({
+          name: p.player,
+          value: p.wins,
+        }));
+      },
+      error: (err) => console.error('No pude cargar top versus:', err),
+    });
   }
 
   private loadCompletedLevels(): void {
     this.statsService.getCompletedLevels().subscribe(
-      cnt => {
+      (cnt) => {
         this.completedLevels = cnt;
         // preparamos los datos para el pie chart
         this.levelsPieData = [
           { name: 'Completados', value: cnt },
-          { name: 'Pendientes',   value: /* aquí totalNiveles − cnt */ cnt > 0 ? 0 : 0 }
+          {
+            name: 'Pendientes',
+            value: /* aquí totalNiveles − cnt */ cnt > 0 ? 0 : 0,
+          },
           // si quieres, sustituye el segundo slice por (TOTAL_NIVELES - cnt)
         ];
       },
-      err => console.error('Error cargando niveles completados', err)
+      (err) => console.error('Error cargando niveles completados', err)
     );
   }
 
+  togglePasswordVisibility(): void {
+    this.passwordFieldType =
+      this.passwordFieldType === 'password' ? 'text' : 'password';
+  }
+
+  get currentPasswordInputType(): string {
+    return this.showCurrentPassword ? 'text' : 'password';
+  }
+
+  toggleCurrentPasswordVisibility(): void {
+    this.showCurrentPassword = !this.showCurrentPassword;
+  }
 }

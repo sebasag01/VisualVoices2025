@@ -125,7 +125,7 @@ export class ModosComponent implements OnInit, OnDestroy {
         if (user.lastWordLearned) {
           this.lastWordLearned = user.lastWordLearned;
         } else {
-          this.lastWordLearned = 'Aún no has aprendido ninguna palabra';
+          this.lastWordLearned = 'Ninguna';
         }
 
         // Calcular tiempo invertido (por ejemplo, para guiado)
