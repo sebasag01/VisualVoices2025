@@ -65,6 +65,7 @@ export class MiperfilComponent implements OnInit {
   showCurrentPassword: boolean = false;
 
   passwordErrorField: string | null = null; // Campo de error para contraseña
+  passwordSuccessMessageVisible: boolean = false;
 
   examStats: { name: string; value: number }[] = [];
 
@@ -298,12 +299,15 @@ export class MiperfilComponent implements OnInit {
 
     this.usuarioService.updatePassword(this.userData.uid, payload).subscribe({
       next: () => {
-        alert('Contraseña actualizada correctamente');
-        this.closePasswordModal();
+        // alert('Contraseña actualizada correctamente');
+        // this.closePasswordModal();
+        this.passwordSuccessMessageVisible = true;
       },
       error: (error) => {
         console.error('Error al actualizar contraseña:', error);
-        alert('Error del servidor: ${error?.error?.message || No se pudo actualizar la contraseña. Verifica tus datos.');
+        alert(
+          'Error del servidor: ${error?.error?.message || No se pudo actualizar la contraseña. Verifica tus datos.'
+        );
       },
     });
   }
@@ -383,5 +387,10 @@ export class MiperfilComponent implements OnInit {
 
   toggleCurrentPasswordVisibility(): void {
     this.showCurrentPassword = !this.showCurrentPassword;
+  }
+
+  confirmPasswordUpdateSuccess() {
+    this.passwordSuccessMessageVisible = false;
+    this.closePasswordModal();
   }
 }

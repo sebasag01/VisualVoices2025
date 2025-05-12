@@ -280,6 +280,8 @@ body, html {
   color: black;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   animation: scaleIn 0.3s ease-out;
+    transition: min-height 0.4s ease; /* <--- Transición suave */
+
 }
 
 .modal-content h3 {
