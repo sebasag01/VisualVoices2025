@@ -27,7 +27,7 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 80vh;
+min-height: 100vh;
   background-color: #fff8d4;
   max-width: 100% !important;
   width: 100% !important;
@@ -698,7 +698,7 @@ html, body {
   animation: popIn 0.8s ease;
 }
 
-.winner-message h1 {
+/* .winner-message h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
   color: black;
@@ -708,38 +708,50 @@ html, body {
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
   color: black;
+} */
+
+.winner-message h1 {
+  font-size: 2rem;
+  font-family: 'ChauPhilomene', sans-serif;
+  color: black;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
 }
 
+.winner-message p {
+  font-size: 1rem;
+  font-family: 'Lexend', sans-serif;
+  color: black;
+  margin-bottom: 1.5rem;
+}
+
+
 .winner-message button {
-  /* display: flex; */
-  justify-content: center;
-  align-items: center;
-  padding: 6px 12px;
-   font-weight: 900;
-   font-size: 14px;
-   font-family: "Lexend", sans-serif;
+  padding: 8px 18px;
+  font-size: 0.95rem;
+  font-family: "Lexend", sans-serif;
+  border: 3px solid black;
+  border-radius: 0.4em;
   background-color: #41b8d5;
   color: black;
-  border: 3px solid black; /* Igual que el otro botón */
-  border-radius: 0.4em; /* Ajustado para coincidir */
-  box-shadow: 0.1em 0.1em;
+  font-weight: bold;
   cursor: pointer;
-  text-transform: uppercase;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  min-width: 20px;
-  min-height: 20px;
-  padding: 10px 20px;
-
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  display: block;
+  margin: 0 auto;
 }
 
 .winner-message button:hover {
   transform: translate(-0.05em, -0.05em);
-  box-shadow: 0.2em 0.2em;}
+  box-shadow: 0.2em 0.2em;
+}
+
 
 .btn-lol{
   align-items: center;
 
 }
+
 
 /* Animaciones */
 @keyframes fadeInOverlay {
