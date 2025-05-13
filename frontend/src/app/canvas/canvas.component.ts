@@ -25,7 +25,8 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./canvas.component.css'],
 })
 export class CanvasComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('webglCanvas', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('threeCanvas', { static: false }) threeCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('skinCanvas',  { static: false }) skinCanvas!: ElementRef<HTMLCanvasElement>;
 
   @Input() animationUrls: string[] = [];
   @Input() showResetButton: boolean = false;
@@ -38,6 +39,9 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   private camera!: THREE.PerspectiveCamera;
   private controls!: OrbitControls;
   private loader: GLTFLoader = new GLTFLoader();
+  private isMainActive: boolean = false;
+
+  
 
   /** Array de grupos (poses) para la animación secuencial */
   private poses: THREE.Group[] = [];
@@ -58,7 +62,10 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     // Nos suscribimos al BehaviorSubject que emite { animaciones, loop }
     this.animacionSubscription = this.animacionService.animaciones$.subscribe(
       (data: AnimationData) => {
-        if (data.animaciones.length > 0) {
+        // data.animaciones => array de URLs
+        // data.loop => true (repetir) / false (una sola vez)
+        
+        if (data.animaciones.length > 0&&!this.isMainActive) {
           const permitido = this.animacionService.permitirReproduccion();
           console.log('Recibida petición de animación:', data, '¿permitido?', permitido);
 
@@ -81,18 +88,15 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     );
   }
 
-  ngOnDestroy() {
-    if (this.animacionSubscription) {
-      this.animacionSubscription.unsubscribe();
-    }
-    // Al destruir el canvas, paramos si hay algo en marcha
-    this.stopLoop(false);
+   ngOnDestroy() {
+    this.animacionSubscription.unsubscribe();
+    this.stopSkin?.();
   }
 
   ngAfterViewInit(): void {
     this.initScene();
     this.initCamera();
-    this.initRenderer();
+    this.initThreeRenderer();
     this.addLights();
     this.addControls();
     this.loadDefaultPose(); // Pose inicial
@@ -103,26 +107,24 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   // --------------------------------------------------
   // INICIALIZAR ESCENA, CÁMARA, LUCES, CONTROLES
   // --------------------------------------------------
-  private initScene(): void {
+  private initScene() {
     this.scene = new THREE.Scene();
   }
 
-  private initCamera(): void {
+  private initCamera() {
     const aspect = window.innerWidth / window.innerHeight;
     this.camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
-    // Ajusta posición
     this.camera.position.set(0, 0, 5.8);
     this.camera.lookAt(0, 0, 0);
-    this.scene.add(this.camera);
   }
 
-  private initRenderer(): void {
-    const canvas = this.canvasRef.nativeElement;
-    this.renderer = new THREE.WebGLRenderer({ canvas });
+   private initThreeRenderer() {
+    this.renderer = new THREE.WebGLRenderer({ canvas: this.threeCanvas.nativeElement, alpha: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    // Fondo transparente
-    this.renderer.setClearColor(0x000000, 0);
+    this.renderer.setClearColor(0x000000, 0);  // transparente
+    this.addLights();
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
   }
 
   private addLights(): void {
@@ -149,6 +151,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   // CARGA DE ANIMACIONES (POSIBLES POSES) Y REPRODUCCIÓN
   // --------------------------------------------------
   private cargarAnimacionesDinamicas(animaciones: string[], loop: boolean): void {
+    if (this.isMainActive) return;
     // 1) Detenemos animación previa, pero sin recargar la pose
     this.stopLoop(false);
 
@@ -181,6 +184,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   private reproducirAnimacionSecuencial(loop: boolean): void {
     // Detener cualquier animación previa
+    if (this.isMainActive) return;
+    // Just in case, paramos algo previo
     this.stopLoop(false);
     
     let index = 0;
@@ -238,6 +243,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
    * @param revertToDefault Si es true, limpiamos y recargamos la pose inicial.
    */
   public stopLoop(revertToDefault: boolean): void {
+    if (this.isMainActive) return;
+    // 1) Parar el intervalo
     if (this.poseInterval) {
       clearInterval(this.poseInterval);
       this.poseInterval = null;
@@ -254,7 +261,9 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   // --------------------------------------------------
   // POSE INICIAL
   // --------------------------------------------------
+  /** Cargar la pose inicial o "modelo por defecto". */
   private loadDefaultPose(force = false): void {
+    if (this.isMainActive) return;
     // Si no forzamos y hay animaciones, no cargamos la pose
     if (!force && this.animacionService.hayAnimacionesActivas()) {
       return;
@@ -297,6 +306,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   // LIMPIAR Y OTRAS UTILIDADES
   // --------------------------------------------------
   limpiarCanvas(): void {
+    if (this.isMainActive) return;
     if (this.avatar) {
       this.scene.remove(this.avatar);
       this.avatar.clear();
@@ -306,32 +316,65 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     console.log('Canvas limpiado: avatar removido, poses vacías');
   }
 
-  private animate(): void {
-    const renderLoop = () => {
-      this.controls.update();
-      this.renderer.render(this.scene, this.camera);
-      requestAnimationFrame(renderLoop);
+  private animate() {
+    const loop = () => {
+      // sólo render Three.js si el skinEngine NO está activo
+      if (!this.skinRunning) {
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
+      }
+      requestAnimationFrame(loop);
     };
-    renderLoop();
+    loop();
   }
 
   private handleResize(): void {
     window.addEventListener('resize', () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      if (this.camera instanceof THREE.PerspectiveCamera) {
-        this.camera.aspect = w / h;
-        this.camera.updateProjectionMatrix();
+      if (!this.isMainActive) {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        if (this.camera instanceof THREE.PerspectiveCamera) {
+          this.camera.aspect = w / h;
+          this.camera.updateProjectionMatrix();
+        }
+        this.renderer.setSize(w, h);
       }
-      this.renderer.setSize(w, h);
     });
   }
 
   public resetView(): void {
+    if (this.isMainActive) return;
     // Reposicionar la cámara, si lo deseas
     this.camera.position.set(0, 1.5, 8.5);
     this.camera.lookAt(0, 0, 0);
     this.controls.target.set(0, 0, 0);
     this.controls.update();
   }
+
+  private stopSkin?: () => void;
+  public get skinRunning(): boolean {
+    return !!this.stopSkin;
+  }
+   async toggleSkin() {
+      if (this.stopSkin) {
+        this.stopSkin();
+        this.stopSkin = undefined;
+        this.skinCanvas.nativeElement.style.display = 'none';
+        return;
+      }
+      // arrancamos el skin engine
+      const { startSkinEngine } = await import('engine/skinEngine.js');
+      this.stopSkin = await startSkinEngine(
+      this.skinCanvas.nativeElement,
+        'assets/malanimation.gltf',
+        () => ({
+          // envolvemos el array de números en un Float32Array
+          projectionMatrix: new Float32Array(this.camera.projectionMatrix.elements),
+          viewMatrix:       new Float32Array(this.camera.matrixWorldInverse.elements)
+        })
+      );
+      this.skinCanvas.nativeElement.style.display = 'block';
+    }
+
+
 }
