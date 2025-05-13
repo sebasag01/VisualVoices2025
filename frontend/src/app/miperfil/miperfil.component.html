@@ -268,7 +268,7 @@
       </div>
 
       <!-- 2) Login stats -->
-      <div class="stats-card">
+      <!-- <div class="stats-card">
         <h3><i class="fa-solid fa-calendar-check"></i>Mi actividad</h3>
         <p><strong>Días con login:</strong> {{ loginStats.totalDays }}</p>
         <p class="small">
@@ -276,6 +276,23 @@
           &nbsp;|&nbsp;
           <span>● Racha máxima: {{ loginStats.maxStreak }} día(s)</span>
         </p>
+      </div> -->
+      <div class="stats-card activity-card">
+        <h3><i class="fa-solid fa-calendar-check"></i>Mi actividad</h3>
+        <div class="activity-content">
+          <div class="activity-block">
+            <p class="activity-number">{{ loginStats.totalDays }}</p>
+            <p class="activity-label">Días con login</p>
+          </div>
+          <div class="activity-block">
+            <p class="activity-number">{{ loginStats.currentStreak }}</p>
+            <p class="activity-label">Racha actual</p>
+          </div>
+          <div class="activity-block">
+            <p class="activity-number">{{ loginStats.maxStreak }}</p>
+            <p class="activity-label">Racha máxima</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -316,7 +333,7 @@
       </div>
 
       <!-- 5) Niveles completados -->
-      <div class="stats-card">
+      <!-- <div class="stats-card">
         <h3><i class="fa-solid fa-puzzle-piece"></i>Niveles Completados</h3>
         <ng-container *ngIf="completedLevels > 0; else noLevels">
           <ngx-charts-pie-chart
@@ -327,6 +344,30 @@
             [scheme]="colorScheme"
           >
           </ngx-charts-pie-chart>
+        </ng-container>
+        <ng-template #noLevels>
+          <p class="text-center">No hay niveles completados aún.</p>
+        </ng-template>
+      </div> -->
+      <!-- 5) Niveles completados -->
+      <div class="stats-card donut-card">
+        <h3><i class="fa-solid fa-puzzle-piece"></i>Niveles Completados</h3>
+        <ng-container *ngIf="completedLevels > 0; else noLevels">
+          <div class="donut-wrapper">
+            <ngx-charts-pie-chart
+              [results]="levelsPieData"
+              [view]="[180, 180]"
+              [legend]="false"
+              [labels]="false"
+              [scheme]="colorScheme"
+              [doughnut]="true"
+              [animations]="true"
+            ></ngx-charts-pie-chart>
+            <div class="donut-center">
+              {{ completedLevels }}
+            </div>
+          </div>
+          <p class="donut-label">niveles completados</p>
         </ng-container>
         <ng-template #noLevels>
           <p class="text-center">No hay niveles completados aún.</p>

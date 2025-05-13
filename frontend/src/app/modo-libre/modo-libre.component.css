@@ -303,9 +303,10 @@ button:active,
     width: 100%; /* Que ocupe todo el contenedor de la cámara */
     height: 100%; /* Que ocupe toda la altura */
     object-fit: cover; /* Se ajusta sin deformarse */
-    transform: scaleX(-1); /* Modo espejo */
+    transform: scaleX(1); 
     border: none; /* Sin bordes */
     border-radius: 0; /* Sin bordes redondeados */
+
   }
 
 .selected-word-container {

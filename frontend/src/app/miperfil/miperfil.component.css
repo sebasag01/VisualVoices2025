@@ -603,6 +603,85 @@ body, html {
   margin-right: 3px;
 }
 
+/* NUEVO ESTILO: tarjeta de actividad visual y grande */
+.activity-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.activity-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+  flex-grow: 1;
+}
+
+.activity-block {
+  text-align: center;
+  flex: 1;
+}
+
+.activity-number {
+  font-size: 3.2rem;
+  font-weight: bold;
+  margin: 0;
+  color: #222;
+  font-family: "Lexend", sans-serif;
+}
+
+.activity-label {
+  font-size: 1.2rem;
+  margin-top: 6px;
+  color: #555;
+  font-family: "Lexend", sans-serif;
+}
+
+.activity-number {
+  font-size: 3.2rem !important;
+}
+
+.activity-label {
+  font-size: 1.2rem !important;
+}
+
+.level-dots-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.level-dots {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.level-dots span {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #ccc;
+  transition: background-color 0.3s ease;
+}
+
+.level-dots span.completed {
+  background-color: #41b8d5;
+}
+
+.levels-label {
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  font-family: "Lexend", sans-serif;
+}
+
+
 
 /* Forzar texto en las stats-card a negro */
 .stats-card,
@@ -613,4 +692,44 @@ body, html {
 .stats-card .ngx-charts text {
   color: black !important;
   fill: black !important;
+}
+
+
+
+.donut-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.donut-wrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.donut-wrapper ngx-charts-pie-chart {
+  position: relative;
+  z-index: 1;
+}
+
+.donut-center {
+  position: absolute;
+  z-index: 2;
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: black;
+  font-family: 'Lexend', sans-serif;
+}
+
+.donut-label {
+  margin-top: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  color: black;
+  font-family: 'Lexend', sans-serif;
 }
