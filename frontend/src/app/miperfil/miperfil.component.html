@@ -343,13 +343,16 @@
     <h3 style="font-weight: bold; text-transform: uppercase">
       <i class="fa-solid fa-envelope"></i> Actualiza tu correo
     </h3>
-    <p style="font-size: 0.9em; margin-bottom: 15px">
+    <p
+      *ngIf="!emailSuccessMessageVisible"
+      style="font-size: 0.9em; margin-bottom: 15px"
+    >
       Introduce tu email actual y el nuevo email al que quieres cambiar tu
       cuenta
     </p>
 
     <!-- Formulario de edición -->
-    <form (ngSubmit)="updateEmail()">
+    <form *ngIf="!emailSuccessMessageVisible" (ngSubmit)="updateEmail()">
       <!-- Input para email actual -->
       <div
         class="form-group"
@@ -405,6 +408,20 @@
         <button type="submit" class="start-button">Actualizar</button>
       </div>
     </form>
+    <div *ngIf="emailSuccessMessageVisible">
+      <p style="font-size: 1.1em; margin-top: 20px">
+        <i class="fa-solid fa-circle-check" style="color: green"></i>
+        Email actualizado correctamente
+      </p>
+      <button
+        type="button"
+        class="start-button"
+        style="margin-top: 15px"
+        (click)="confirmEmailUpdateSuccess()"
+      >
+        Aceptar
+      </button>
+    </div>
   </div>
 </div>
 
@@ -414,7 +431,10 @@
     <h3 style="font-weight: bold; text-transform: uppercase">
       <i class="fa-solid fa-lock"></i> Cambia tu contraseña
     </h3>
-<p *ngIf="!passwordSuccessMessageVisible" style="font-size: 0.9em; margin-bottom: 15px">
+    <p
+      *ngIf="!passwordSuccessMessageVisible"
+      style="font-size: 0.9em; margin-bottom: 15px"
+    >
       Introduce tu contraseña actual y la nueva contraseña que deseas usar
     </p>
 

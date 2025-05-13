@@ -66,6 +66,8 @@ export class MiperfilComponent implements OnInit {
 
   passwordErrorField: string | null = null; // Campo de error para contraseña
   passwordSuccessMessageVisible: boolean = false;
+  emailSuccessMessageVisible: boolean = false;
+
 
   examStats: { name: string; value: number }[] = [];
 
@@ -161,8 +163,8 @@ export class MiperfilComponent implements OnInit {
       .subscribe({
         next: () => {
           this.emailUsuario = this.newEmail; // Actualizamos el email en la sesión
-          this.closeModal(); // Cerramos el modal
-          alert('Email actualizado correctamente');
+            this.emailSuccessMessageVisible = true; // mostrar mensaje de éxito
+
         },
         error: (error) => {
           console.error('Error al actualizar el email:', error);
@@ -393,4 +395,10 @@ export class MiperfilComponent implements OnInit {
     this.passwordSuccessMessageVisible = false;
     this.closePasswordModal();
   }
+
+  confirmEmailUpdateSuccess() {
+  this.emailSuccessMessageVisible = false;
+  this.closeModal();
+}
+
 }
