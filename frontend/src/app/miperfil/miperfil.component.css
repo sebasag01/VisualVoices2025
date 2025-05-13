@@ -90,7 +90,9 @@ body, html {
 /* Dos columnas en la primera fila */
 .stats-row.two-cols {
   grid-template-columns: repeat(2, 1fr);
-  height: calc(40vh - 30px); /* Altura ajustada para primer fila */
+  /* height: calc(40vh - 0px);  */
+    height: 300px !important; /* Subido desde 240px */
+
 }
 
 /* Tres columnas en la segunda fila */
@@ -453,6 +455,9 @@ body, html {
   
   body, html {
     overflow-y: auto; /* Permitir scroll en pantallas pequeñas */
+      font-family: "Lexend", sans-serif;
+
+
   }
   
   .stats-column {
@@ -543,4 +548,38 @@ body, html {
   cursor: pointer;
   color: rgba(0, 0, 0, 0.4);
   font-size: 1.1em;
+}
+
+:host ::ng-deep .ngx-charts text {
+  font-family: "Lexend", sans-serif !important;
+}
+
+:host ::ng-deep .ngx-charts .arc path {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.15));
+  stroke: #fff;
+  stroke-width: 1;
+}
+
+:host ::ng-deep .ngx-charts .pie-label {
+  font-family: "Lexend", sans-serif !important;
+  font-weight: 600;
+  font-size: 14px;
+  fill: #333;
+}
+
+.fa-chart-pie{
+  margin-right: 3px;
+}
+
+
+
+/* Forzar texto en las stats-card a negro */
+.stats-card,
+.stats-card h3,
+.stats-card p,
+.stats-card span,
+.stats-card .small,
+.stats-card .ngx-charts text {
+  color: black !important;
+  fill: black !important;
 }
