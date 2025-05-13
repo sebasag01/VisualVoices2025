@@ -415,6 +415,8 @@ body, html {
   align-items: center !important;
   width: 100% !important;
   height: 210px !important; /* Ajustado para dar más espacio */
+    margin-top: 15px; /* baja el contenido */
+
 }
 
 /* Configuración de vista para gráficos */
@@ -443,6 +445,20 @@ body, html {
 :host ::ng-deep .ngx-charts .bar-label {
   font-size: 13px !important; /* Reducido de 14px a 13px */
 }
+
+
+/* NEGRO EN NUMEROS Y PALABRAS STATS */
+
+:host ::ng-deep .ngx-charts .axis text {
+  fill: black !important;
+  font-family: "Lexend", sans-serif;
+  font-size: 12px;
+}
+
+:host ::ng-deep .ngx-charts .tick text {
+  fill: black !important;
+}
+
 
 /* Media queries para responsividad */
 @media screen and (max-width: 1200px) {
@@ -571,6 +587,21 @@ body, html {
   margin-right: 3px;
 }
 
+.fa-trophy{
+  margin-right: 3px;
+}
+
+.fa-book{
+  margin-right: 3px;
+}
+
+.fa-calendar-check{
+  margin-right: 3px;
+}
+
+.fa-puzzle-piece{
+  margin-right: 3px;
+}
 
 
 /* Forzar texto en las stats-card a negro */

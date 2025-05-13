@@ -254,7 +254,7 @@
     <div class="stats-row two-cols">
       <!-- 1) Exámenes -->
       <div class="stats-card">
-        <h3><i class="fa-solid fa-chart-pie"></i>Mi rendimiento en exámenes</h3>
+        <h3><i class="fa-solid fa-chart-pie"></i>Mi Rendimiento en Exámenes</h3>
         <ngx-charts-pie-chart
           [results]="examStats"
           [view]="[400, 300]"
@@ -269,7 +269,7 @@
 
       <!-- 2) Login stats -->
       <div class="stats-card">
-        <h3>Mis Inicios de Sesión</h3>
+        <h3><i class="fa-solid fa-calendar-check"></i>Mi actividad</h3>
         <p><strong>Días con login:</strong> {{ loginStats.totalDays }}</p>
         <p class="small">
           <span>● Racha actual: {{ loginStats.currentStreak }} día(s)</span>
@@ -283,9 +283,9 @@
     <div class="stats-row three-cols">
       <!-- 3) Top palabras aprendidas -->
       <div class="stats-card">
-        <h3>Mis Palabras Más Aprendidas</h3>
+        <h3><i class="fa-solid fa-book"></i>Mis Palabras Más Aprendidas</h3>
         <ngx-charts-bar-vertical
-          [view]="[320, 190]"
+          [view]="[280, 240]"
           [results]="barChartData"
           [scheme]="colorScheme"
           [gradient]="false"
@@ -300,7 +300,7 @@
 
       <!-- 4) Top versus -->
       <div class="stats-card">
-        <h3>Top 3 Ganadores Versus</h3>
+        <h3><i class="fa-solid fa-trophy"></i>Top 3 Ganadores Versus</h3>
         <ngx-charts-bar-vertical
           [view]="[320, 190]"
           [results]="topVersus"
@@ -317,7 +317,7 @@
 
       <!-- 5) Niveles completados -->
       <div class="stats-card">
-        <h3>Niveles Completados</h3>
+        <h3><i class="fa-solid fa-puzzle-piece"></i>Niveles Completados</h3>
         <ng-container *ngIf="completedLevels > 0; else noLevels">
           <ngx-charts-pie-chart
             [results]="levelsPieData"
