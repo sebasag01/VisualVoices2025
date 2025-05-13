@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CanvasComponent } from '../canvas/canvas.component';
 import { UsuariosService } from '../services/usuarios.service';
@@ -35,11 +35,16 @@ const MODES = [
 ];
 
 @Component({
+  selector: 'app-modos',
   standalone: true,
-  selector: 'app-mode-selector',
+  imports: [
+    CommonModule,
+    RouterModule,
+    HeaderComponent,
+    CanvasComponent
+  ],
   templateUrl: './modos.component.html',
-  styleUrls: ['./modos.component.css'],
-  imports: [CommonModule, CanvasComponent, HeaderComponent],
+  styleUrls: ['./modos.component.css']
 })
 export class ModosComponent implements OnInit, OnDestroy {
   userId: string = '';

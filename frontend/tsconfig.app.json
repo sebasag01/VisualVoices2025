@@ -6,14 +6,27 @@
     "outDir": "./out-tsc/app",
     "types": [
       "node"
-    ]
+    ],
+    /*  👇  Añade estas 2 líneas  */
+    "baseUrl": "src",
+    "paths": {
+      "engine/*": ["engine/*"]
+    },
+    "allowJs": true
   },
+   "exclude": [
+   "**/*.spec.ts",
+   "**/*.test.ts",
+   "test.ts"
+  ],
   "files": [
     "src/main.ts",
     "src/main.server.ts",
     "server.ts"
   ],
   "include": [
+    "src/**/*.ts",
+    "src/**/*.js",
     "src/**/*.d.ts"
   ]
 }
