@@ -43,7 +43,7 @@
   width:  100%;
   height: 100%;
   z-index: 1;            /* por encima del threeCanvas */
-  pointer-events: none;  /* opcional: si no quieres que intercepte clicks */
+  pointer-events: auto;  /* Permitir eventos del ratón */
 }
 
 .invisible {
@@ -66,4 +66,37 @@
 
 .bottom-button:hover {
   background-color: rgba(0, 86, 179, 0.9);
+}
+
+.button-container {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.skin-button, .reset-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.skin-button:hover, .reset-button:hover {
+  background-color: #45a049;
+}
+
+.reset-button {
+  background-color: #2196F3;
+}
+
+.reset-button:hover {
+  background-color: #1976D2;
 }

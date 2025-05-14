@@ -4,9 +4,10 @@
 // ---------------------------------------------------------------------------
 import * as m4 from './lib/m4.js';
 import * as wu from './lib/webgl-utils.js';
+import { mat4, vec3 } from 'gl-matrix';
 
 // ---------------------------------------------------------------------------
-//  SHADERS  (★ Pega aquí tu código “real” si quieres modificarlo)            *
+//  SHADERS  (★ Pega aquí tu código "real" si quieres modificarlo)            *
 // ---------------------------------------------------------------------------
 const skinVS = `precision mediump float;
 attribute vec4 a_POSITION;
@@ -322,8 +323,56 @@ export async function startSkinEngine(
   // -------------------------------------------------------------------------
   //  RENDER-LOOP
   // -------------------------------------------------------------------------
-  let stop=false;
-  function render(ms){
+  let stop = false;
+  let isDragging = false;
+  let previousMousePosition = { x: 0, y: 0 };
+  let currentRotation = { x: 0, y: 0 };
+  const rotationSpeed = 0.02;
+
+  // Event listeners para el control del ratón
+  canvas.addEventListener('mousedown', (e) => {
+    console.log('Mouse down');
+    isDragging = true;
+    previousMousePosition = {
+      x: e.clientX,
+      y: e.clientY
+    };
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+
+    const deltaMove = {
+      x: e.clientX - previousMousePosition.x,
+      y: e.clientY - previousMousePosition.y
+    };
+
+    // Actualizar rotación usando gl-matrix
+    currentRotation.y += deltaMove.x * rotationSpeed;
+    currentRotation.x += deltaMove.y * rotationSpeed;
+
+    // Limitar rotación vertical a ±90 grados
+    currentRotation.x = Math.max(-Math.PI/2, Math.min(Math.PI/2, currentRotation.x));
+
+    console.log('Rotation:', currentRotation);
+
+    previousMousePosition = {
+      x: e.clientX,
+      y: e.clientY
+    };
+  });
+
+  canvas.addEventListener('mouseup', () => {
+    console.log('Mouse up');
+    isDragging = false;
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    console.log('Mouse leave');
+    isDragging = false;
+  });
+
+  function render(ms) {
     if(stop) return;
     const t = ms*0.001;
 
@@ -333,29 +382,36 @@ export async function startSkinEngine(
     gl.clearColor(0.1,0.1,0.1,1);
     gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
 
-    // cámara básica
-    const proj=m4.perspective(m4.degToRad(60),
-                 gl.canvas.clientWidth/gl.canvas.clientHeight,1,2000);
-    const view=m4.inverse(m4.lookAt([0,0,8],[0,0,0],[0,1,0]));
+    // Crear matrices usando gl-matrix
+    const proj = mat4.create();
+    mat4.perspective(proj, 
+      m4.degToRad(60),
+      gl.canvas.clientWidth/gl.canvas.clientHeight,
+      1,
+      2000
+    );
 
-    // animación
-    if(duration){
-      const localT = t % duration;
-      channels.forEach(ch=>{
-        const inA=inputs[ch.sampler], outA=outputs[ch.sampler];
-        let i=0; while(i+1<inA.length && inA[i+1]<localT) ++i;
-        const t0=inA[i],t1=inA[i+1], α=(localT-t0)/(t1-t0);
-        const stride=(ch.path==='rotation')?4:3;
-        for(let k=0;k<stride;++k){
-          const v0=outA[i*stride+k], v1=outA[(i+1)*stride+k];
-          ch.node.source[ch.path][k]=v0+(v1-v0)*α;
-        }
-      });
-    }
+    const view = mat4.create();
+    const cameraPosition = vec3.fromValues(0, 0, 8);
+    const target = vec3.fromValues(0, 0, 0);
+    const up = vec3.fromValues(0, 1, 0);
+    mat4.lookAt(view, cameraPosition, target, up);
+    mat4.invert(view, view);
 
-    const shared={u_lightDirection:m4.normalize([-1,3,5])};
-    const draw=n=>n.drawables.forEach(d=>d.render(n,proj,view,shared));
-    gltf.scenes.forEach(sc=>{
+    // Crear matriz de modelo con la rotación actual usando gl-matrix
+    const modelMatrix = mat4.create();
+    
+    // Aplicar rotaciones en el orden correcto
+    mat4.rotateY(modelMatrix, modelMatrix, currentRotation.y); // Primero rotación Y
+    mat4.rotateX(modelMatrix, modelMatrix, currentRotation.x); // Luego rotación X
+
+    const shared = {
+      u_lightDirection: vec3.normalize(vec3.create(), vec3.fromValues(-1, 3, 5)),
+      u_world: modelMatrix
+    };
+
+    const draw = n => n.drawables.forEach(d => d.render(n, proj, view, shared));
+    gltf.scenes.forEach(sc => {
       sc.root.updateWorldMatrix();
       sc.root.traverse(draw);
     });
@@ -367,7 +423,14 @@ export async function startSkinEngine(
   // -------------------------------------------------------------------------
   //  DEVOLVER CALLBACK PARA PARAR
   // -------------------------------------------------------------------------
-  return ()=>{ stop=true; };
+  return () => { 
+    stop = true;
+    // Limpiar event listeners
+    canvas.removeEventListener('mousedown', null);
+    canvas.removeEventListener('mousemove', null);
+    canvas.removeEventListener('mouseup', null);
+    canvas.removeEventListener('mouseleave', null);
+  };
 }
 
 // ---------------------------------------------------------------------------

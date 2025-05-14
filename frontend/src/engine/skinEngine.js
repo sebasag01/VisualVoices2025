@@ -6,7 +6,7 @@
 import * as m4  from 'engine/lib/m4.js';
 import * as wu  from 'engine/lib/webgl-utils.js';
 // ---------------------------------------------------------------------------
-//  SHADERS  (★ Pega aquí tu código “real” si quieres modificarlo)            *
+//  SHADERS  (★ Pega aquí tu código "real" si quieres modificarlo)            *
 // ---------------------------------------------------------------------------
 const skinVS = `precision mediump float;
 attribute vec4 a_POSITION;
@@ -332,8 +332,57 @@ export async function startSkinEngine(
   // -------------------------------------------------------------------------
   //  RENDER-LOOP
   // -------------------------------------------------------------------------
-  let stop=false;
-  function render(ms){
+  let stop = false;
+  let isDragging = false;
+  let previousMousePosition = { x: 0, y: 0 };
+  let currentRotation = { x: 0, y: 0 };
+  const rotationSpeed = 0.02;
+  const MAX_ROTATION = Math.PI / 3; // 60 grados en radianes
+
+  // Event listeners para el control del ratón
+  canvas.addEventListener('mousedown', (e) => {
+    console.log('Mouse down');
+    isDragging = true;
+    previousMousePosition = {
+      x: e.clientX,
+      y: e.clientY
+    };
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+
+    const deltaMove = {
+      x: e.clientX - previousMousePosition.x,
+      y: e.clientY - previousMousePosition.y
+    };
+
+    // Actualizar rotación Y con límites
+    currentRotation.y += deltaMove.x * rotationSpeed;
+    // Limitar la rotación a ±60 grados
+    currentRotation.y = Math.max(-MAX_ROTATION, Math.min(MAX_ROTATION, currentRotation.y));
+    // Mantener la rotación X en 0
+    currentRotation.x = 0;
+
+    console.log('Rotation:', currentRotation.y * (180/Math.PI)); // Mostrar en grados
+
+    previousMousePosition = {
+      x: e.clientX,
+      y: e.clientY
+    };
+  });
+
+  canvas.addEventListener('mouseup', () => {
+    console.log('Mouse up');
+    isDragging = false;
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    console.log('Mouse leave');
+    isDragging = false;
+  });
+
+  function render(ms) {
     if(stop) return;
     const t = ms*0.001;
 
@@ -343,10 +392,19 @@ export async function startSkinEngine(
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    
     const { projectionMatrix, viewMatrix } = getThreeCameras();
 
+    // Crear matriz de modelo con la rotación actual
+    const modelMatrix = m4.identity();
     
+    // Aplicar rotación Y usando TRS
+    const trs = new TRS(
+      [0, 0, 0],  // posición
+      [0, Math.sin(currentRotation.y/2), 0, Math.cos(currentRotation.y/2)],  // rotación (quaternion)
+      [1, 1, 1]   // escala
+    );
+    trs.getMatrix(modelMatrix);
+
     // animación
     if(duration){
       const localT = t % duration;
@@ -362,15 +420,20 @@ export async function startSkinEngine(
       });
     }
 
-    const shared = { u_lightDirection: m4.normalize([-1,3,5]) };
+    const shared = { 
+      u_lightDirection: m4.normalize([-1,3,5]),
+      u_world: modelMatrix 
+    };
+
     const draw = node => {
       node.drawables.forEach(d => d.render(
         node,
-        projectionMatrix,   // ya no usamos m4.perspective…
-        viewMatrix,         // …ni m4.inverse( lookAt )
+        projectionMatrix,
+        viewMatrix,
         shared
       ));
     };
+
     gltf.scenes.forEach(sc => {
       sc.root.updateWorldMatrix();
       sc.root.traverse(draw);
@@ -380,7 +443,14 @@ export async function startSkinEngine(
   }
   requestAnimationFrame(render);
 
-  return () => { stop = true; };
+  return () => { 
+    stop = true;
+    // Limpiar event listeners
+    canvas.removeEventListener('mousedown', null);
+    canvas.removeEventListener('mousemove', null);
+    canvas.removeEventListener('mouseup', null);
+    canvas.removeEventListener('mouseleave', null);
+  };
 }
 
 // ---------------------------------------------------------------------------
