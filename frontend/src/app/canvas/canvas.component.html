@@ -1,17 +1,18 @@
 <div class="canvas-container">
-  <canvas
-    #threeCanvas
-    class="webgl"
-    [class.invisible]="skinRunning"
-  ></canvas>
+  <div class="canvas-wrapper">
+    <canvas
+      #threeCanvas
+      class="webgl"
+      [class.invisible]="skinRunning"
+    ></canvas>
 
-  <canvas
-    #skinCanvas
-    class="webgl skin-canvas"
-    [class.invisible]="!skinRunning"
-  ></canvas>
-
-  <button (click)="toggleSkin()">
+    <canvas
+      #skinCanvas
+      class="webgl skin-canvas"
+      [class.invisible]="!skinRunning"
+    ></canvas>
+  </div>
+  <button (click)="toggleSkin()" class="bottom-button">
     {{ skinRunning ? 'Detener Skin Engine' : 'Arrancar Skin Engine' }}
   </button>
 </div>

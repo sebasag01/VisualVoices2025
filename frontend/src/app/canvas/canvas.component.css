@@ -4,6 +4,7 @@
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -12,16 +13,26 @@
   margin-top: 10px;
 }
 
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 1000px;
+  max-height: 530px;
+}
+
 /* Este era tu estilo original para el único canvas */
 .webgl {
   width: 100%;
   height: 100%;
   display: block;
-  position: relative;    /* importante para que sea “flow” */
+  position: relative;    /* importante para que sea "flow" */
   z-index: 0;
   max-width: 1000px;
-  max-height: 800px;
+  max-height: 530px;
   box-sizing: border-box;
+  border: 2px solid white;
+  border-radius: 4px;
 }
 
 /* Ahora añadimos SOLO este bloque: el skin-canvas va absolute sobre el threeCanvas */
@@ -39,4 +50,20 @@
   visibility: hidden;   /* el canvas sigue ocupando espacio y tamaño */
   /* o bien */
   opacity: 0;           /* si prefieres transición suave con css */
+}
+
+/* Estilos para el botón */
+.bottom-button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: rgba(0, 123, 255, 0.9);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.bottom-button:hover {
+  background-color: rgba(0, 86, 179, 0.9);
 }
