@@ -342,15 +342,35 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  public resetView(): void {
+  public async resetView(): Promise<void> {
     if (this.isMainActive) return;
 
     if (this.skinRunning) {
-      // Si el skin engine está activo, detenerlo y volver a iniciarlo
-      this.toggleSkin(); // Primero lo detenemos
-      setTimeout(() => {
-        this.toggleSkin(); // Luego lo volvemos a iniciar
-      }, 100);
+      // Hacer un fade out suave
+      const canvas = this.skinCanvas.nativeElement;
+      canvas.style.transition = 'opacity 0.3s ease-out';
+      canvas.style.opacity = '0';
+
+      // Esperar a que termine el fade out
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      // Reiniciar el skin engine
+      this.stopSkin?.();
+      this.stopSkin = undefined;
+      
+      // Arrancar de nuevo el skin engine
+      const { startSkinEngine } = await import('engine/skinEngine.js');
+      this.stopSkin = await startSkinEngine(
+        this.skinCanvas.nativeElement,
+        'assets/malanimation.gltf',
+        () => ({
+          projectionMatrix: new Float32Array(this.camera.projectionMatrix.elements),
+          viewMatrix: new Float32Array(this.camera.matrixWorldInverse.elements)
+        })
+      );
+
+      // Hacer un fade in suave
+      canvas.style.opacity = '1';
     } else {
       // Limpiar el avatar actual
       if (this.avatar) {
