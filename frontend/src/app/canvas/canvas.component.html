@@ -12,7 +12,12 @@
       [class.invisible]="!skinRunning"
     ></canvas>
   </div>
-  <button (click)="toggleSkin()" class="bottom-button">
-    {{ skinRunning ? 'Detener Skin Engine' : 'Arrancar Skin Engine' }}
-  </button>
+  <div class="button-container">
+    <button (click)="toggleSkin()" class="bottom-button">
+      {{ skinRunning ? 'Detener Skin Engine' : 'Arrancar Skin Engine' }}
+    </button>
+    <button (click)="resetView()" class="bottom-button">
+      Resetear posición
+    </button>
+  </div>
 </div>

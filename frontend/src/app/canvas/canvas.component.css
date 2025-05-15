@@ -31,7 +31,6 @@
   max-width: 1000px;
   max-height: 530px;
   box-sizing: border-box;
-  border: 2px solid white;
   border-radius: 4px;
 }
 
@@ -52,9 +51,14 @@
   opacity: 0;           /* si prefieres transición suave con css */
 }
 
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
 /* Estilos para el botón */
 .bottom-button {
-  margin-top: 10px;
   padding: 8px 16px;
   background-color: rgba(0, 123, 255, 0.9);
   color: white;
@@ -66,16 +70,6 @@
 
 .bottom-button:hover {
   background-color: rgba(0, 86, 179, 0.9);
-}
-
-.button-container {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-  z-index: 1000;
 }
 
 .skin-button, .reset-button {

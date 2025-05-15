@@ -344,11 +344,30 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   public resetView(): void {
     if (this.isMainActive) return;
-    // Reposicionar la cámara, si lo deseas
-    this.camera.position.set(0, 1.5, 8.5);
-    this.camera.lookAt(0, 0, 0);
-    this.controls.target.set(0, 0, 0);
-    this.controls.update();
+
+    if (this.skinRunning) {
+      // Si el skin engine está activo, detenerlo y volver a iniciarlo
+      this.toggleSkin(); // Primero lo detenemos
+      setTimeout(() => {
+        this.toggleSkin(); // Luego lo volvemos a iniciar
+      }, 100);
+    } else {
+      // Limpiar el avatar actual
+      if (this.avatar) {
+        this.scene.remove(this.avatar);
+        this.avatar.clear();
+        this.avatar = undefined;
+      }
+
+      // Recargar el modelo por defecto
+      this.loadDefaultPose(true);
+
+      // Resetear la cámara
+      this.camera.position.set(0, 0, 5.8);
+      this.camera.lookAt(0, 0, 0);
+      this.controls.target.set(0, 0, 0);
+      this.controls.update();
+    }
   }
 
   private stopSkin?: () => void;
