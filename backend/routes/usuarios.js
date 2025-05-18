@@ -51,19 +51,40 @@ router.get(
   obtenerPalabrasAprendidasPorNivel
 );
 
+const esAdminOPropietario = (req, res, next) => {
+  const { id } = req.params;
+  if (req.rol === 'ROL_ADMIN' || req.uid === id) {
+    return next();
+  }
+  return res.status(403).json({
+    ok: false,
+    msg: 'No tiene permisos para realizar esta acción',
+  });
+};
+
 router.put(
   "/:id",
   [
     validarJWT,
-    //check("nombre", "El argumento nombre es obligatorio").not().isEmpty(),
-    //check("apellidos", "El argumento apellidos es obligatorio").not().isEmpty(),
     check("email", "El argumento email es obligatorio").not().isEmpty(),
     check("id", "El identificador no es válido").isMongoId(),
     validarCampos,
-    tieneRol("ROL_ADMIN"),
+    esAdminOPropietario, // ✅ Reemplaza `tieneRol("ROL_ADMIN")`
   ],
   actualizarUsuario
 );
+
+// router.put(
+//   "/:id",
+//   [
+//     validarJWT,
+//     check("email", "El argumento email es obligatorio").not().isEmpty(),
+//     check("id", "El identificador no es válido").isMongoId(),
+//     validarCampos,
+//     tieneRol("ROL_ADMIN"),
+//   ],
+//   actualizarUsuario
+// );
 
 router.delete(
   "/:id",
