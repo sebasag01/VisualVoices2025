@@ -64,8 +64,13 @@
           controls
           autoplay
           class="mirror-recorded"
-          style="width: 100%; height: 100%; object-fit: cover; display: block   ;transform: scaleX(1);
-"
+          style="
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transform: scaleX(1);
+          "
         ></video>
 
         <!-- Menú de herramientas (Radio Buttons) -->
@@ -237,7 +242,12 @@
           <!-- Botón para cambiar el turno -->
           <!-- Botón de "Siguiente Turno" con mismo estilo que "Nueva Pregunta" -->
           <div style="margin-top: 2rem; display: flex; justify-content: center">
-            <button class="next-turn-btn" (click)="nextTurn()">
+            <button
+              class="next-turn-btn"
+              (click)="nextTurn()"
+              [disabled]="!hasRespondido"
+              [ngClass]="{ 'disabled-btn': !hasRespondido }"
+            >
               Siguiente turno
             </button>
           </div>
@@ -274,9 +284,14 @@
   <!-- Overlay para anunciar al ganador -->
   <div *ngIf="uiState === 'finPartida'" class="winner-overlay">
     <div class="winner-message">
-<h1><i class="fa-solid fa-trophy" style="margin-right: 10px;"></i> ¡Felicidades {{ ganador }} has ganado!</h1>
+      <h1>
+        <i class="fa-solid fa-trophy" style="margin-right: 10px"></i>
+        ¡Felicidades {{ ganador }} has ganado!
+      </h1>
       <p>La partida ha terminado</p>
-      <button class="btn-lol" (click)="volverAModos()"><i class="fa-solid fa-arrow-left"></i>Volver a modos</button>
+      <button class="btn-lol" (click)="volverAModos()">
+        <i class="fa-solid fa-arrow-left"></i>Volver a modos
+      </button>
     </div>
   </div>
 </div>

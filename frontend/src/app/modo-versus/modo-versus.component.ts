@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -17,14 +23,9 @@ import { StatsService } from '../services/stats.service';
 @Component({
   selector: 'app-modo-versus',
   standalone: true,
-  imports: [
-    CommonModule,
-    HeaderComponent,
-    CanvasComponent,
-    FormsModule
-  ],
+  imports: [CommonModule, HeaderComponent, CanvasComponent, FormsModule],
   templateUrl: './modo-versus.component.html',
-  styleUrls: ['./modo-versus.component.css']
+  styleUrls: ['./modo-versus.component.css'],
 })
 export class ModoVersusComponent implements OnInit, OnDestroy {
   @ViewChild(CanvasComponent) canvasRef!: CanvasComponent;
@@ -59,6 +60,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   resultado: string = '';
   cargandoPregunta: boolean = false;
   optionStatus: { [key: string]: 'correct' | 'incorrect' } = {};
+  hasRespondido: boolean = false;
 
   // Modo
   selectedTool: string = '';
@@ -75,29 +77,24 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
 
   isLooping = false;
 
-  sessionId!: string;    // Nueva: identificador de la “sesión de examen”
+  sessionId!: string; // Nueva: identificador de la “sesión de examen”
 
-  authUser!: { uid: string; username: string;};
+  authUser!: { uid: string; username: string };
 
-
-  private isSuddenDeath = false; 
-
-
+  private isSuddenDeath = false;
 
   constructor(
     private examenService: ExamenService,
     private usuariosService: UsuariosService,
     private animacionService: AnimacionService,
     private router: Router,
-    private statsService: StatsService,
-
+    private statsService: StatsService
   ) {}
 
   ngOnInit(): void {
     // Cargar la pregunta cuando el usuario inicie el modo
     // (en este ejemplo, se hace al pulsar un botón "Empezar")
     this.loadAuthenticatedUser();
-
   }
 
   ngOnDestroy(): void {
@@ -109,7 +106,6 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
       this.stopWebcam();
     }
   }
-
 
   onStartButton(): void {
     // Asegurarte que ambos tengan un nombre
@@ -131,27 +127,24 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     this.uiState = 'turnAnnounce';
 
     this.examenService.startSession().subscribe({
-      next: resp => {
+      next: (resp) => {
         this.sessionId = resp.sessionId;
-  
+
         // 2) ahora sí arrancas el modo y cargas la primera pregunta
         this.iniciarModo();
-        
+
         // y tras el delay pasas a playing…
         setTimeout(() => {
           this.uiState = 'playing';
           this.iniciarModo();
         }, 2500);
       },
-      error: err => {
+      error: (err) => {
         console.error('No pude iniciar sesión de Versus:', err);
         alert('Error arrancando la partida.');
-      }
+      },
     });
-
   }
-  
-
 
   // ======================================================
   // 1) Iniciar Modo => solo ENCIENDE la cámara, NO graba
@@ -159,9 +152,10 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   iniciarModo(): void {
     this.hasStarted = true;
     this.showWebcam = true;
-    
+
     // Encendemos la cámara, pero NO empezamos a grabar todavía.
-    navigator.mediaDevices.getUserMedia({ video: true })
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
       .then((stream) => {
         this.videoStream = stream;
         const videoEl: HTMLVideoElement = this.videoElement.nativeElement;
@@ -171,7 +165,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
         // Configuramos el MediaRecorder, pero NO lo iniciamos aún
         this.mediaRecorder = new MediaRecorder(stream);
         this.recordedChunks = [];
-        
+
         // Event: Se van acumulando datos en recordedChunks
         this.mediaRecorder.ondataavailable = (event: BlobEvent) => {
           if (event.data.size > 0) {
@@ -181,17 +175,18 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
 
         // Event: Al parar la grabación => genera blob
         this.mediaRecorder.onstop = () => {
-          const videoBlob = new Blob(this.recordedChunks, { type: 'video/webm' });
+          const videoBlob = new Blob(this.recordedChunks, {
+            type: 'video/webm',
+          });
           this.recordedVideoUrl = URL.createObjectURL(videoBlob);
-          console.log("Video grabado =>", this.recordedVideoUrl);
+          console.log('Video grabado =>', this.recordedVideoUrl);
         };
 
         // Cargamos la pregunta
         this.cargarNuevaPregunta();
-
       })
       .catch((err) => {
-        console.error("Error al encender cámara:", err);
+        console.error('Error al encender cámara:', err);
         this.showWebcam = false;
       });
   }
@@ -202,9 +197,9 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   startRecording(): void {
     if (this.mediaRecorder && !this.isRecording) {
       this.recordedChunks = [];
-      this.mediaRecorder.start();  // -> ahora sí graba
+      this.mediaRecorder.start(); // -> ahora sí graba
       this.isRecording = true;
-      console.log("Grabando...");
+      console.log('Grabando...');
     }
   }
 
@@ -215,12 +210,12 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     if (this.mediaRecorder && this.isRecording) {
       this.mediaRecorder.stop();
       this.isRecording = false;
-      console.log("Grabación finalizada.");
+      console.log('Grabación finalizada.');
     }
     // 1) Apaga la cámara
     this.stopWebcam();
     this.showWebcam = false;
-  
+
     // 2) Muestra el video que se grabó
     this.showRecordedVideo = true;
   }
@@ -242,16 +237,15 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
 
         // Buscar la opción correcta => para la "currentWord"
         const correctId = resp.correctAnswerId;
-        const correctOption = this.opciones.find(o => o._id === correctId);
+        const correctOption = this.opciones.find((o) => o._id === correctId);
         if (correctOption) {
           if (this.usedWords.includes(correctOption.palabra)) {
             console.warn('Palabra repetida, cargando otra pregunta...');
             this.cargarNuevaPregunta();
             return;
-          }else {
+          } else {
             this.currentWord = correctOption.palabra;
             this.usedWords.push(correctOption.palabra);
-
           }
         } else {
           this.currentWord = 'Cargando...';
@@ -261,8 +255,8 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
         // Cargar animaciones en el canvas
         if (this.canvasRef) {
           this.canvasRef.stopLoop(false);
-          const animacionesUrls = this.animaciones.map(a =>
-            `${environment.apiUrl}/gltf/animaciones/${a.filename}`
+          const animacionesUrls = this.animaciones.map(
+            (a) => `${environment.apiUrl}/gltf/animaciones/${a.filename}`
           );
           this.animacionService.cargarAnimaciones(animacionesUrls, true, false);
         }
@@ -270,7 +264,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Error al generar pregunta:', err);
         this.cargandoPregunta = false;
-      }
+      },
     });
   }
 
@@ -278,34 +272,45 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   // Opciones => Seleccionar Opción
   // ======================================================
   seleccionarOpcion(opcionId: string): void {
+    this.hasRespondido = true;
     // El GUESSER elige la opción => scoreboard para guesser
-    this.examenService.verificarRespuesta(this.sessionId, this.questionId, opcionId).subscribe({
-      next: (resp) => {
-        this.optionStatus[opcionId] = resp.esCorrecta ? 'correct' : 'incorrect';
-        this.resultado = resp.esCorrecta ? '¡Respuesta correcta!' : 'Respuesta incorrecta';
+    this.examenService
+      .verificarRespuesta(this.sessionId, this.questionId, opcionId)
+      .subscribe({
+        next: (resp) => {
+          this.optionStatus[opcionId] = resp.esCorrecta
+            ? 'correct'
+            : 'incorrect';
+          this.resultado = resp.esCorrecta
+            ? '¡Respuesta correcta!'
+            : 'Respuesta incorrecta';
 
-        // Si fue incorrecta, también marca la correcta en verde
-        if (!resp.esCorrecta && resp.opcionCorrectaId) {
-          this.optionStatus[resp.opcionCorrectaId] = 'correct';
-        }
-  
-        // Actualizar scoreboard AL GUESSER
-        if (this.guesserName === this.player1Name) {
-          this.player1Score[this.player1Index] = resp.esCorrecta ? 'hit' : 'miss';
-          this.player1Index++; // Incrementar DESPUÉS de actualizar el score
-        } else {
-          this.player2Score[this.player2Index] = resp.esCorrecta ? 'hit' : 'miss';
-          this.player2Index++; // Incrementar DESPUÉS de actualizar el score
-        }
-        
-        // Comprobar si hay ganador después de actualizar índices
-        this.checkForWinner();
-      },
-      error: err => {
-        console.error('Error al verificar respuesta:', err);
-        alert('No se pudo verificar la respuesta.');
-      }
-    });
+          // Si fue incorrecta, también marca la correcta en verde
+          if (!resp.esCorrecta && resp.opcionCorrectaId) {
+            this.optionStatus[resp.opcionCorrectaId] = 'correct';
+          }
+
+          // Actualizar scoreboard AL GUESSER
+          if (this.guesserName === this.player1Name) {
+            this.player1Score[this.player1Index] = resp.esCorrecta
+              ? 'hit'
+              : 'miss';
+            this.player1Index++; // Incrementar DESPUÉS de actualizar el score
+          } else {
+            this.player2Score[this.player2Index] = resp.esCorrecta
+              ? 'hit'
+              : 'miss';
+            this.player2Index++; // Incrementar DESPUÉS de actualizar el score
+          }
+
+          // Comprobar si hay ganador después de actualizar índices
+          this.checkForWinner();
+        },
+        error: (err) => {
+          console.error('Error al verificar respuesta:', err);
+          alert('No se pudo verificar la respuesta.');
+        },
+      });
   }
 
   // ======================================================
@@ -315,20 +320,20 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     const input = event.target as HTMLInputElement;
     const valor = input.value;
 
-    const animUrls = this.animaciones.map(a =>
-      `${environment.apiUrl}/gltf/animaciones/${a.filename}`
+    const animUrls = this.animaciones.map(
+      (a) => `${environment.apiUrl}/gltf/animaciones/${a.filename}`
     );
 
     switch (valor) {
       case 'play':
         this.animacionService.cargarAnimaciones(animUrls, true, false);
-  this.selectedTool = 'play';
+        this.selectedTool = 'play';
 
-  // Deseleccionar automáticamente cuando acabe (3 segundos aprox)
-  setTimeout(() => {
-    this.deseleccionarRadio();
-  }, 4000); // SEGUNDOS QUE DURA LA ANIMACIÓN PARA DESELECCIONAR EL PLAY
-  break;
+        // Deseleccionar automáticamente cuando acabe (3 segundos aprox)
+        setTimeout(() => {
+          this.deseleccionarRadio();
+        }, 4000); // SEGUNDOS QUE DURA LA ANIMACIÓN PARA DESELECCIONAR EL PLAY
+        break;
       case 'play2':
         this.animacionService.cargarAnimaciones(animUrls, true, true);
         break;
@@ -346,18 +351,20 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     }
   }
   deseleccionarRadio(): void {
-    const radios = document.querySelectorAll('input[name="value-radio"]') as NodeListOf<HTMLInputElement>;
-    radios.forEach(radio => radio.checked = false);
+    const radios = document.querySelectorAll(
+      'input[name="value-radio"]'
+    ) as NodeListOf<HTMLInputElement>;
+    radios.forEach((radio) => (radio.checked = false));
     this.selectedTool = '';
   }
-  
+
   // ======================================================
   // Reproducir animación al hacer click en la palabra
   // ======================================================
   handleWordClick(): void {
     if (this.animaciones?.length > 0) {
-      const animUrls = this.animaciones.map(a =>
-        `${environment.apiUrl}/gltf/animaciones/${a.filename}`
+      const animUrls = this.animaciones.map(
+        (a) => `${environment.apiUrl}/gltf/animaciones/${a.filename}`
       );
       this.animacionService.cargarAnimaciones(animUrls, true, false);
     }
@@ -376,7 +383,8 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   }
 
   startWebcam(): void {
-    navigator.mediaDevices.getUserMedia({ video: true })
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
       .then((stream) => {
         const videoEl: HTMLVideoElement = this.videoElement.nativeElement;
         videoEl.srcObject = stream;
@@ -388,7 +396,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     const videoEl: HTMLVideoElement = this.videoElement.nativeElement;
     const stream = videoEl.srcObject as MediaStream;
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach((track) => track.stop());
     }
     videoEl.srcObject = null;
   }
@@ -412,7 +420,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Error al cerrar sesión:', err);
         alert('Error al cerrar sesión');
-      }
+      },
     });
   }
 
@@ -430,7 +438,8 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     // Limpieza
     this.showRecordedVideo = false;
     this.resultado = '';
-    
+    this.hasRespondido = false;
+
     this.currentTurnName = this.signerName;
 
     // Comprobar si alguien ganó (opcional)
@@ -447,48 +456,50 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
   }
 
   private handleWin() {
-    const miId     = this.authUser.uid;
+    const miId = this.authUser.uid;
     // Los nombres que tecleó el usuario al arrancar la partida:
-    const nombreA  = this.player1Name; 
-    const nombreB  = this.player2Name; 
-    const ganador  = this.ganador;
+    const nombreA = this.player1Name;
+    const nombreB = this.player2Name;
+    const ganador = this.ganador;
 
     console.log({
-      player1Id:   miId,
-      player1Name: nombreA,     // aquí tu this.player1Name
-      player2Id:   miId,
+      player1Id: miId,
+      player1Name: nombreA, // aquí tu this.player1Name
+      player2Id: miId,
       player2Name: nombreB,
-      winnerId:    miId,
-      winnerName:  ganador
+      winnerId: miId,
+      winnerName: ganador,
     });
 
-    this.statsService.endVersus({
-      // guardamos siempre al usuario “real” como participante A
-      player1Id:   miId,
-      player1Name: nombreA,
-      player2Id:   miId,
-      player2Name: nombreB,
-      winnerId:    miId,
-      winnerName:  ganador
-    }).subscribe({
-      next: () => console.log('Partida versus guardada'),
-      error: e => console.error('Error guardando versus', e)
-    });
-  
+    this.statsService
+      .endVersus({
+        // guardamos siempre al usuario “real” como participante A
+        player1Id: miId,
+        player1Name: nombreA,
+        player2Id: miId,
+        player2Name: nombreB,
+        winnerId: miId,
+        winnerName: ganador,
+      })
+      .subscribe({
+        next: () => console.log('Partida versus guardada'),
+        error: (e) => console.error('Error guardando versus', e),
+      });
+
     this.uiState = 'finPartida';
     this.triggerConfetti();
   }
 
   private checkForWinner(): boolean {
-    const p1Hits = this.player1Score.filter(s => s === 'hit').length;
-    const p2Hits = this.player2Score.filter(s => s === 'hit').length;
-    
+    const p1Hits = this.player1Score.filter((s) => s === 'hit').length;
+    const p2Hits = this.player2Score.filter((s) => s === 'hit').length;
+
     // Si no estamos en muerte súbita
     if (!this.isSuddenDeath) {
       // Verificar si ambos jugadores han completado sus 3 turnos
       const p1Complete = this.player1Index === 3;
       const p2Complete = this.player2Index === 3;
-      
+
       // Caso 1: Si ambos han completado sus turnos
       if (p1Complete && p2Complete) {
         if (p1Hits > p2Hits) {
@@ -506,7 +517,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
           return false;
         }
       }
-      
+
       // Caso 2: Si uno ha completado sus turnos pero el otro no
       if (p1Complete && !p2Complete) {
         // Solo declaramos ganador al player1 si es matemáticamente imposible para player2 alcanzarlo
@@ -517,7 +528,7 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
           return true;
         }
       }
-      
+
       if (p2Complete && !p1Complete) {
         // Solo declaramos ganador al player2 si es matemáticamente imposible para player1 alcanzarlo
         const p1PossibleHits = p1Hits + (3 - this.player1Index);
@@ -527,19 +538,19 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
           return true;
         }
       }
-      
+
       // Caso 3: Ninguno ha completado sus turnos
       // Comprobamos si matemáticamente es imposible para uno alcanzar al otro
       if (!p1Complete && !p2Complete) {
         const p1PossibleHits = p1Hits + (3 - this.player1Index);
         const p2PossibleHits = p2Hits + (3 - this.player2Index);
-        
+
         if (p1Hits > p2PossibleHits) {
           this.ganador = this.player1Name;
           this.handleWin();
           return true;
         }
-        
+
         if (p2Hits > p1PossibleHits) {
           this.ganador = this.player2Name;
           this.handleWin();
@@ -562,20 +573,18 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
         // Si están empatados, continúa la muerte súbita
       }
     }
-    
+
     return false;
   }
-
 
   private triggerConfetti(): void {
     confetti({
       particleCount: 100,
       spread: 70,
-      origin: { y: 0.6 }
+      origin: { y: 0.6 },
     });
   }
-  
-  
+
   /**
    * endGame: Limpia o navega a otra ruta. Por ejemplo:
    */
@@ -585,32 +594,30 @@ export class ModoVersusComponent implements OnInit, OnDestroy {
     // O redirigir a la pantalla de modos:
     this.router.navigate(['/modos']);
   }
-  
-  
+
   onToggleLoop(event: Event): void {
     const checked = (event.target as HTMLInputElement).checked;
-  
+
     if (checked) {
       this.isLooping = true;
-      this.reproducirAnimacion(true);  // con bucle
+      this.reproducirAnimacion(true); // con bucle
     } else {
       this.isLooping = false;
-      this.canvasRef?.stopLoop(true);  // parar animación
+      this.canvasRef?.stopLoop(true); // parar animación
     }
   }
   private reproducirAnimacion(loop: boolean): void {
-    const animacionesUrls = this.animaciones.map(a =>
-      `${environment.apiUrl}/gltf/animaciones/${a.filename}`
+    const animacionesUrls = this.animaciones.map(
+      (a) => `${environment.apiUrl}/gltf/animaciones/${a.filename}`
     );
-  
+
     this.animacionService.cargarAnimaciones(animacionesUrls, true, loop);
   }
 
   private loadAuthenticatedUser(): void {
     this.usuariosService.getAuthenticatedUser().subscribe({
-      next: resp => this.authUser = resp.usuario,
-      error: err => console.error('No pude cargar usuario autenticado', err)
+      next: (resp) => (this.authUser = resp.usuario),
+      error: (err) => console.error('No pude cargar usuario autenticado', err),
     });
   }
-    
 }

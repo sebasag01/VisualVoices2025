@@ -1,471 +1,446 @@
 @font-face {
-    font-family: 'lexend';
-    src: url('../../assets/fonts/lexend.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  /* Importar la fuente personalizada desde la carpeta public */
-  @font-face {
-    font-family: "ChauPhilomene";
-    src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  
-  
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 80vh;
-    background-color: #fff8d4;
-    max-width: 100% !important; 
-    width: 100% !important;
-  }
-  
-  /* Asegurar que .content ocupe toda la pantalla */
-  .content {
-    width: 100vw;
-    height: 100vh;
-    background-color: #fff8d4;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  
-  .instructions {
-    margin-top: 25px;
-    font-size: 1.2rem;
-    text-align: center;
-    margin-bottom: -27px;
-    font-family: 'lexend';
-    
-  }
-  
-  .layout {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    width: 100vw;
-    height: 100vh;
-  }
-  
-  
-  
-  
-  .button-grid {
-    flex: 0 0 35%;
-    background-color: #f4a940;
-    padding: 20px;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    overflow-y: auto;
-    box-sizing: border-box;
-  }
-  
-  
-  
-  
-  .image-container {
-    position: relative;  /* Muy importante para anclar el menú */
-    flex-grow: 1;
-    width: calc(100% - 5%);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    overflow: hidden;
-  }
-  .canvas-container {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-  
-  
-  
-  /* Botones dinámicos para categorías (blancos) */
-  .main-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: nowrap;
-  }
-  .main-button {
-    padding: 10px 20px;
-    font-size: 1.3rem;
-    background-color: white;
-    
-    border-radius: 8px;
-    font-family: "ChauPhilomene", sans-serif;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    
-  }
-  
-  
-  
-  .main-button.active {
-    border:#000 3px solid;
-    border-color: #000;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.8); /* Sombra para resaltar */
-    
-  
-  
-  }
-  
-  
-  /* Botones dinámicos para palabras (azules) */
-  .grid-buttons {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    width: 100%;
-    justify-items: center;
-  }
-  .secondary-button {
-    background-color: #41b8d5;
-    color: black;
-    font-size: 1.4rem;
-    
-    border: 2px solid black;
-    border-radius: 12px;
-    padding: 15px;
-    width: 150px;
-    height: 80px;
-    text-align: center;
-    transition: background-color 0.3s;
-    font-family: "Lexend", sans-serif;
-    border-width: 3px;
-  }
-  .secondary-button:hover {
-    background-color: #35a0c7;
-  }
-  
-  /* Importar la fuente personalizada desde la carpeta public */
-  @font-face {
-    font-family: "ChauPhilomene";
-    src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  @font-face {
-    font-family: "Lexend";
-    src: url("../../assets/fonts/lexend.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  .logo-fixed {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    text-align: left;
-    z-index: 100;
-  }
-  .logo {
-    width: 50px;
-    height: auto;
-    margin-right: 10px;
-  }
-  .logo-text {
-    font-family: "ChauPhilomene", sans-serif;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #000;
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-  }
-  .visual {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  .voices {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-top: 2px;
-  }
-  /*MENÚ DERECHO*/
-  .icon-menu-fixed {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    gap: 15px;
-    font-size: 30px;
-    z-index: 1000;
-    background: none;
-    padding: 0;
-  }
+  font-family: "lexend";
+  src: url("../../assets/fonts/lexend.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 
-  .icon-menu-fixed a {
-    color: black;
-    text-decoration: none;
-    transition: transform 0.2s ease;
-    cursor: pointer;
-  }
+/* Importar la fuente personalizada desde la carpeta public */
+@font-face {
+  font-family: "ChauPhilomene";
+  src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 
-  .icon-menu-fixed a:hover {
-    transform: scale(1.1);
-  }
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 80vh;
+  background-color: #fff8d4;
+  max-width: 100% !important;
+  width: 100% !important;
+}
 
-  /* Add padding to the top of the right panel to accommodate the fixed menu */
-  /* Make sure the title and other elements don't get covered */
-  .exam-title {
-    margin-top: 120px;
-    position: relative;
-    color: black;
-  }
+/* Asegurar que .content ocupe toda la pantalla */
+.content {
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff8d4;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
 
-  .enunciado-general {
-    margin-top: 10px;
-  }
+.instructions {
+  margin-top: 25px;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: -27px;
+  font-family: "lexend";
+}
 
-  .modo-guiado {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-  
-  
-  
-  /* Estilos para la cámara */
-  /* Cuando la cámara está activa, queremos que el avatar sea la mitad del ancho */
-  .half-width {
-    width: 50% !important;
-  }
-  
-  /* Contenedor de la cámara */
-  .camera-container {
-    width: 35vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff8d4;
-  }
+.layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100vw;
+  height: 100vh;
+}
 
-   .camera-container {
-    flex: 0 0 35%; 
-  }
-  
-  /* Estilo del video en modo espejo */
-  .mirror-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: scaleX(-1);
-    border: none;
-    border-radius: 0;
-  }
-  
-  
-  
-  /* Nueva clase para un botón de desactivar webcam más pequeño */
-  .small-disable-webcam-btn {
-    margin-top: 10px;         /* Espacio entre el video y el botón */
-    padding: 5px 10px;        /* Menos padding para que sea pequeño */
-    font-size: 1rem;          /* Fuente más pequeña */
-    border: none;
-    border-radius: 12px;      /* Bordes redondeados */
-    background-color: #ff4d4d;/* Color de fondo */
-    color: white;             /* Color de texto */
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .small-disable-webcam-btn:hover {
-    background-color: #e60000;
-  }
-  
-  .current-word {
-    margin-top: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 2rem;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-  }
-  
-  .small-webcam-btn {
-    padding: 5px 10px;              /* Menos padding para que sea pequeño */
-    font-size: 1rem;                /* Fuente un poco más pequeña */
-    font-family: "Lexend", sans-serif;
-    width: auto;
-    height: auto;
-    border: 3px solid black;
-    border-radius: 0.4em;            /* Bordes redondeados */
-    background-color: white;      /* Color de fondo que combina con los otros botones */
-    color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
-    transition: background-color 0.3s ease;
-    z-index: 999;
-    cursor: pointer;
-    font-weight: bold;
+.button-grid {
+  flex: 0 0 35%;
+  background-color: #f4a940;
+  padding: 20px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
 
-    
+.image-container {
+  position: relative; /* Muy importante para anclar el menú */
+  flex-grow: 1;
+  width: calc(100% - 5%);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.canvas-container {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
-  }
-  
-  .small-webcam-btn:hover {
-    transform: translate(-0.05em, -0.05em);
-    box-shadow: 0.2em 0.2em;
+/* Botones dinámicos para categorías (blancos) */
+.main-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: nowrap;
+}
+.main-button {
+  padding: 10px 20px;
+  font-size: 1.3rem;
+  background-color: white;
 
-  }
-  
-  
-  .tutorial-btn {
-    padding: 5px 10px;              /* Menos padding para que sea pequeño */
-    font-size: 1rem;                /* Fuente un poco más pequeña */
-    font-family: "Lexend", sans-serif;
-    width: auto;
-    height: auto;
-    border: 2px solid black;
-    border-radius: 12px;            /* Bordes redondeados */
-    background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
-    color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
-    transition: background-color 0.3s ease;
-    z-index: 999;
+  border-radius: 8px;
+  font-family: "ChauPhilomene", sans-serif;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
 
-  }
-  
-  .tutorial-btn:hover {
-    background-color: #35a0c7;      /* Cambio de color en hover */
-  }
+.main-button.active {
+  border: #000 3px solid;
+  border-color: #000;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.8); /* Sombra para resaltar */
+}
 
-  .back-to-modes-button {
-    padding: 5px 10px;              /* Menos padding para que sea pequeño */
-    font-size: 1rem;                /* Fuente un poco más pequeña */
-    font-family: "Lexend", sans-serif;
-    width: auto;
-    height: auto;
-    border: 2px solid black;
-    border-radius: 12px;            /* Bordes redondeados */
-    background-color: #41b8d5;      /* Color de fondo que combina con los otros botones */
-    color: rgb(0, 0, 0);                   /* Texto blanco para buen contraste */
-    transition: background-color 0.3s ease;
-    z-index: 999;
+/* Botones dinámicos para palabras (azules) */
+.grid-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  width: 100%;
+  justify-items: center;
+}
+.secondary-button {
+  background-color: #41b8d5;
+  color: black;
+  font-size: 1.4rem;
 
-  }
-  
-  .back-to-modes-button:hover {
-    background-color: #35a0c7;      /* Cambio de color en hover */
-  }
-  
-  /* search-bar.css */
+  border: 2px solid black;
+  border-radius: 12px;
+  padding: 15px;
+  width: 150px;
+  height: 80px;
+  text-align: center;
+  transition: background-color 0.3s;
+  font-family: "Lexend", sans-serif;
+  border-width: 3px;
+}
+.secondary-button:hover {
+  background-color: #35a0c7;
+}
+
+/* Importar la fuente personalizada desde la carpeta public */
+@font-face {
+  font-family: "ChauPhilomene";
+  src: url("../../assets/fonts/chauphilomene.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Lexend";
+  src: url("../../assets/fonts/lexend.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.logo-fixed {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  text-align: left;
+  z-index: 100;
+}
+.logo {
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
+}
+.logo-text {
+  font-family: "ChauPhilomene", sans-serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.visual {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.voices {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 2px;
+}
+/*MENÚ DERECHO*/
+.icon-menu-fixed {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 15px;
+  font-size: 30px;
+  z-index: 1000;
+  background: none;
+  padding: 0;
+}
+
+.icon-menu-fixed a {
+  color: black;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.icon-menu-fixed a:hover {
+  transform: scale(1.1);
+}
+
+/* Add padding to the top of the right panel to accommodate the fixed menu */
+/* Make sure the title and other elements don't get covered */
+.exam-title {
+  margin-top: 120px;
+  position: relative;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.enunciado-general {
+  margin-top: 10px;
+}
+
+.modo-guiado {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* Estilos para la cámara */
+/* Cuando la cámara está activa, queremos que el avatar sea la mitad del ancho */
+.half-width {
+  width: 50% !important;
+}
+
+/* Contenedor de la cámara */
+.camera-container {
+  width: 35vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff8d4;
+}
+
+.camera-container {
+  flex: 0 0 35%;
+}
+
+/* Estilo del video en modo espejo */
+.mirror-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  border: none;
+  border-radius: 0;
+}
+
+/* Nueva clase para un botón de desactivar webcam más pequeño */
+.small-disable-webcam-btn {
+  margin-top: 10px; /* Espacio entre el video y el botón */
+  padding: 5px 10px; /* Menos padding para que sea pequeño */
+  font-size: 1rem; /* Fuente más pequeña */
+  border: none;
+  border-radius: 12px; /* Bordes redondeados */
+  background-color: #ff4d4d; /* Color de fondo */
+  color: white; /* Color de texto */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.small-disable-webcam-btn:hover {
+  background-color: #e60000;
+}
+
+.current-word {
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
+
+.small-webcam-btn {
+  padding: 5px 10px; /* Menos padding para que sea pequeño */
+  font-size: 1rem; /* Fuente un poco más pequeña */
+  font-family: "Lexend", sans-serif;
+  width: auto;
+  height: auto;
+  border: 3px solid black;
+  border-radius: 0.4em; /* Bordes redondeados */
+  background-color: white; /* Color de fondo que combina con los otros botones */
+  color: rgb(0, 0, 0); /* Texto blanco para buen contraste */
+  transition: background-color 0.3s ease;
+  z-index: 999;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.small-webcam-btn:hover {
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.2em 0.2em;
+}
+
+.tutorial-btn {
+  padding: 5px 10px; /* Menos padding para que sea pequeño */
+  font-size: 1rem; /* Fuente un poco más pequeña */
+  font-family: "Lexend", sans-serif;
+  width: auto;
+  height: auto;
+  border: 2px solid black;
+  border-radius: 12px; /* Bordes redondeados */
+  background-color: #41b8d5; /* Color de fondo que combina con los otros botones */
+  color: rgb(0, 0, 0); /* Texto blanco para buen contraste */
+  transition: background-color 0.3s ease;
+  z-index: 999;
+}
+
+.tutorial-btn:hover {
+  background-color: #35a0c7; /* Cambio de color en hover */
+}
+
+.back-to-modes-button {
+  padding: 5px 10px; /* Menos padding para que sea pequeño */
+  font-size: 1rem; /* Fuente un poco más pequeña */
+  font-family: "Lexend", sans-serif;
+  width: auto;
+  height: auto;
+  border: 2px solid black;
+  border-radius: 12px; /* Bordes redondeados */
+  background-color: #41b8d5; /* Color de fondo que combina con los otros botones */
+  color: rgb(0, 0, 0); /* Texto blanco para buen contraste */
+  transition: background-color 0.3s ease;
+  z-index: 999;
+}
+
+.back-to-modes-button:hover {
+  background-color: #35a0c7; /* Cambio de color en hover */
+}
+
+/* search-bar.css */
 
 .search-bar {
-    width: 100%;
-    background-color: transparent;    /* Fondo transparente */
-    border: 3px solid black;          /* Borde negro */
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    box-sizing: border-box;
-    margin-bottom: 10px;
-  }
-  
-  .search-bar input {
-    flex: 1;                          /* Ocupar todo el espacio posible */
-    background: transparent;
-    border: none;                     /* Sin borde interior */
-    outline: none;                    /* Quitar outline al enfocar */
-    color: #000;                      /* Texto en negro */
-    font-size: 1rem;
-  }
-  
-  .search-bar input::placeholder {
-    color: rgba(0, 0, 0, 0.5);        /* Placeholder gris */
-    font-family: "Lexend", sans-serif;
-  }
-  
-  /* El botón con la lupa */
-  .search-bar button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;                       /* Ajuste para no agrandar el botón */
-    margin-left: 0.5rem;             /* Separación del input */
-  }
-  
-  .search-bar button:focus {
-    outline: none;
-  }
-  
-  /* Icono de lupa (podrías usar un emoji, una imagen de fondo, o un icono de librería) */
-  .search-bar .lupa::before {
-    content: '🔍'; 
-    font-size: 1.2rem;
-  }
-  /* Panel derecho */
-  .right-panel {
-    position: relative; /* Muy importante */
-    flex: 0 0 35%;
-    background-color: #f4a940;
-    padding: 20px;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    overflow-y: auto;
-    box-sizing: border-box;
-  }
-  
-  /* Estilo general de cada fila de categoría */
-  .category-item {
-    display: flex;
-    justify-content: space-between; /* Título a la izq, flecha a la dcha */
-    align-items: center;
-    background-color: white;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    border: 2px solid black;
-    font-family: "Lexend", sans-serif;
-  }
-  
-  .category-item:hover {
-    background-color: #d2d1d3b1; /* un ligero hover */
-  }
-  
-  .cat-info {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .cat-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  .cat-subtitle {
-    color: black;
-    font-size: 0.9rem;
-  }
-  
-  .cat-arrow {
-    font-size: 1.2rem;
-  }
-  
- /* Grid de 2 columnas para la vista 2 */
+  width: 100%;
+  background-color: transparent; /* Fondo transparente */
+  border: 3px solid black; /* Borde negro */
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.search-bar input {
+  flex: 1; /* Ocupar todo el espacio posible */
+  background: transparent;
+  border: none; /* Sin borde interior */
+  outline: none; /* Quitar outline al enfocar */
+  color: #000; /* Texto en negro */
+  font-size: 1rem;
+}
+
+.search-bar input::placeholder {
+  color: rgba(0, 0, 0, 0.5); /* Placeholder gris */
+  font-family: "Lexend", sans-serif;
+}
+
+/* El botón con la lupa */
+.search-bar button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0; /* Ajuste para no agrandar el botón */
+  margin-left: 0.5rem; /* Separación del input */
+}
+
+.search-bar button:focus {
+  outline: none;
+}
+
+/* Icono de lupa (podrías usar un emoji, una imagen de fondo, o un icono de librería) */
+.search-bar .lupa::before {
+  content: "🔍";
+  font-size: 1.2rem;
+}
+/* Panel derecho */
+.right-panel {
+  position: relative; /* Muy importante */
+  flex: 0 0 35%;
+  background-color: #f4a940;
+  padding: 20px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Estilo general de cada fila de categoría */
+.category-item {
+  display: flex;
+  justify-content: space-between; /* Título a la izq, flecha a la dcha */
+  align-items: center;
+  background-color: white;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid black;
+  font-family: "Lexend", sans-serif;
+}
+
+.category-item:hover {
+  background-color: #d2d1d3b1; /* un ligero hover */
+}
+
+.cat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cat-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.cat-subtitle {
+  color: black;
+  font-size: 0.9rem;
+}
+
+.cat-arrow {
+  font-size: 1.2rem;
+}
+
+/* Grid de 2 columnas para la vista 2 */
 .word-list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -492,135 +467,130 @@
   user-select: none;
   text-shadow: none;
   font-weight: bold;
-
 }
-  
-  /* Efecto hover */
+
+/* Efecto hover */
 .word-item:hover,
 .word-item:focus {
   transform: translate(-0.05em, -0.05em);
   box-shadow: 0.2em 0.2em;
-  
 }
-  /* Estado seleccionado (queda “pegado” el brillo en la palabra clicada) */
-  .word-item.selected-word {
-    transform: scale(1.06); /* ajústalo a tu gusto, 1.05 ~ 1.10 */
-    z-index: 2; /* para evitar que se 'meta' bajo otras palabras al crecer */
-    color: #000000;
-    background: #008cff;
-    border: 0.5px solid #000000;
-    
-   
-  }
-  .word-title {
-    font-weight: bold;
-    color: #000000;
-  }
-  
-  .back-button {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 15px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    color: black;
-    border: 2px solid black;
-    padding: 6px 12px;
-    border-radius: 8px;
-    width: fit-content;
-    background-color: #ffedd2;
-  }
-  
-  .back-button:hover {
-    background-color: #ffc580;
-  }
-  /* Contenedor que queremos al 30% */
+/* Estado seleccionado (queda “pegado” el brillo en la palabra clicada) */
+.word-item.selected-word {
+  transform: scale(1.06); /* ajústalo a tu gusto, 1.05 ~ 1.10 */
+  z-index: 2; /* para evitar que se 'meta' bajo otras palabras al crecer */
+  color: #000000;
+  background: #008cff;
+  border: 0.5px solid #000000;
+}
+.word-title {
+  font-weight: bold;
+  color: #000000;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: black;
+  border: 2px solid black;
+  padding: 6px 12px;
+  border-radius: 8px;
+  width: fit-content;
+  background-color: #ffedd2;
+}
+
+.back-button:hover {
+  background-color: #ffc580;
+}
+/* Contenedor que queremos al 30% */
 .multi-select-dropdown {
-    position: relative; 
-    width: 30%;          /* Ajusta según tu necesidad */
-    min-width: 200px;    /* Un mínimo para que no sea demasiado pequeño */
-    display: inline-block;
-    margin-bottom: 1rem; /* Espacio debajo si lo deseas */
-  }
-  
-  /* Botón que muestra el dropdown */
-  .dropdown-button {
-    width: 100%;
-    background-color: #41b8d5; 
-    border: 2px solid #000;
-    border-radius: 8px;
-    padding: 8px 12px;
-    cursor: pointer;
-    text-align: left;
-    display: flex;
-    justify-content: space-between; /* Para poner la flechita a la derecha */
-    align-items: center;
-    font-family: "ChauPhilomene", sans-serif;
-  }
-  
-  /* Flecha desplegable */
-  .arrow {
-    transition: transform 0.3s ease;
-    margin-left: 8px;
-  }
-  
-  /* Rotar flecha al abrir */
-  .arrow.rotate {
-    transform: rotate(180deg);
-  }
-  
-  /* Contenido desplegable */
-  .dropdown-content {
-    position: absolute;
-    top: 110%; /* un poco debajo del botón */
-    left: 0;
-    z-index: 999;
-    background-color: #fff;
-    width: 100%;
-    border: 2px solid #000;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    max-height: 0;          /* Comenzamos colapsado */
-    overflow: hidden;       /* Ocultamos el contenido mientras está cerrado */
-    transition: max-height 0.3s ease;
-    font-family: "ChauPhilomene", sans-serif;
-  }
-  
-  /* Cuando el contenedor tiene la clase .open, mostramos el contenido */
-  .multi-select-dropdown.open .dropdown-content {
-    max-height: 200px;  /* la altura máxima que permita ver varios checkboxes */
-    overflow-y: auto;   /* scroll interno si excede la altura */
-  }
-  
-  /* Cada elemento dentro del menú */
-  .dropdown-item {
-    display: flex;
-    align-items: center;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-family: sans-serif;
-  }
-  
-  /* Quitar subrayado */
-  .dropdown-item input {
-    margin-right: 8px;
-    cursor: pointer;
-  }
-  
+  position: relative;
+  width: 30%; /* Ajusta según tu necesidad */
+  min-width: 200px; /* Un mínimo para que no sea demasiado pequeño */
+  display: inline-block;
+  margin-bottom: 1rem; /* Espacio debajo si lo deseas */
+}
 
-  /*NUEVO DISEÑO DE CARDS*/
+/* Botón que muestra el dropdown */
+.dropdown-button {
+  width: 100%;
+  background-color: #41b8d5;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  justify-content: space-between; /* Para poner la flechita a la derecha */
+  align-items: center;
+  font-family: "ChauPhilomene", sans-serif;
+}
 
-  /* Contenedor grid para las categorías */
+/* Flecha desplegable */
+.arrow {
+  transition: transform 0.3s ease;
+  margin-left: 8px;
+}
+
+/* Rotar flecha al abrir */
+.arrow.rotate {
+  transform: rotate(180deg);
+}
+
+/* Contenido desplegable */
+.dropdown-content {
+  position: absolute;
+  top: 110%; /* un poco debajo del botón */
+  left: 0;
+  z-index: 999;
+  background-color: #fff;
+  width: 100%;
+  border: 2px solid #000;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  max-height: 0; /* Comenzamos colapsado */
+  overflow: hidden; /* Ocultamos el contenido mientras está cerrado */
+  transition: max-height 0.3s ease;
+  font-family: "ChauPhilomene", sans-serif;
+}
+
+/* Cuando el contenedor tiene la clase .open, mostramos el contenido */
+.multi-select-dropdown.open .dropdown-content {
+  max-height: 200px; /* la altura máxima que permita ver varios checkboxes */
+  overflow-y: auto; /* scroll interno si excede la altura */
+}
+
+/* Cada elemento dentro del menú */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: sans-serif;
+}
+
+/* Quitar subrayado */
+.dropdown-item input {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+/*NUEVO DISEÑO DE CARDS*/
+
+/* Contenedor grid para las categorías */
 .category-grid {
-   display: grid;
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 30px;
   /* Centra horizontalmente los elementos en cada celda */
-  justify-items: center;  
+  justify-items: center;
   /* Centra verticalmente los elementos en cada celda */
   align-items: center;
-  
+
   margin: 10px auto; /* Opcional, para centrar el grid en su contenedor padre */
 }
 
@@ -684,27 +654,22 @@
   opacity: 1;
 }
 
-.user-icon{
+.user-icon {
   z-index: 999;
 }
 
-.ajustes-icon{
+.ajustes-icon {
   z-index: 999;
 }
 
-.logout-icon{
+.logout-icon {
   z-index: 999;
 }
-
-
-
-
 
 .tools-menu-placeholder {
   font-size: 1.2rem;
   color: #000;
 }
-
 
 /* NUEVO DISEÑO RADIO-BUTTONS */
 
@@ -816,7 +781,7 @@
   text-transform: uppercase;
   transition: all 0.1s linear;
   text-shadow: -1px -1px 1px rgba(224, 224, 224, 0.1),
-               0px 2px 3px rgba(0, 0, 0, 0.3);
+    0px 2px 3px rgba(0, 0, 0, 0.3);
 }
 
 .label input[type="radio"]:checked + .text {
@@ -824,13 +789,10 @@
   text-shadow: 0px 0px 12px #cae2fd;
 }
 
-
 /* Hover animation: Scaling the button and adjusting shadow */
 .btn-small:hover {
   transform: scale(1.1); /* Button grows slightly */
-  box-shadow:
-    
-    5px 15px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 5px 15px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Active click animation */
@@ -847,9 +809,7 @@
   height: 100%;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  box-shadow:
-    inset 0px -4px 0px #dddddd,
-    0px -4px 0px #f4f5f6;
+  box-shadow: inset 0px -4px 0px #dddddd, 0px -4px 0px #f4f5f6;
   border-radius: 20px;
   transition: 0.3s ease-in-out; /* Smooth animation */
   z-index: 1;
@@ -942,46 +902,46 @@
 }
 /* Asegúrate de que la "label" de play2 es position: relative
    para posicionar Stop en la esquina */
-   .label-play2 {
-    position: relative;
-    /* Mantén el resto de estilos heredados de .label si lo deseas */
-  }
-  
-  /* El pequeño label-stop se ubica ABSOLUTO 
+.label-play2 {
+  position: relative;
+  /* Mantén el resto de estilos heredados de .label si lo deseas */
+}
+
+/* El pequeño label-stop se ubica ABSOLUTO 
      dentro de la "caja" de .label-play2 */
-  .label-play2 .label-stop {
-    position: absolute;
-    bottom: 0px;  /* Ajusta a tu gusto */
-    right: 0px;
-    width: 27px;  /* tamaño reducido */
-    height: 27px;
-    background-color: #444;  /* un color distinto */
-    border-radius: 3px;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  
-  /* Ocultamos el input radio de STOP para que solo se vea el “Stop” */
-  .label-play2 .label-stop input[type="radio"] {
-    display: none;
-  }
-  
-  /* Texto “Stop” más pequeño */
-  .label-play2 .stop-text {
-    color: white;
-    font-size: 10px;
-    text-transform: uppercase;
-    pointer-events: none; /* Deja que el clic ocurra en el contenedor */
-  }
-  
-  /* Efecto al estar marcado STOP */
-  .label-play2 .label-stop:has(input[type="radio"]:checked) {
-    background-color: #222;  /* se oscurece al hacer click */
-  }
-  /* Para todos tus .label con un icon dentro */
+.label-play2 .label-stop {
+  position: absolute;
+  bottom: 0px; /* Ajusta a tu gusto */
+  right: 0px;
+  width: 27px; /* tamaño reducido */
+  height: 27px;
+  background-color: #444; /* un color distinto */
+  border-radius: 3px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Ocultamos el input radio de STOP para que solo se vea el “Stop” */
+.label-play2 .label-stop input[type="radio"] {
+  display: none;
+}
+
+/* Texto “Stop” más pequeño */
+.label-play2 .stop-text {
+  color: white;
+  font-size: 10px;
+  text-transform: uppercase;
+  pointer-events: none; /* Deja que el clic ocurra en el contenedor */
+}
+
+/* Efecto al estar marcado STOP */
+.label-play2 .label-stop:has(input[type="radio"]:checked) {
+  background-color: #222; /* se oscurece al hacer click */
+}
+/* Para todos tus .label con un icon dentro */
 .label .icon {
   width: 32px;
   height: 32px;
@@ -1018,8 +978,8 @@
 .icon-play2 {
   fill: #fff;
   transition: fill 0.2s, filter 0.2s;
-  width:38px;
-  height:38px;
+  width: 38px;
+  height: 38px;
   cursor: pointer;
 }
 
@@ -1027,7 +987,7 @@
 .icon-stop {
   fill: #ff0000;
   transition: fill 0.2s, filter 0.2s;
-  
+
   cursor: pointer;
 }
 
@@ -1042,7 +1002,6 @@
   fill: #ff0000;
   filter: drop-shadow(0 0 5px #cae2fd);
 }
-
 
 /* Caja general de la webcam */
 .label-webcam {
@@ -1063,10 +1022,10 @@
 
 /* El <img> con webcam.svg */
 .icon-webcam {
-  display: block;          /* o inline-block, según prefieras */
-  width: 40px;             /* ajusta tu tamaño */
+  display: block; /* o inline-block, según prefieras */
+  width: 40px; /* ajusta tu tamaño */
   height: auto;
-  margin: 0 auto;          /* centrado horizontal */
+  margin: 0 auto; /* centrado horizontal */
   transition: filter 0.2s; /* para el efecto “iluminado” */
 }
 
@@ -1103,20 +1062,26 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Estilos para iconos de feedback más llamativos */
 .icon-correct {
-  color: #28a745;             /* Verde brillante */
-  font-size: 2rem;            /* Tamaño grande */
+  color: #28a745; /* Verde brillante */
+  font-size: 2rem; /* Tamaño grande */
   animation: pop 0.5s ease-out;
   text-shadow: 0 0 10px rgba(40, 167, 69, 0.7);
 }
 
 .icon-incorrect {
-  color: #dc3545;             /* Rojo vibrante */
+  color: #dc3545; /* Rojo vibrante */
   font-size: 2rem;
   animation: shake 0.5s ease;
   text-shadow: 0 0 10px rgba(220, 53, 69, 0.7);
@@ -1139,11 +1104,21 @@
 
 /* Animación para el icono incorrecto */
 @keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 /* En modo-examen.component.css */
@@ -1155,7 +1130,7 @@
 .exam-title {
   text-align: center;
   margin-bottom: 1rem;
-  font-family: 'ChauPhilomene', sans-serif;
+  font-family: "ChauPhilomene", sans-serif;
   font-size: 2.5rem;
   color: black; /* Texto en púrpura */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -1184,7 +1159,7 @@
   font-size: 1.4rem;
   text-align: center;
   margin-bottom: 1rem;
-  font-family: 'lexend';
+  font-family: "lexend";
   color: black;
 }
 
@@ -1222,39 +1197,40 @@
   box-shadow: 0.2em 0.2em; /* mismo efecto que al hacer hover/selected */
 }
 
-
 /* Opcional: Animación sutil para resaltar la respuesta correcta */
 @keyframes highlightCorrect {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .correct-solution {
   animation: highlightCorrect 0.7s ease-in-out;
 }
 
-
 .exam-summary {
   text-align: center;
   /* background:  #f4a940; */
   background: transparent;
-  font-family: 'ChauPhilomene', sans-serif;
+  font-family: "ChauPhilomene", sans-serif;
   padding: 20px;
   border-radius: 12px;
   /* box-shadow: 0 4px 8px rgba(0,0,0,0.1); */
-  margin-top: 10rem;    /* sube o baja este valor a tu gusto */
+  margin-top: 10rem; /* sube o baja este valor a tu gusto */
   color: #000;
   font-size: 2rem;
-
-
 }
 
 .exam-summary .mt-4 button {
-  margin: 0 0.75rem;  /* 0 arriba/abajo, 0.75rem izquierda/derecha */
+  margin: 0 0.75rem; /* 0 arriba/abajo, 0.75rem izquierda/derecha */
   background-color: #41b8d5;
   font-size: 1.2rem;
-
 }
 
 .summary-icons {
@@ -1279,18 +1255,34 @@
   text-shadow: none;
 }
 
-
-
 /* Animaciones */
 @keyframes pop {
-  0%   { transform: scale(0.5); opacity: 0; }
-  60%  { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 @keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
