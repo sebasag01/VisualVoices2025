@@ -2,6 +2,9 @@
 ## 📽️ Presentación del proyecto
 🎥 (https://drive.google.com/file/d/1luvsQLjod5oFeX4BhM9njO-V1fRBBhw-/view?usp=sharing)
 
+## Esta web ha recibido el Premio de Accesibilidad 2025 de los Premios Impulso, por la Universidad de Alicante 
+🎥 (https://vertice.cpd.ua.es/304879)
+
 ## ✨ Descripción del proyecto
 Este proyecto consiste en el **desarrollo de una página web educativa** diseñada para el **aprendizaje de la lengua de signos** mediante un **avatar 3D animado**.
 La plataforma utiliza el avatar 3D creado con **Blender**, el cual reproduce distintos signos mediante animaciones por huesos.  
@@ -61,10 +64,11 @@ cd Graphicare_ABP24
 ---
 
 ## 👥 Proyecto colaborativo
-Este proyecto fue desarrollado en equipo junto con otros estudiantes.  
+Este proyecto fue desarrollado en equipo junto con otros estudiantes.
+
 **Formé parte del desarrollo de:**
 - Creación del modelado avatar y sus animaciones.
-- Implementación del sistema de animación por huesos.  
+- Implementación del sistema de animación por huesos.
 - Integración de modelos glTF en el motor gráfico.
 - Optimización del renderizado en WebGL.
 
