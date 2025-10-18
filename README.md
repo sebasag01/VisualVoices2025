@@ -1,9 +1,9 @@
 # 🧏‍♂️ Plataforma Educativa de Lengua de Signos – Proyecto WebGL 3D
 ## 📽️ Presentación del proyecto
-🎥 (https://drive.google.com/file/d/1luvsQLjod5oFeX4BhM9njO-V1fRBBhw-/view?usp=sharing)
+(https://drive.google.com/file/d/1luvsQLjod5oFeX4BhM9njO-V1fRBBhw-/view?usp=sharing)
 
-## Esta web ha recibido el Premio de Accesibilidad 2025 de los Premios Impulso, por la Universidad de Alicante 
-🎥 (https://vertice.cpd.ua.es/304879)
+## ⭐ Esta web ha recibido el Premio de Accesibilidad 2025 de los Premios Impulso, por la Universidad de Alicante
+(https://vertice.cpd.ua.es/304879)
 
 ## ✨ Descripción del proyecto
 Este proyecto consiste en el **desarrollo de una página web educativa** diseñada para el **aprendizaje de la lengua de signos** mediante un **avatar 3D animado**.
