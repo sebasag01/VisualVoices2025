@@ -1,33 +1,3 @@
-<<<<<<< HEAD
-# graphicare_abp24
-[ABPGC24] Proyecto de Contenidos del grupo GraphiCare de ABP 2024/25
-
-## Descripción
-Este proyecto forma parte del grupo **GraphiCare** del curso ABP 2024/25. Graphicare_ABP24 es una aplicación web destinada a facilitar la comunicación visual y el aprendizaje mediante herramientas interactivas y avanzadas, enfocada en la accesibilidad y el uso de tecnologías modernas como **Three.js**, **Angular**, y un backend en **Node.js**.
-
----
-
-## Funcionalidades
-- **Modo Libre**: Permite seleccionar palabras para que el avatar 3D realice su signo correspondiente.
-- **Modo Guiado**: Ofrece niveles progresivos de aprendizaje con signos y palabras de dificultad variable.
-- **Pictogramas Visuales**: Herramienta interactiva que utiliza tarjetas organizadas por categorías.
-- **Acceso Multiusuario**: Sistema de login con roles diferenciados (usuarios y administradores).
-
----
-
-## Tecnologías Utilizadas
-### Frontend:
-- **Angular**: Framework utilizado para la interfaz de usuario.
-- **Three.js**: Biblioteca para gráficos en 3D.
-
-### Backend:
-- **Node.js**: Entorno de ejecución para el backend.
-- **Express.js**: Framework para la creación de la API REST.
-
-### Base de Datos:
-- **MongoDB**: Base de datos relacional para el almacenamiento de datos de usuarios y configuraciones.
-
-=======
 # 🧏‍♂️ Plataforma Educativa de Lengua de Signos – Proyecto WebGL 3D
 ## 📽️ Presentación del proyecto
 (https://drive.google.com/file/d/1luvsQLjod5oFeX4BhM9njO-V1fRBBhw-/view?usp=sharing)
@@ -54,7 +24,6 @@ Para lograr animaciones **más dinámicas y fluidas**, se ha desarrollado un **m
 
 ---
 
->>>>>>> 34a8aeb745ee9c742c3016843567546892407009
 ## Instalación y Configuración
 
 ### 1. Clonar el repositorio
@@ -94,21 +63,6 @@ cd Graphicare_ABP24
 
 ---
 
-<<<<<<< HEAD
-## Estructura del Proyecto
-```plaintext
-Graphicare_ABP24/
-├── backend/        # API REST y conexión con la base de datos
-├── frontend/       # Aplicación Angular
-├── database/       # Scripts para la creación de la base de datos
-├── documents/      # Documentación del proyecto
-└── README.md       # Archivo de documentación principal
-```
-
----
-
-## Contribuidores
-=======
 ## 👥 Proyecto colaborativo
 Este proyecto fue desarrollado en equipo junto con otros estudiantes.
 
@@ -119,17 +73,11 @@ Este proyecto fue desarrollado en equipo junto con otros estudiantes.
 - Optimización del renderizado en WebGL.
 
 ## Contribuidores del equipo GraphiCare
->>>>>>> 34a8aeb745ee9c742c3016843567546892407009
 - **Ángel Manuel Ruiz Freeman**.
 - **Lorena Heras Caballero**.
 - **Yousra El Jaafari El Idrissi**.
 - **Sebastián Ayala García**.
 - **Adrián Guerras Algarra**.
 
-<<<<<<< HEAD
-- Equipo GraphiCare ABP 2024/25.
-
-=======
 ## 📜 Licencia
 Este proyecto fue desarrollado en un entorno académico y se comparte únicamente con fines demostrativos.
->>>>>>> 34a8aeb745ee9c742c3016843567546892407009
